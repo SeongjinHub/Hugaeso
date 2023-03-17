@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MapTrips</string>
+    <string name="activity_login_sign_up_btn">새 계정 생성</string>
+    <string name="activity_login_sign_in_btn">로그인</string>
+</resources>
