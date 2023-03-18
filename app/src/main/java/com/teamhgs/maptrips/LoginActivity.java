@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -45,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
             editTextPassword.setVisibility(View.VISIBLE);
 
 
-            signInBtn.setOnClickListener(new View.OnClickListener() {
+            signInBtn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     User.username = editTextUsername.getText().toString();
@@ -59,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (User.username.length() < 6 || User.username.length() > 14)
                         editTextVal = 1;
 
-                    else if (User.password.length() < 7 || User.password.length() > 15)
+                    else if (User.password.length() < 8 || User.password.length() > 16)
                         editTextVal = 2;
 
                     switch (editTextVal) {
@@ -90,6 +91,14 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             break;
                     }
+                }
+            });
+
+            signUpBtn.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intentSignUpActivity = new Intent(LoginActivity.this, SignUpActivity.class);
+                    startActivity(intentSignUpActivity);
                 }
             });
         } else {

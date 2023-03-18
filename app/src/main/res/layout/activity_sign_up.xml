@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUpActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/textViewSignUpTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:visibility="visible"
+            android:textSize="15pt"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:text="Sign Up" />
+
+        <TextView
+            android:id="@+id/textViewFieldContx"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:visibility="visible"
+            android:text="@string/activity_signup_field_contx" />
+
+
+        <EditText
+            android:id="@+id/editTextUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:padding="10dp"
+            android:visibility="visible"
+            android:ems="10"
+            android:hint="USERNAME *"
+            android:background="@drawable/edittext_login_ui_rounded_corner"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/textViewUsernNameContx1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:visibility="visible"
+            android:text="@string/activity_signup_username_contx1" />
+
+        <TextView
+            android:id="@+id/textViewUsernNameContx2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:visibility="visible"
+            android:text="@string/activity_signup_username_contx2" />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:padding="10dp"
+            android:visibility="visible"
+            android:ems="10"
+            android:hint="PASSWORD *"
+            android:background="@drawable/edittext_login_ui_rounded_corner"
+            android:inputType="textPassword"
+            android:selectAllOnFocus="true" />
+
+        <TextView
+            android:id="@+id/textViewPasswordContx"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:visibility="visible"
+            android:text="@string/activity_signup_password_contx" />
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:padding="10dp"
+            android:visibility="visible"
+            android:ems="10"
+            android:hint="@string/activity_signup_name"
+            android:background="@drawable/edittext_login_ui_rounded_corner"
+            android:inputType="text"
+            android:selectAllOnFocus="true" />
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:padding="10dp"
+            android:visibility="visible"
+            android:ems="10"
+            android:hint="@string/activity_signup_email"
+            android:background="@drawable/edittext_login_ui_rounded_corner"
+            android:inputType="textEmailAddress"
+            android:selectAllOnFocus="true" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="@string/activity_signup_info_agr_chkbox" />
+
+        <Button
+            android:id="@+id/buttonSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:visibility="visible"
+            android:background="@drawable/btn_login_ui_sign_up"
+            android:textColor="@color/white"
+            android:textSize="9pt"
+            android:text="@string/activity_login_sign_up_btn" />
+
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
