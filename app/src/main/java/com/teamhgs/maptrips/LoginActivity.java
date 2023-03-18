@@ -33,11 +33,11 @@ public class LoginActivity extends AppCompatActivity {
         //SharePreference Key-Value 쌍 비교를 통해 로그인 정보를 불러옴
         SharedPreferences pref = getSharedPreferences("UserName", Activity.MODE_PRIVATE);
 
-        User.userName = pref.getString("UserName", "");
+        User.username = pref.getString("UserName", "");
         User.password = new String();
 
-        if (User.userName.length() == 0) {
-            Log.d("Authentication failed. authInfo = ", User.userName);
+        if (User.username.length() == 0) {
+            Log.d("Authentication failed. authInfo = ", User.username);
 
             signInBtn.setVisibility(View.VISIBLE);
             signUpBtn.setVisibility(View.VISIBLE);
@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             signInBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    User.userName = editTextUsername.getText().toString();
+                    User.username = editTextUsername.getText().toString();
                     User.password = editTextPassword.getText().toString();
 
                     editTextUsername.setBackground(editTextNormalUI);
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     int editTextVal = 0;
 
-                    if (User.userName.length() < 6 || User.userName.length() > 14)
+                    if (User.username.length() < 6 || User.username.length() > 14)
                         editTextVal = 1;
 
                     else if (User.password.length() < 7 || User.password.length() > 15)
@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                             if (dbAuthResult == true) {
                                 //인증값이 참일 경우 로컬 앱 데이터에 UserName을 저장한 후 메인 액티비티로 이동
                                 SharedPreferences.Editor editor = pref.edit();
-                                editor.putString("UserName", User.userName);
+                                editor.putString("UserName", User.username);
                                 editor.commit();
                                 startActivity(intentMainActivity);
                                 finish();
@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
             });
         } else {
             //이전에 로그인 한 기록이 있을 경우 메인 액티비티로 바로 이동
-            Log.d("Authentication succeeded. userName = ", String.valueOf(User.userName));
+            Log.d("Authentication succeeded. userName = ", String.valueOf(User.username));
             startActivity(intentMainActivity);
             finish();
         }

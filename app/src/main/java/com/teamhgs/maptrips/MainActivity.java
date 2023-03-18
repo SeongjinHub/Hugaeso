@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView textViewUsername = (TextView) findViewById(R.id.userNameText);
 
-        textViewUsername.setText(User.userName);
+        textViewUsername.setText(User.username);
 
     }
 }
