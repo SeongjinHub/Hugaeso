@@ -4,10 +4,14 @@
     <string name="activity_login_sign_up_btn">Create A New Account</string>
     <string name="activity_signup_name">Name *</string>
     <string name="activity_signup_email">E-Mail *</string>
-    <string name="activity_signup_username_contx1">Please Enter Username to use as ID.</string>
-    <string name="activity_signup_username_contx2">Username must be at least 6 characters and less than 15 characters</string>
-    <string name="activity_signup_password_contx">Password must be at least 8 characters and less than 17 characters</string>
-    <string name="activity_signup_field_contx">* must be entered</string>
+    <string name="activity_signup_username_sub1">Please Enter Username to use as ID.</string>
+    <string name="activity_signup_username_sub2">Username must be at least 6 characters and less than 15 characters</string>
+    <string name="activity_signup_password_sub1">Password must be at least 8 characters and less than 17 characters</string>
+    <string name="activity_signup_field_sub">* must be entered</string>
     <string name="activity_signup_info_agr_chkbox">I agree to collect and use personal information.</string>
     <string name="activity_signup_terms_agr_chkbox">I agree to the terms and conditions.</string>
+    <string name="activity_signup_username_sub3">Verifying..</string>
+    <string name="activity_signup_password_sub2">Please enter the same password as above.</string>
+    <string name="activity_signup_name_sub">Please enter a valid name.</string>
+    <string name="activity_signup_email_sub">Please enter a valid email address.</string>
 </resources>

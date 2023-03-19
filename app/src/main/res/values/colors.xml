@@ -10,9 +10,11 @@
     <color name="app_main_color">#FF000000</color>
     <color name="login_ui_field_n_focused">#E1717171</color>
     <color name="login_ui_field_focused">#5C6BC0</color>
-    <color name="login_ui_field_error">#FFFF0000</color>
+    <color name="login_ui_field_error">#FFB00020</color>
     <color name="login_ui_btn_signin">#74BA77</color>
     <color name="login_ui_btn_signin_hovered">#B0D5B2</color>
     <color name="login_ui_btn_signup">#4380B1</color>
     <color name="login_ui_btn_signup_hovered">#6CA2CD</color>
+    <color name="default_text_color">#80000000</color>
+    <color name="correct_color">#00D16B</color>
 </resources>
