@@ -70,6 +70,8 @@ public class SignUpActivity extends AppCompatActivity {
 
                 User.username = editTextUsername.getText().toString();
 
+                textViewUsernameSub3.setText(getResources().getString(R.string.activity_signup_username_verifying));
+
                 if (User.username.length() < 1) {
                     editTextUsername.setBackground(editTextErrorUI);
                     textViewUsernameSub1.setTextColor(errColor);
@@ -86,12 +88,16 @@ public class SignUpActivity extends AppCompatActivity {
                     editTextUsername.setBackground(editTextErrorUI);
                     textViewUsernameSub1.setTextColor(defaultTextColor);
                     textViewUsernameSub2.setTextColor(defaultTextColor);
+
+                    textViewUsernameSub3.setText(getResources().getString(R.string.activity_signup_username_dup));
                     textViewUsernameSub3.setTextColor(errColor);
                 }
                 else {
                     editTextUsername.setBackground(editTextNormalUI);
                     textViewUsernameSub1.setTextColor(defaultTextColor);
                     textViewUsernameSub2.setTextColor(defaultTextColor);
+
+                    textViewUsernameSub3.setText(getResources().getString(R.string.activity_signup_username_verified));
                     textViewUsernameSub3.setTextColor(correctColor);
                     id = true;
                 }

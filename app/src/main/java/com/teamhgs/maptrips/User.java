@@ -29,6 +29,11 @@ public class User {
     }
 
     public static boolean chkuserNameDB(String username) {
+
+        // 테스트 용
+        if (username.equals("dddddd")) {
+            return false;
+        }
         return true;
     }
 

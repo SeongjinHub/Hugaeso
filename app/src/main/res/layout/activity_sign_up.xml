@@ -88,7 +88,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginRight="30dp"
-                android:text="@string/activity_signup_username_sub3"
+                android:text="@string/activity_signup_username_verifying"
                 android:visibility="visible" />
 
             <EditText
