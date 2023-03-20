@@ -1,20 +1,37 @@
 package com.teamhgs.maptrips;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -258,6 +275,13 @@ public class SignUpActivity extends AppCompatActivity {
                 } else if (!userinfoAgr) {
                     checkBoxUserInfoAgr.setTextColor(errColor);
                 } else {
+
+                    InsertData task = new InsertData();
+                    User.usercode = "Android";
+                    User.usercode = User.usercode + LocalDate.now() + LocalTime.now();
+                    Toast.makeText(getApplicationContext(), User.usercode, Toast.LENGTH_SHORT).show();
+                    task.execute("http://" + DB_Framework.IP_ADDRESS + "/db_signup.php",User.usercode,User.username,User.password,User.name,User.email);
+
                     //테스트 용
                     Intent intentMainActivity = new Intent(SignUpActivity.this, MainActivity.class);
                     startActivity(intentMainActivity);
@@ -267,4 +291,76 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
     }
+
+    class InsertData extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String usercode = (String)params[1];
+            String username = (String)params[2];
+            String password = (String)params[3];
+            String name = (String)params[4];
+            String email = (String)params[5];
+
+            String serverURL = (String)params[0];
+            String postParameters = "usercode=" + usercode + "&username=" + username + "&password=" + password + "&name=" + name + "&email=" + email;
+
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "POST response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "InsertData: Error ", e);
+
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
+    }
+
 }

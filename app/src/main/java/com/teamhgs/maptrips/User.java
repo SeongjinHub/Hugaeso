@@ -12,7 +12,7 @@ public class User {
     static String email = new String();
     static int year;
     static int month;
-    static int usercode;
+    static String usercode = "Android";
 
     public static boolean chkUserNameLength(String username) {
         if (username.length() < 6 || username.length() > 14)
