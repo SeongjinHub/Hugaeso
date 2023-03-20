@@ -5,14 +5,10 @@ import static android.content.ContentValues.TAG;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,6 +19,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,7 +33,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -89,35 +90,56 @@ public class SignUpActivity extends AppCompatActivity {
 
                 textViewUsernameSub3.setText(getResources().getString(R.string.activity_signup_username_verifying));
 
-                if (User.username.length() < 1) {
-                    editTextUsername.setBackground(editTextErrorUI);
-                    textViewUsernameSub1.setTextColor(errColor);
-                    textViewUsernameSub2.setTextColor(defaultTextColor);
-                    textViewUsernameSub3.setTextColor(defaultTextColor);
-                }
-                else if (!User.chkUserNameLength(User.username)) {
-                    editTextUsername.setBackground(editTextErrorUI);
-                    textViewUsernameSub1.setTextColor(defaultTextColor);
-                    textViewUsernameSub2.setTextColor(errColor);
-                    textViewUsernameSub3.setTextColor(defaultTextColor);
-                }
-                else if (!User.chkuserNameDB(User.username)) {
-                    editTextUsername.setBackground(editTextErrorUI);
-                    textViewUsernameSub1.setTextColor(defaultTextColor);
-                    textViewUsernameSub2.setTextColor(defaultTextColor);
 
-                    textViewUsernameSub3.setText(getResources().getString(R.string.activity_signup_username_dup));
-                    textViewUsernameSub3.setTextColor(errColor);
-                }
-                else {
-                    editTextUsername.setBackground(editTextNormalUI);
-                    textViewUsernameSub1.setTextColor(defaultTextColor);
-                    textViewUsernameSub2.setTextColor(defaultTextColor);
+                //username 중복확인 검사
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean usernameNotDup = jsonResponse.getBoolean("chkResult"); //DB에 중복될 시 true 반환
+//
+                            if (User.username.length() < 1) {
+                                editTextUsername.setBackground(editTextErrorUI);
+                                textViewUsernameSub1.setTextColor(errColor);
+                                textViewUsernameSub2.setTextColor(defaultTextColor);
+                                textViewUsernameSub3.setTextColor(defaultTextColor);
+                            }
+                            else if (!User.chkUserNameLength(User.username)) {
+                                editTextUsername.setBackground(editTextErrorUI);
+                                textViewUsernameSub1.setTextColor(defaultTextColor);
+                                textViewUsernameSub2.setTextColor(errColor);
+                                textViewUsernameSub3.setTextColor(defaultTextColor);
+                            }
+                            else if (usernameNotDup) {
+                                editTextUsername.setBackground(editTextErrorUI);
+                                textViewUsernameSub1.setTextColor(defaultTextColor);
+                                textViewUsernameSub2.setTextColor(defaultTextColor);
 
-                    textViewUsernameSub3.setText(getResources().getString(R.string.activity_signup_username_verified));
-                    textViewUsernameSub3.setTextColor(correctColor);
-                    id = true;
-                }
+                                textViewUsernameSub3.setText(getResources().getString(R.string.activity_signup_username_dup));
+                                textViewUsernameSub3.setTextColor(errColor);
+                                id = false; //중복될 경우
+                            }
+                            else {
+                                editTextUsername.setBackground(editTextNormalUI);
+                                textViewUsernameSub1.setTextColor(defaultTextColor);
+                                textViewUsernameSub2.setTextColor(defaultTextColor);
+
+                                textViewUsernameSub3.setText(getResources().getString(R.string.activity_signup_username_verified));
+                                textViewUsernameSub3.setTextColor(correctColor);
+                                id = true;
+                            }
+                        } catch (Exception e) {
+                            id = false;
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                User.chkUsernameRequest Request = new User.chkUsernameRequest(User.username, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(SignUpActivity.this);
+                queue.add(Request);
+
             }
         });
 
@@ -143,8 +165,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (!User.chkPasswordLength(User.password)) {
                     editTextPassword1.setBackground(editTextErrorUI);
                     textViewPasswordSub1.setTextColor(errColor);
-                }
-                else {
+                } else {
                     editTextPassword1.setBackground(editTextNormalUI);
                     textViewPasswordSub1.setTextColor(defaultTextColor);
                 }
@@ -152,8 +173,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (!User.password.equals(password2)) {
                     editTextPassword2.setBackground(editTextErrorUI);
                     textViewPasswordSub2.setTextColor(errColor);
-                }
-                else {
+                } else {
                     editTextPassword2.setBackground(editTextNormalUI);
                     textViewPasswordSub2.setTextColor(defaultTextColor);
                     pw = true;
@@ -183,8 +203,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (!User.password.equals(password2)) {
                     editTextPassword2.setBackground(editTextErrorUI);
                     textViewPasswordSub2.setTextColor(errColor);
-                }
-                else {
+                } else {
                     editTextPassword2.setBackground(editTextNormalUI);
                     textViewPasswordSub2.setTextColor(defaultTextColor);
                     pw = true;
@@ -213,8 +232,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (User.name.length() < 1) {
                     editTextName.setBackground(editTextErrorUI);
                     textViewNameSub.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     editTextName.setBackground(editTextNormalUI);
                     textViewNameSub.setVisibility(View.GONE);
                     name = true;
@@ -243,12 +261,10 @@ public class SignUpActivity extends AppCompatActivity {
                 if (User.email.length() < 1) {
                     editTextEmail.setBackground(editTextErrorUI);
                     textViewEmaiilSub.setVisibility(View.VISIBLE);
-                }
-                else if (!User.isValidEmailAddress(User.email)) {
+                } else if (!User.isValidEmailAddress(User.email)) {
                     editTextEmail.setBackground(editTextErrorUI);
                     textViewEmaiilSub.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     editTextEmail.setBackground(editTextNormalUI);
                     textViewEmaiilSub.setVisibility(View.GONE);
                     email = true;
@@ -277,14 +293,14 @@ public class SignUpActivity extends AppCompatActivity {
                 } else {
 
                     InsertData task = new InsertData();
+
                     User.usercode = "Android";
                     User.usercode = User.usercode + LocalDate.now() + LocalTime.now();
-                    Toast.makeText(getApplicationContext(), User.usercode, Toast.LENGTH_SHORT).show();
-                    task.execute("http://" + DB_Framework.IP_ADDRESS + "/db_signup.php",User.usercode,User.username,User.password,User.name,User.email);
+                    task.execute(DB_Framework.IP_ADDRESS + "/db_signup.php", User.usercode, User.username, User.password, User.name, User.email);
 
                     //테스트 용
-                    Intent intentMainActivity = new Intent(SignUpActivity.this, MainActivity.class);
-                    startActivity(intentMainActivity);
+//                    Intent intentMainActivity = new Intent(SignUpActivity.this, MainActivity.class);
+//                    startActivity(intentMainActivity);
 
                 }
             }
@@ -295,15 +311,33 @@ public class SignUpActivity extends AppCompatActivity {
     class InsertData extends AsyncTask<String, Void, String> {
 
         @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            String msg;
+
+            if (s.equals("true")) {
+                msg = getResources().getString(R.string.activity_signup_reg_result_true);
+
+                Intent intentMainActivity = new Intent(SignUpActivity.this, MainActivity.class);
+                startActivity(intentMainActivity);
+            } else {
+                msg = getResources().getString(R.string.activity_signup_reg_result_false);
+            }
+
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
         protected String doInBackground(String... params) {
 
-            String usercode = (String)params[1];
-            String username = (String)params[2];
-            String password = (String)params[3];
-            String name = (String)params[4];
-            String email = (String)params[5];
+            String usercode = (String) params[1];
+            String username = (String) params[2];
+            String password = (String) params[3];
+            String name = (String) params[4];
+            String email = (String) params[5];
 
-            String serverURL = (String)params[0];
+            String serverURL = (String) params[0];
             String postParameters = "usercode=" + usercode + "&username=" + username + "&password=" + password + "&name=" + name + "&email=" + email;
 
 
@@ -328,10 +362,9 @@ public class SignUpActivity extends AppCompatActivity {
                 Log.d(TAG, "POST response code - " + responseStatusCode);
 
                 InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                if (responseStatusCode == HttpURLConnection.HTTP_OK) {
                     inputStream = httpURLConnection.getInputStream();
-                }
-                else{
+                } else {
                     inputStream = httpURLConnection.getErrorStream();
                 }
 
@@ -342,13 +375,12 @@ public class SignUpActivity extends AppCompatActivity {
                 StringBuilder sb = new StringBuilder();
                 String line = null;
 
-                while((line = bufferedReader.readLine()) != null){
+                while ((line = bufferedReader.readLine()) != null) {
                     sb.append(line);
                 }
 
 
                 bufferedReader.close();
-
 
                 return sb.toString();
 

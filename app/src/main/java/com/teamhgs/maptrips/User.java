@@ -1,7 +1,14 @@
 package com.teamhgs.maptrips;
 
+import android.util.Log;
 import android.util.Patterns;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class User {
@@ -12,7 +19,10 @@ public class User {
     static String email = new String();
     static int year;
     static int month;
-    static String usercode = "Android";
+    static String usercode = new String();
+
+
+    private static Map<String, String> parameters;
 
     public static boolean chkUserNameLength(String username) {
         if (username.length() < 6 || username.length() > 14)
@@ -28,13 +38,25 @@ public class User {
         return true;
     }
 
-    public static boolean chkuserNameDB(String username) {
 
-        // 테스트 용
-        if (username.equals("dddddd")) {
-            return false;
+    public static class chkUsernameRequest extends StringRequest {
+
+        public chkUsernameRequest(String username, Response.Listener<String> listener){
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_chk_username.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("username", username);
+            }
+            catch (Exception e) {
+                Log.d("chkUsernameRequest", "parameter put error");
+            }
         }
-        return true;
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+
     }
 
     public static boolean isValidEmailAddress(String email) {

@@ -16,4 +16,6 @@
     <string name="activity_signup_email_sub">Please enter a valid email address.</string>
     <string name="activity_signup_username_verified">Is verified.</string>
     <string name="activity_signup_username_dup">Duplicated.</string>
+    <string name="activity_signup_reg_result_true">Registration completed.</string>
+    <string name="activity_signup_reg_result_false">Registration Failed.</string>
 </resources>
