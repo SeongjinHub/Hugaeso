@@ -319,8 +319,9 @@ public class SignUpActivity extends AppCompatActivity {
             if (s.equals("true")) {
                 msg = getResources().getString(R.string.activity_signup_reg_result_true);
 
-                Intent intentMainActivity = new Intent(SignUpActivity.this, MainActivity.class);
+                Intent intentMainActivity = new Intent(SignUpActivity.this, LoginActivity.class);
                 startActivity(intentMainActivity);
+                finish();
             } else {
                 msg = getResources().getString(R.string.activity_signup_reg_result_false);
             }
