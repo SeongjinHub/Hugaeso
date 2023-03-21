@@ -24,6 +24,7 @@ public class User {
 
     private static Map<String, String> parameters;
 
+    /** Username 길이 검증 Method **/
     public static boolean chkUserNameLength(String username) {
         if (username.length() < 6 || username.length() > 14)
             return false;
@@ -31,6 +32,7 @@ public class User {
         return true;
     }
 
+    /** Password 길이 검증 Method **/
     public static boolean chkPasswordLength(String password) {
         if (password.length() < 8 || password.length() > 16)
             return false;
@@ -39,6 +41,7 @@ public class User {
     }
 
 
+    /** User.Username 중복여부 확인을 위한 PHP POST를 수행 **/
     public static class chkUsernameRequest extends StringRequest {
 
         public chkUsernameRequest(String username, Response.Listener<String> listener){
@@ -59,6 +62,7 @@ public class User {
 
     }
 
+    /** E-mail 규칙확인 Method **/
     public static boolean isValidEmailAddress(String email) {
         boolean result = true;
 
@@ -74,6 +78,7 @@ public class User {
         }
     }
 
+    /** 로그인 시 'PHP'에 'POST' 하기위한 Class 및 Method **/
     public static class loginRequest extends StringRequest {
 
         public loginRequest(String username, String password, Response.Listener<String> listener){

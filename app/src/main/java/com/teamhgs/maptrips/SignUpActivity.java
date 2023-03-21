@@ -68,6 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
         int defaultTextColor = ContextCompat.getColor(getApplicationContext(), R.color.default_text_color);
         int correctColor = ContextCompat.getColor(getApplicationContext(), R.color.correct_color);
 
+        // .addTextChangedListener() 실시간 입력 값 검증
         editTextUsername.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -86,7 +87,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 User.username = editTextUsername.getText().toString();
 
-                //username 중복확인 검사
+                // DB접속을 통해 User.username 검증 (입력여부 및 길이검증 포함)
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -262,8 +263,6 @@ public class SignUpActivity extends AppCompatActivity {
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User.username = editTextUsername.getText().toString();
-                User.password = editTextPassword1.getText().toString();
 
                 userinfoAgr = checkBoxUserInfoAgr.isChecked();
 
@@ -279,15 +278,13 @@ public class SignUpActivity extends AppCompatActivity {
                     checkBoxUserInfoAgr.setTextColor(errColor);
                 } else {
 
+                    // DB INSERT Query 실행
                     InsertData task = new InsertData();
 
                     User.usercode = "Android";
                     User.usercode = User.usercode + LocalDate.now() + LocalTime.now();
                     task.execute(DB_Framework.IP_ADDRESS + "/db_signup.php", User.usercode, User.username, User.password, User.name, User.email);
 
-                    //테스트 용
-//                    Intent intentMainActivity = new Intent(SignUpActivity.this, MainActivity.class);
-//                    startActivity(intentMainActivity);
 
                 }
             }
@@ -295,6 +292,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
+    /** DB INSERT Query를 수행하는 Class 및 Method **/
     class InsertData extends AsyncTask<String, Void, String> {
 
         @Override

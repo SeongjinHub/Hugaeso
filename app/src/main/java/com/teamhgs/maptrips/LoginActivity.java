@@ -44,21 +44,23 @@ public class LoginActivity extends AppCompatActivity {
 
         Intent intentMainActivity = new Intent(LoginActivity.this, MainActivity.class);
 
-        //SharePreference Key-Value 쌍 비교를 통해 로그인 정보를 불러옴
+        // SharedPreference Key-Value 쌍 비교를 통해 로그인 정보를 불러옴
         SharedPreferences pref = getSharedPreferences("UserCode", Activity.MODE_PRIVATE);
 
         User.username = pref.getString("UserCode", "");
 
+        // 이전의 로그인 기록이 없는 경우 (SharedPref에 값이 없는 경우)
         if (User.username.length() == 0) {
             Log.d("Authentication failed. authInfo = ", User.usercode);
 
-            signInBtn.setVisibility(View.VISIBLE);
+            signInBtn.setVisibility(View.VISIBLE); //로그인 및 회원가입을 위한 UI 출력
             signUpBtn.setVisibility(View.VISIBLE);
             forgotBtn.setVisibility(View.VISIBLE);
 
             editTextUsername.setVisibility(View.VISIBLE);
             editTextPassword.setVisibility(View.VISIBLE);
 
+            // EditText 입력 값 변동 시 UI 초기화
             editTextUsername.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -72,8 +74,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    loginSub.setVisibility(View.GONE);
-                    editTextUsername.setBackground(editTextNormalUI);
+                    loginSub.setVisibility(View.GONE); // 로그인 오류 안내 숨기기
+                    editTextUsername.setBackground(editTextNormalUI); // EditText Style 초기화
 
                 }
             });
@@ -88,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 }
+
                 @Override
                 public void afterTextChanged(Editable s) {
                     loginSub.setVisibility(View.GONE);
@@ -123,13 +126,13 @@ public class LoginActivity extends AppCompatActivity {
 //                                        User.name = jsonResponse.getString("name");
 //                                        User.email = jsonResponse.getString("email");
                                         SharedPreferences.Editor editor = pref.edit();
-                                        editor.putString("UserCode", User.usercode);
+                                        editor.putString("UserCode", User.usercode); // SharedPref (Local) 에 User.usercode 저장
                                         editor.commit();
-                                        startActivity(intentMainActivity);
-                                        finish();
+                                        startActivity(intentMainActivity); // 메인화면으로 이동
+                                        finish(); // 뒤로가기를 통해 LoginActivity 재 접근 차단
                                     }
                                     else {
-                                        loginSub.setVisibility(View.VISIBLE);
+                                        loginSub.setVisibility(View.VISIBLE); // 로그인 오류 안내 출력
                                         editTextPassword.setBackground(editTextErrorUI);
                                     }
                                 } catch (JSONException e) {
