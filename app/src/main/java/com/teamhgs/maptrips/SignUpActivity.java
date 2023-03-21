@@ -50,8 +50,6 @@ public class SignUpActivity extends AppCompatActivity {
         EditText editTextEmail = (EditText) findViewById(R.id.editTextEmail);
 
         TextView textViewUsernameSub1 = (TextView) findViewById(R.id.textViewUsernameSub1);
-        TextView textViewUsernameSub2 = (TextView) findViewById(R.id.textViewUsernameSub2);
-        TextView textViewUsernameSub3 = (TextView) findViewById(R.id.textViewUsernameSub3);
 
         TextView textViewPasswordSub1 = (TextView) findViewById(R.id.textViewPasswordSub1);
         TextView textViewPasswordSub2 = (TextView) findViewById(R.id.textViewPasswordSub2);
@@ -88,9 +86,6 @@ public class SignUpActivity extends AppCompatActivity {
 
                 User.username = editTextUsername.getText().toString();
 
-                textViewUsernameSub3.setText(getResources().getString(R.string.activity_signup_username_verifying));
-
-
                 //username 중복확인 검사
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
@@ -102,31 +97,23 @@ public class SignUpActivity extends AppCompatActivity {
                             if (User.username.length() < 1) {
                                 editTextUsername.setBackground(editTextErrorUI);
                                 textViewUsernameSub1.setTextColor(errColor);
-                                textViewUsernameSub2.setTextColor(defaultTextColor);
-                                textViewUsernameSub3.setTextColor(defaultTextColor);
+                                textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_sub1));
                             }
                             else if (!User.chkUserNameLength(User.username)) {
                                 editTextUsername.setBackground(editTextErrorUI);
-                                textViewUsernameSub1.setTextColor(defaultTextColor);
-                                textViewUsernameSub2.setTextColor(errColor);
-                                textViewUsernameSub3.setTextColor(defaultTextColor);
+                                textViewUsernameSub1.setTextColor(errColor);
+                                textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_sub2));
                             }
                             else if (usernameNotDup) {
                                 editTextUsername.setBackground(editTextErrorUI);
-                                textViewUsernameSub1.setTextColor(defaultTextColor);
-                                textViewUsernameSub2.setTextColor(defaultTextColor);
-
-                                textViewUsernameSub3.setText(getResources().getString(R.string.activity_signup_username_dup));
-                                textViewUsernameSub3.setTextColor(errColor);
+                                textViewUsernameSub1.setTextColor(errColor);
+                                textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_dup));
                                 id = false; //중복될 경우
                             }
                             else {
                                 editTextUsername.setBackground(editTextNormalUI);
-                                textViewUsernameSub1.setTextColor(defaultTextColor);
-                                textViewUsernameSub2.setTextColor(defaultTextColor);
-
-                                textViewUsernameSub3.setText(getResources().getString(R.string.activity_signup_username_verified));
-                                textViewUsernameSub3.setTextColor(correctColor);
+                                textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_verified));
+                                textViewUsernameSub1.setTextColor(correctColor);
                                 id = true;
                             }
                         } catch (Exception e) {
