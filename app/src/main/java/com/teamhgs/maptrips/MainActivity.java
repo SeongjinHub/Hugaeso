@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -12,9 +13,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView textViewUsername = (TextView) findViewById(R.id.userNameText);
-
-        textViewUsername.setText(User.username);
+        //For Debug
+        Toast.makeText(getApplicationContext(), "UserCode = " + User.usercode, Toast.LENGTH_LONG).show();
 
     }
 }

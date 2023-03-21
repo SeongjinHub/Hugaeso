@@ -50,6 +50,18 @@
             android:inputType="textPassword"
             android:selectAllOnFocus="true" />
 
+        <TextView
+            android:id="@+id/textViewLoginSub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:textColor="@color/design_default_color_error"
+            android:text="@string/activity_login_sign_in_fail" />
+
         <Button
             android:id="@+id/buttonSignIn"
             android:layout_width="match_parent"
@@ -64,6 +76,18 @@
             android:text="@string/activity_login_sign_in_btn" />
 
         <Button
+            android:id="@+id/buttonForgot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:layout_marginTop="10dp"
+            android:background="#00000000"
+            android:textColor="@color/default_text_color"
+            android:textAllCaps="false"
+            android:visibility="invisible"
+            android:text="@string/activity_login_forgot" />
+
+        <Button
             android:id="@+id/buttonSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,5 +99,6 @@
             android:textColor="@color/white"
             android:textSize="9pt"
             android:text="@string/activity_login_sign_up_btn" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

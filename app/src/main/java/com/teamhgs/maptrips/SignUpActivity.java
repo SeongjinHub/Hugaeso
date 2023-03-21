@@ -93,7 +93,7 @@ public class SignUpActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             boolean usernameNotDup = jsonResponse.getBoolean("chkResult"); //DB에 중복될 시 true 반환
-//
+
                             if (User.username.length() < 1) {
                                 editTextUsername.setBackground(editTextErrorUI);
                                 textViewUsernameSub1.setTextColor(errColor);

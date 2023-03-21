@@ -7,11 +7,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -22,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Button signInBtn = (Button) findViewById(R.id.buttonSignIn);
         Button signUpBtn = (Button) findViewById(R.id.buttonSignUp);
+        Button forgotBtn = (Button) findViewById(R.id.buttonForgot);
 
         EditText editTextUsername = (EditText) findViewById(R.id.editTextUserName);
         EditText editTextPassword = (EditText) findViewById(R.id.editTextPassword1);
@@ -29,36 +40,58 @@ public class LoginActivity extends AppCompatActivity {
         Drawable editTextNormalUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner);
         Drawable editTextErrorUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner_err);
 
+        TextView loginSub = (TextView)  findViewById(R.id.textViewLoginSub);
+
         Intent intentMainActivity = new Intent(LoginActivity.this, MainActivity.class);
 
         //SharePreference Key-Value 쌍 비교를 통해 로그인 정보를 불러옴
-        SharedPreferences pref = getSharedPreferences("UserName", Activity.MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences("UserCode", Activity.MODE_PRIVATE);
 
-        User.username = pref.getString("UserName", "");
+        User.username = pref.getString("UserCode", "");
 
         if (User.username.length() == 0) {
-            Log.d("Authentication failed. authInfo = ", User.username);
+            Log.d("Authentication failed. authInfo = ", User.usercode);
 
             signInBtn.setVisibility(View.VISIBLE);
             signUpBtn.setVisibility(View.VISIBLE);
+            forgotBtn.setVisibility(View.VISIBLE);
+
             editTextUsername.setVisibility(View.VISIBLE);
             editTextPassword.setVisibility(View.VISIBLE);
 
-            editTextUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            editTextUsername.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void onFocusChange(View view, boolean b) {
-                    if (b) {
-                        editTextUsername.setBackground(editTextNormalUI);
-                    }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    loginSub.setVisibility(View.GONE);
+                    editTextUsername.setBackground(editTextNormalUI);
+
                 }
             });
 
-            editTextPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            editTextPassword.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void onFocusChange(View view, boolean b) {
-                    if (b) {
-                        editTextPassword.setBackground(editTextNormalUI);
-                    }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+                @Override
+                public void afterTextChanged(Editable s) {
+                    loginSub.setVisibility(View.GONE);
+                    editTextPassword.setBackground(editTextNormalUI);
                 }
             });
 
@@ -70,28 +103,45 @@ public class LoginActivity extends AppCompatActivity {
                     User.password = editTextPassword.getText().toString();
 
                     if (!User.chkUserNameLength(User.username)) {
+                        loginSub.setVisibility(View.VISIBLE);
                         editTextUsername.setBackground(editTextErrorUI);
                     }
                     else if (!User.chkPasswordLength(User.password)) {
+                        loginSub.setVisibility(View.VISIBLE);
                         editTextPassword.setBackground(editTextErrorUI);
                     }
                     else {
-                        boolean dbAuthResult = true;
-                        //boolean dbAuthResult = false;
+                        Response.Listener<String>   responseListener = new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONObject jsonResponse = new JSONObject(response);
+                                    boolean loginResult = jsonResponse.getBoolean("loginResult");
+                                    if (loginResult) {
+                                        User.usercode = jsonResponse.getString("usercode");
+//                                        User.username = jsonResponse.getString("username");
+//                                        User.name = jsonResponse.getString("name");
+//                                        User.email = jsonResponse.getString("email");
+                                        SharedPreferences.Editor editor = pref.edit();
+                                        editor.putString("UserCode", User.usercode);
+                                        editor.commit();
+                                        startActivity(intentMainActivity);
+                                        finish();
+                                    }
+                                    else {
+                                        loginSub.setVisibility(View.VISIBLE);
+                                        editTextPassword.setBackground(editTextErrorUI);
+                                    }
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        };
 
-                        //DB서버 내 사용자 정보와 비교하는 과정 코드가 필요함
-                        //인증 값이 참일 경우
-                        if (dbAuthResult) {
-                            //인증값이 참일 경우 로컬 앱 데이터에 Username을 저장한 후 메인 액티비티로 이동
-                            SharedPreferences.Editor editor = pref.edit();
-                            editor.putString("UserName", User.username);
-                            editor.commit();
-                            startActivity(intentMainActivity);
-                            finish();
-                        }
-                        else {
-                            editTextPassword.setBackground(editTextErrorUI);
-                        }
+                        User.loginRequest Request = new User.loginRequest(User.username, User.password ,responseListener);
+                        RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+                        queue.add(Request);
+
                     }
                 }
             });
@@ -105,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
             });
         } else {
             //이전에 로그인 한 기록이 있을 경우 메인 액티비티로 바로 이동
-            Log.d("Authentication succeeded. userName = ", String.valueOf(User.username));
+            Log.d("Authentication succeeded. UserCode = ", String.valueOf(User.usercode));
             startActivity(intentMainActivity);
             finish();
         }

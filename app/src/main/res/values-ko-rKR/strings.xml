@@ -19,4 +19,6 @@
     <string name="activity_signup_username_dup">사용할 수 없는 사용자 이름입니다.</string>
     <string name="activity_signup_reg_result_true">회원가입이 완료되었습니다.</string>
     <string name="activity_signup_reg_result_false">회원가입에 실패하였습니다.</string>
+    <string name="activity_login_forgot">계정 찾기</string>
+    <string name="activity_login_sign_in_fail">로그인에 실패하였습니다.</string>
 </resources>

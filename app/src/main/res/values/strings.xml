@@ -18,4 +18,6 @@
     <string name="activity_signup_username_dup">Duplicated.</string>
     <string name="activity_signup_reg_result_true">Registration completed.</string>
     <string name="activity_signup_reg_result_false">Registration Failed.</string>
+    <string name="activity_login_forgot">Forgot?</string>
+    <string name="activity_login_sign_in_fail">Sign in failed. Please check USERNAME and PASSWORD</string>
 </resources>

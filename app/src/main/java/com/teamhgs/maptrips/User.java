@@ -74,4 +74,25 @@ public class User {
         }
     }
 
+    public static class loginRequest extends StringRequest {
+
+        public loginRequest(String username, String password, Response.Listener<String> listener){
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_login.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("username", username);
+                parameters.put("password", password);
+            }
+            catch (Exception e) {
+                Log.d("loginRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+
+    }
+
 }
