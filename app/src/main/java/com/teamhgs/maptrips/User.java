@@ -25,22 +25,34 @@ public class User {
 
     private static Map<String, String> parameters;
 
-    /** Username 길이 검증 Method **/
-    public static boolean chkUserNameLength(String username) {
-        if (username.length() < 6 || username.length() > 14)
-            return false;
+    /** 6-14자리 소문자, 숫자, 특수문자 - _ . 허용 **/
+    public static boolean chkUsernameRegEx(String username) {
+        String pattern = "[a-z\\d\\-_.]{6,14}";
 
-        return true;
+        if (Pattern.matches(pattern, username))
+            return true;
+        else
+            return false;
     }
 
-    /** Password 길이 검증 Method **/
-    public static boolean chkPasswordLength(String password) {
-        if (password.length() < 8 || password.length() > 16)
-            return false;
+    /** 8-16자리 문자, 숫자, 특수문자 포함 여부 확인 **/
+    public static boolean chkPasswordRegEx(String password) {
+        String pattern = "^.*(?=^.{8,16}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=]).*$";
 
-        return true;
+        if (Pattern.matches(pattern, password))
+            return true;
+        else
+            return false;
     }
 
+    public static boolean chkNameRegEx(String name) {
+        String pattern = "[A-Za-z가-힣\\d\\-_.]{2,20}";
+
+        if (Pattern.matches(pattern, name))
+            return true;
+        else
+            return false;
+    }
 
     /** User.Username 중복여부 확인을 위한 PHP POST를 수행 **/
     public static class chkUsernameRequest extends StringRequest {

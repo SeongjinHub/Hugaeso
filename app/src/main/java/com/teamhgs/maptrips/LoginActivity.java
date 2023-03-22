@@ -105,11 +105,11 @@ public class LoginActivity extends AppCompatActivity {
                     User.username = editTextUsername.getText().toString();
                     User.password = editTextPassword.getText().toString();
 
-                    if (!User.chkUserNameLength(User.username)) {
+                    if (!User.chkUsernameRegEx(User.username)) {
                         loginSub.setVisibility(View.VISIBLE);
                         editTextUsername.setBackground(editTextErrorUI);
                     }
-                    else if (!User.chkPasswordLength(User.password)) {
+                    else if (!User.chkPasswordRegEx(User.password)) {
                         loginSub.setVisibility(View.VISIBLE);
                         editTextPassword.setBackground(editTextErrorUI);
                     }

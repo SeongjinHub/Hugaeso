@@ -100,7 +100,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 textViewUsernameSub1.setTextColor(errColor);
                                 textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_sub1));
                             }
-                            else if (!User.chkUserNameLength(User.username)) {
+                            else if (!User.chkUsernameRegEx(User.username)) {
                                 editTextUsername.setBackground(editTextErrorUI);
                                 textViewUsernameSub1.setTextColor(errColor);
                                 textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_sub2));
@@ -150,7 +150,7 @@ public class SignUpActivity extends AppCompatActivity {
                 User.password = editTextPassword1.getText().toString();
                 String password2 = editTextPassword2.getText().toString();
 
-                if (!User.chkPasswordLength(User.password)) {
+                if (!User.chkPasswordRegEx(User.password)) {
                     editTextPassword1.setBackground(editTextErrorUI);
                     textViewPasswordSub1.setTextColor(errColor);
                 } else {
@@ -217,7 +217,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 User.name = editTextName.getText().toString();
 
-                if (User.name.length() < 1) {
+                if (!User.chkNameRegEx(User.name)) {
                     editTextName.setBackground(editTextErrorUI);
                     textViewNameSub.setVisibility(View.VISIBLE);
                 } else {
@@ -280,7 +280,7 @@ public class SignUpActivity extends AppCompatActivity {
                     InsertData task = new InsertData();
 
                     User.usercode = "Android";
-                    User.usercode = User.usercode + LocalDate.now() + LocalTime.now();
+                    User.usercode = User.usercode + LocalDate.now() + "." + LocalTime.now();
                     task.execute(DB_Framework.IP_ADDRESS + "/db_signup.php", User.usercode, User.username, User.password, User.name, User.email);
 
 
