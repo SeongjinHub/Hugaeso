@@ -36,7 +36,7 @@ import java.time.LocalTime;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    boolean id, pw, name, email, userinfoAgr = false;
+    boolean id, pw, name, email = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,8 +264,6 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                userinfoAgr = checkBoxUserInfoAgr.isChecked();
-
                 if (!id) {
                     editTextUsername.setBackground(editTextErrorUI);
                 } else if (!pw) {
@@ -274,7 +272,7 @@ public class SignUpActivity extends AppCompatActivity {
                     editTextName.setBackground(editTextErrorUI);
                 } else if (!email) {
                     editTextEmail.setBackground(editTextErrorUI);
-                } else if (!userinfoAgr) {
+                } else if (!checkBoxUserInfoAgr.isChecked()) {
                     checkBoxUserInfoAgr.setTextColor(errColor);
                 } else {
 
@@ -293,7 +291,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     /** DB INSERT Query를 수행하는 Class 및 Method **/
-    class InsertData extends AsyncTask<String, Void, String> {
+    private class InsertData extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPostExecute(String s) {

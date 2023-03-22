@@ -17,6 +17,7 @@ public class User {
     static String password = new String();
     static String name = new String();
     static String email = new String();
+    static String country = new String();
     static int year;
     static int month;
     static String usercode = new String();
