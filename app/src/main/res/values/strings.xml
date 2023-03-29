@@ -20,4 +20,5 @@
     <string name="activity_signup_reg_result_false">Registration Failed.</string>
     <string name="activity_login_forgot">Forgot?</string>
     <string name="activity_login_sign_in_fail">Sign in failed. Please check USERNAME and PASSWORD</string>
+    <string name="activity_signup_cancel">Cancel</string>
 </resources>

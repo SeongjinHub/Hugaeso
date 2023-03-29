@@ -3,102 +3,127 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="20dp">
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/AppIcon"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="50dp"
-            android:layout_gravity="center"
-            android:src="@drawable/sample_img" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/app_main_color"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/app_main_color"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="180dp"
+                android:src="@drawable/sample_img" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="Welcome"
+                android:textAlignment="center"
+                android:textColor="@color/default_text_color_white"
+                android:textSize="10pt" />
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/editTextUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginTop="30dp"
             android:layout_marginRight="30dp"
-            android:padding="10dp"
-            android:visibility="invisible"
+            android:background="@drawable/edittext_login_ui_rounded_corner"
             android:ems="10"
             android:hint="USERNAME"
-            android:background="@drawable/edittext_login_ui_rounded_corner"
-            android:inputType="text" />
+            android:inputType="text"
+            android:padding="15dp"
+            android:visibility="invisible" />
 
         <EditText
             android:id="@+id/editTextPassword1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="30dp"
-            android:padding="10dp"
-            android:visibility="invisible"
+            android:background="@drawable/edittext_login_ui_rounded_corner"
             android:ems="10"
             android:hint="PASSWORD"
-            android:background="@drawable/edittext_login_ui_rounded_corner"
             android:inputType="textPassword"
-            android:selectAllOnFocus="true" />
+            android:padding="15dp"
+            android:selectAllOnFocus="true"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/textViewLoginSub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="30dp"
+            android:text="@string/activity_login_sign_in_fail"
             android:textAlignment="center"
-            android:visibility="gone"
             android:textColor="@color/design_default_color_error"
-            android:text="@string/activity_login_sign_in_fail" />
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/buttonSignIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginTop="30dp"
             android:layout_marginRight="30dp"
-            android:visibility="invisible"
             android:background="@drawable/btn_login_ui_sign_in"
+            android:text="@string/activity_login_sign_in_btn"
             android:textColor="@color/white"
             android:textSize="9pt"
-            android:text="@string/activity_login_sign_in_btn" />
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/buttonForgot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="0dp"
             android:layout_marginTop="10dp"
             android:background="#00000000"
-            android:textColor="@color/default_text_color"
+            android:minHeight="0dp"
+            android:text="@string/activity_login_forgot"
             android:textAllCaps="false"
-            android:visibility="invisible"
-            android:text="@string/activity_login_forgot" />
+            android:layout_gravity="center"
+            android:textColor="@color/default_text_color"
+            android:visibility="invisible" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
         <Button
             android:id="@+id/buttonSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:visibility="invisible"
+            android:layout_margin="30dp"
             android:background="@drawable/btn_login_ui_sign_up"
+            android:text="@string/activity_login_sign_up_btn"
             android:textColor="@color/white"
             android:textSize="9pt"
-            android:text="@string/activity_login_sign_up_btn" />
+            android:visibility="invisible" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
