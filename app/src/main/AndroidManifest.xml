@@ -18,7 +18,7 @@
         <activity
             android:name=".SignUpActivityV2"
             android:exported="false"
-            android:theme="@style/Theme.Maptrips.Login"/>
+            android:theme="@style/Theme.Maptrips.Login" />
         <activity
             android:name=".SignUpActivity"
             android:exported="false" />
@@ -27,8 +27,7 @@
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Maptrips.Login">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -48,6 +50,8 @@ public class SignUpActivityV2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_main);
 
+        overridePendingTransition(R.anim.none, R.anim.none);
+
         ViewGroup container = (ViewGroup) findViewById(R.id.container);
 
         Button buttonCancel = (Button) findViewById(R.id.button_cancel);
@@ -64,8 +68,13 @@ public class SignUpActivityV2 extends AppCompatActivity {
 
         layoutInflater.inflate(R.layout.activity_sign_up_username, container, true);
 
+        Animation fade_in = AnimationUtils.loadAnimation(SignUpActivityV2.this, R.anim.fade_in);
+
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) EditText editTextUsername = (EditText) findViewById(R.id.editTextUserName);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView textViewUsernameSub1 = (TextView) findViewById(R.id.textViewUsernameSub1);
+
+        editTextUsername.startAnimation(fade_in);
+        textViewUsernameSub1.startAnimation(fade_in);
 
         // .addTextChangedListener() 실시간 입력 값 검증
         editTextUsername.addTextChangedListener(new TextWatcher() {
@@ -83,7 +92,6 @@ public class SignUpActivityV2 extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
 
                 id = false;
-                buttonConfirm.setVisibility(View.INVISIBLE);
 
                 User.username = editTextUsername.getText().toString();
 
@@ -99,16 +107,19 @@ public class SignUpActivityV2 extends AppCompatActivity {
                                 editTextUsername.setBackground(editTextErrorUI);
                                 textViewUsernameSub1.setTextColor(errColor);
                                 textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_sub1));
+                                buttonConfirm.setVisibility(View.INVISIBLE);
                             }
                             else if (!User.chkUsernameRegEx(User.username)) {
                                 editTextUsername.setBackground(editTextErrorUI);
                                 textViewUsernameSub1.setTextColor(errColor);
                                 textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_sub2));
+                                buttonConfirm.setVisibility(View.INVISIBLE);
                             }
                             else if (usernameNotDup) {
                                 editTextUsername.setBackground(editTextErrorUI);
                                 textViewUsernameSub1.setTextColor(errColor);
                                 textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_dup)); //중복될 경우
+                                buttonConfirm.setVisibility(View.INVISIBLE);
                             }
                             else {
                                 editTextUsername.setBackground(editTextNormalUI);
@@ -134,12 +145,14 @@ public class SignUpActivityV2 extends AppCompatActivity {
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                buttonConfirm.setVisibility(View.INVISIBLE);
                 if (step == 0 && id) {
                     step = 1;
-                    buttonConfirm.setVisibility(View.INVISIBLE);
 
                     container.removeAllViews();
                     layoutInflater.inflate(R.layout.activity_sign_up_password, container, true);
+                    Animation anim = AnimationUtils.loadAnimation(SignUpActivityV2.this, R.anim.slide_left_enter);
+                    container.startAnimation(anim);
 
                     EditText editTextPassword1 = (EditText) findViewById(R.id.editTextPassword1);
                     EditText editTextPassword2 = (EditText) findViewById(R.id.editTextPassword2);
@@ -207,7 +220,7 @@ public class SignUpActivityV2 extends AppCompatActivity {
                             User.password = editTextPassword1.getText().toString();
                             String password2 = editTextPassword2.getText().toString();
 
-                            if (!User.password.equals(password2)) {
+                            if (!User.password.equals(password2) || User.password.length() < 1) {
                                 editTextPassword2.setBackground(editTextErrorUI);
                                 textViewPasswordSub2.setTextColor(errColor);
                             } else {
@@ -224,6 +237,9 @@ public class SignUpActivityV2 extends AppCompatActivity {
 
                     container.removeAllViews();
                     layoutInflater.inflate(R.layout.activity_sign_up_userinfo, container, true);
+
+                    Animation anim = AnimationUtils.loadAnimation(SignUpActivityV2.this, R.anim.slide_left_enter);
+                    container.startAnimation(anim);
 
                     EditText editTextName = (EditText) findViewById(R.id.editTextName);
                     EditText editTextEmail = (EditText) findViewById(R.id.editTextEmail);
@@ -311,11 +327,16 @@ public class SignUpActivityV2 extends AppCompatActivity {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentLoginActivity = new Intent(SignUpActivityV2.this, LoginActivity.class);
-                startActivity(intentLoginActivity);
+                Intent loginActivity = new Intent(SignUpActivityV2.this, LoginActivity.class);
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(R.anim.none, R.anim.none);
     }
 
     /** DB INSERT Query를 수행하는 Class 및 Method **/

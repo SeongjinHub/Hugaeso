@@ -44,6 +44,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/title_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -51,11 +52,13 @@
             android:background="@color/app_main_color">
 
             <ImageView
+                android:id="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="180dp"
                 android:src="@drawable/sample_img" />
 
             <TextView
+                android:id="@+id/sub_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Welcome"

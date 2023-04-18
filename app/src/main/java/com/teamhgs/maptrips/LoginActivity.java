@@ -13,8 +13,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -38,8 +42,13 @@ public class LoginActivity extends AppCompatActivity {
         EditText editTextUsername = (EditText) findViewById(R.id.editTextUserName);
         EditText editTextPassword = (EditText) findViewById(R.id.editTextPassword1);
 
+        LinearLayout parent_area = (LinearLayout) findViewById(R.id.parent_area);
+
         Drawable editTextNormalUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner);
         Drawable editTextErrorUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner_err);
+
+        Animation fade_in = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade_in);
+        Animation fade_out = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade_out);
 
         TextView loginSub = (TextView)  findViewById(R.id.textViewLoginSub);
 
@@ -54,12 +63,22 @@ public class LoginActivity extends AppCompatActivity {
         if (User.usercode.length() == 0) {
             Log.d("Authentication failed. authInfo = ", User.usercode);
 
+            getWindow().setStatusBarColor(getResources().getColor(R.color.app_main_color));
+
+            parent_area.setVisibility(View.VISIBLE);
+            parent_area.startAnimation(fade_in);
+
             signInBtn.setVisibility(View.VISIBLE); //로그인 및 회원가입을 위한 UI 출력
-            signUpBtn.setVisibility(View.VISIBLE);
             forgotBtn.setVisibility(View.VISIBLE);
+            signUpBtn.setVisibility(View.VISIBLE);
+            signInBtn.startAnimation(fade_in);
+            forgotBtn.startAnimation(fade_in);
+            signUpBtn.startAnimation(fade_in);
 
             editTextUsername.setVisibility(View.VISIBLE);
             editTextPassword.setVisibility(View.VISIBLE);
+            editTextUsername.startAnimation(fade_in);
+            editTextPassword.startAnimation(fade_in);
 
             // EditText 입력 값 변동 시 UI 초기화
             editTextUsername.addTextChangedListener(new TextWatcher() {
@@ -182,6 +201,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intentSignUpActivity);
                 }
             });
+
         } else {
             /* Usercode와 Device ID값을 DB에 검색하여 인증값(Auth)이 참인지 확인합니다.
              * Value of "auth"
