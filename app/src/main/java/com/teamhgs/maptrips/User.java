@@ -7,6 +7,9 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -21,6 +24,7 @@ public class User {
     static int year;
     static int month;
     static String usercode = new String();
+    static String deviceinfo = new String();
 
 
     private static Map<String, String> parameters;
@@ -113,4 +117,48 @@ public class User {
 
     }
 
+    public static class savedLoginRequest extends StringRequest {
+
+        public savedLoginRequest(String usercode, String deviceinfo, int auth, Response.Listener<String> listener){
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_saved_login.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("usercode", usercode);
+                parameters.put("deviceinfo", deviceinfo);
+                parameters.put("auth", String.valueOf(auth));
+            }
+            catch (Exception e) {
+                Log.d("savedLoginRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+
+    }
+
+    public static class insertSavedLoginRequest extends StringRequest {
+
+        public insertSavedLoginRequest(String usercode, String deviceinfo, int auth, Response.Listener<String> listener){
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_saved_login_insert.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("usercode", usercode);
+                parameters.put("deviceinfo", deviceinfo);
+                parameters.put("auth", String.valueOf(auth));
+                parameters.put("datetime", (LocalDate.now() + "." + LocalTime.now()));
+            }
+            catch (Exception e) {
+                Log.d("insertSavedLoginRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+
+    }
 }

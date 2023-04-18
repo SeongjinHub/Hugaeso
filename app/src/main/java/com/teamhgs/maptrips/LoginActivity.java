@@ -3,10 +3,12 @@ package com.teamhgs.maptrips;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -45,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intentMainActivity = new Intent(LoginActivity.this, MainActivity.class);
 
         // SharedPreference Key-Value 쌍 비교를 통해 로그인 정보를 불러옴
-        SharedPreferences pref = getSharedPreferences("UserCode", Activity.MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences("com.teamhgs.maptrips.user", Activity.MODE_PRIVATE);
 
         User.username = pref.getString("UserCode", "");
 
@@ -114,25 +116,50 @@ public class LoginActivity extends AppCompatActivity {
                         editTextPassword.setBackground(editTextErrorUI);
                     }
                     else {
-                        Response.Listener<String>   responseListener = new Response.Listener<String>() {
+
+                        /* Username과 Password가 DB에 저장된 값과 일치하는 지 확인합니다. */
+                        Response.Listener<String> responseListener = new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 try {
                                     JSONObject jsonResponse = new JSONObject(response);
-                                    boolean loginResult = jsonResponse.getBoolean("loginResult");
-                                    if (loginResult) {
+                                    boolean loginResult = jsonResponse.getBoolean("responseResult");
+
+                                    if (loginResult) { // 일치할 경우
                                         User.usercode = jsonResponse.getString("usercode");
 //                                        User.username = jsonResponse.getString("username");
 //                                        User.name = jsonResponse.getString("name");
 //                                        User.email = jsonResponse.getString("email");
-                                        SharedPreferences.Editor editor = pref.edit();
-                                        editor.putString("UserCode", User.usercode); // SharedPref (Local) 에 User.usercode 저장
-                                        editor.commit();
-                                        startActivity(intentMainActivity); // 메인화면으로 이동
-                                        finish(); // 뒤로가기를 통해 LoginActivity 재 접근 차단
+
+                                        /* DB에 Usercode, Device ID, DateTime, Auth 정보를 기록합니다. */
+                                        Response.Listener<String> responseListener2 = new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                try {
+                                                    JSONObject jsonResponse2 = new JSONObject(response);
+                                                    boolean result = jsonResponse2.getBoolean("responseResult");
+
+                                                    if (result) {
+                                                        SharedPreferences.Editor editor = pref.edit();
+                                                        editor.putString("UserCode", User.usercode); // 내부 저장소에 Usercode를 저장합니다.
+                                                        editor.commit();
+                                                        startActivity(intentMainActivity); // 메인화면으로 이동
+                                                        finish(); // 뒤로가기를 통해 LoginActivity 재 접근 차단
+                                                    }
+                                                    else {
+
+                                                    }
+                                                } catch (JSONException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            }
+                                        };
+                                        User.insertSavedLoginRequest request = new User.insertSavedLoginRequest(User.usercode, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), 1, responseListener2);
+                                        RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+                                        queue.add(request);
                                     }
                                     else {
-                                        loginSub.setVisibility(View.VISIBLE); // 로그인 오류 안내 출력
+                                        loginSub.setVisibility(View.VISIBLE); // 로그인 오류 안내를 출력합니다.
                                         editTextPassword.setBackground(editTextErrorUI);
                                     }
                                 } catch (JSONException e) {
@@ -141,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         };
 
-                        User.loginRequest Request = new User.loginRequest(User.username, User.password ,responseListener);
+                        User.loginRequest Request = new User.loginRequest(User.username, User.password, responseListener);
                         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                         queue.add(Request);
 
@@ -157,10 +184,41 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         } else {
-            //이전에 로그인 한 기록이 있을 경우 메인 액티비티로 바로 이동
-            Log.d("Authentication succeeded. UserCode = ", String.valueOf(User.usercode));
-            startActivity(intentMainActivity);
-            finish();
+            /* Usercode와 Device ID값을 DB에 검색하여 인증값(Auth)이 참인지 확인합니다.
+             * Value of "auth"
+             * 1 - true
+             * 2 - false
+             * 인증에 실패하면 내부 저장공간에 저장된 Usercode 값을 초기화 하고 액티비티를 재실행합니다. */
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean result = jsonResponse.getBoolean("responseResult");
+                        if(result) {
+                            Log.d("Authentication succeeded. UserCode = ", String.valueOf(User.usercode));
+                            startActivity(intentMainActivity);
+                            finish();
+                        }
+                        else {
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("UserCode", "");
+                            editor.commit();
+                            for (int i = 0; i < 1; i++) {
+                                startActivity(new Intent(LoginActivity.this, LoginActivity.class));
+                                finish();
+                            }
+
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            };
+
+            User.savedLoginRequest Request = new User.savedLoginRequest(User.usercode, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), 1, responseListener);
+            RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+            queue.add(Request);
         }
     }
 }
