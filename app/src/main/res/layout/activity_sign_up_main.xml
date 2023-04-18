@@ -13,7 +13,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/app_header"
             android:orientation="horizontal"
             android:gravity="center"
             android:padding="10dp"
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:text="Sign UP"
                 android:textAllCaps="true"
-                android:textSize="10pt"
+                android:textSize="@dimen/app_header_fontsize"
                 android:textColor="@color/default_text_color_white"
                 android:visibility="invisible"/>
             <View

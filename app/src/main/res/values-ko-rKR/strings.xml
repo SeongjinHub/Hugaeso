@@ -22,4 +22,9 @@
     <string name="activity_login_forgot">계정 찾기</string>
     <string name="activity_login_sign_in_fail">로그인에 실패하였습니다.</string>
     <string name="activity_signup_cancel">취소</string>
+    <string name="bottom_feed">피드</string>
+    <string name="bottom_search">검색</string>
+    <string name="bottom_write">추가</string>
+    <string name="bottom_folder">폴더</string>
+    <string name="bottom_mypage">내 정보</string>
 </resources>

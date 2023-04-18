@@ -21,4 +21,9 @@
     <string name="activity_login_forgot">Forgot?</string>
     <string name="activity_login_sign_in_fail">Sign in failed. Please check USERNAME and PASSWORD</string>
     <string name="activity_signup_cancel">Cancel</string>
+    <string name="bottom_feed">Feed</string>
+    <string name="bottom_search">Search</string>
+    <string name="bottom_write">Write</string>
+    <string name="bottom_folder">Folder</string>
+    <string name="bottom_mypage">My</string>
 </resources>

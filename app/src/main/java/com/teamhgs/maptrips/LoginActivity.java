@@ -3,7 +3,6 @@ package com.teamhgs.maptrips;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -44,15 +43,15 @@ public class LoginActivity extends AppCompatActivity {
 
         TextView loginSub = (TextView)  findViewById(R.id.textViewLoginSub);
 
-        Intent intentMainActivity = new Intent(LoginActivity.this, MainActivity.class);
+        Intent intentMainActivity = new Intent(LoginActivity.this, FolderActivity.class);
 
         // SharedPreference Key-Value 쌍 비교를 통해 로그인 정보를 불러옴
         SharedPreferences pref = getSharedPreferences("com.teamhgs.maptrips.user", Activity.MODE_PRIVATE);
 
-        User.username = pref.getString("UserCode", "");
+        User.usercode = pref.getString("UserCode", "");
 
         // 이전의 로그인 기록이 없는 경우 (SharedPref에 값이 없는 경우)
-        if (User.username.length() == 0) {
+        if (User.usercode.length() == 0) {
             Log.d("Authentication failed. authInfo = ", User.usercode);
 
             signInBtn.setVisibility(View.VISIBLE); //로그인 및 회원가입을 위한 UI 출력

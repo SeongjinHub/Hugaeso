@@ -19,4 +19,5 @@
     <color name="default_text_color">#80000000</color>
     <color name="default_text_color_white">#FFFFFFFF</color>
     <color name="correct_color">#00D16B</color>
+    <color name="divider">#20000000</color>
 </resources>
