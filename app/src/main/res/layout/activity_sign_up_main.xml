@@ -63,7 +63,7 @@
                 android:id="@+id/sub_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Welcome"
+                android:text="Sign Up!"
                 android:textAlignment="center"
                 android:textSize="10pt"
                 android:layout_margin="15dp"

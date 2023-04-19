@@ -215,4 +215,23 @@ public class User implements Serializable {
         }
 
     }
+
+    public static class getUserinfoRequest extends StringRequest {
+
+        public getUserinfoRequest(String usercode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_get_userinfo.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("usercode", usercode);
+            } catch (Exception e) {
+                Log.d("getUserinfoRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+
+    }
 }

@@ -2,53 +2,34 @@ package com.teamhgs.maptrips;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class FolderActivity extends AppCompatActivity {
+public class MypageActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_folder);
+        setContentView(R.layout.activity_mypage);
         overridePendingTransition(R.anim.none, R.anim.none);
 
         User defaultUser = (User) getIntent().getSerializableExtra("defaultUser");
 
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    boolean result = jsonResponse.getBoolean("responseResult");
+        TextView header_title = (TextView) findViewById(R.id.header_title_text);
 
-                    if (result) {
-                        defaultUser.setUsername(jsonResponse.getString("username"));
-                        defaultUser.setName(jsonResponse.getString("name"));
-                        defaultUser.setEmail(jsonResponse.getString("email"));
-                    }
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
-        User.getUserinfoRequest request = new User.getUserinfoRequest(defaultUser.getUsercode(), responseListener);
-        RequestQueue queue = Volley.newRequestQueue(FolderActivity.this);
-        queue.add(request);
+        header_title.setText("@"  + defaultUser.getUsername());
+
 
         //For Debug
-        Toast.makeText(getApplicationContext(), "UserCode = " + defaultUser.getUsercode(), Toast.LENGTH_LONG).show();
+        String temp = defaultUser.getUsercode() + " " + defaultUser.getUsername() + " " + defaultUser.getName() + " " + defaultUser.getEmail();
+        Toast.makeText(getApplicationContext(), "Userinfo = " + temp, Toast.LENGTH_LONG).show();
 
         Button btm_feed_btn = (Button) findViewById(R.id.feedButton);
         Button btm_search_btn = (Button) findViewById(R.id.searchButton);
@@ -80,17 +61,37 @@ public class FolderActivity extends AppCompatActivity {
         btm_folder_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MypageActivity.this, FolderActivity.class);
+                intent.putExtra("defaultUser", defaultUser);
+                startActivity(intent);
+                finish();
             }
         });
 
         btm_mypage_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FolderActivity.this, MypageActivity.class);
+                Intent intent = new Intent(MypageActivity.this, MypageActivity.class);
                 intent.putExtra("defaultUser", defaultUser);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        ImageButton header_setting_btn = (ImageButton) findViewById(R.id.settingButton);
+
+        header_setting_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SharedPreferences pref = getSharedPreferences("com.teamhgs.maptrips.user", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("UserCode", "");
+                editor.commit();
+
+                startActivity(new Intent(MypageActivity.this, LoginActivity.class));
+                finish();
+
             }
         });
     }

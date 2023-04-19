@@ -2,6 +2,7 @@
 <resources>
     <dimen name="app_header">60dp</dimen>
     <dimen name="app_header_fontsize">11pt</dimen>
+    <dimen name="app_header_btn_size">50dp</dimen>
     <dimen name="app_bottom">70dp</dimen>
     <dimen name="app_bottom_imgsize">40dp</dimen>
     <dimen name="app_bottom_fontsize">4pt</dimen>
