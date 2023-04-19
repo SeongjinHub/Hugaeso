@@ -68,15 +68,15 @@ public class MypageActivity extends AppCompatActivity {
             }
         });
 
-        btm_mypage_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MypageActivity.this, MypageActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
-                startActivity(intent);
-                finish();
-            }
-        });
+//        btm_mypage_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(MypageActivity.this, MypageActivity.class);
+//                intent.putExtra("defaultUser", defaultUser);
+//                startActivity(intent);
+//                finish();
+//            }
+//        });
 
         ImageButton header_setting_btn = (ImageButton) findViewById(R.id.settingButton);
 

@@ -77,12 +77,12 @@ public class FolderActivity extends AppCompatActivity {
             }
         });
 
-        btm_folder_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        btm_folder_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
         btm_mypage_btn.setOnClickListener(new View.OnClickListener() {
             @Override
