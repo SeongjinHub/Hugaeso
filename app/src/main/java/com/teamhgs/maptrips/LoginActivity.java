@@ -27,6 +27,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.NoSuchAlgorithmException;
+
 public class LoginActivity extends AppCompatActivity {
 
     @Override
@@ -133,6 +135,12 @@ public class LoginActivity extends AppCompatActivity {
                         editTextPassword.setBackground(editTextErrorUI);
                     }
                     else {
+
+                        try {
+                            defaultUser.setPassword(User.SHA256.encrypt(defaultUser.getUsername() + defaultUser.getPassword()));
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new RuntimeException(e);
+                        }
 
                         /* Username과 Password가 DB에 저장된 값과 일치하는 지 확인합니다. */
                         Response.Listener<String> responseListener = new Response.Listener<String>() {

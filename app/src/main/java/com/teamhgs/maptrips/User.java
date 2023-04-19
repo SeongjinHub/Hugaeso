@@ -8,6 +8,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
@@ -148,6 +150,25 @@ public class User implements Serializable {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static class SHA256 {
+
+        public static String encrypt(String text) throws NoSuchAlgorithmException {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(text.getBytes());
+
+            return bytesToHex(md.digest());
+        }
+
+        private static String bytesToHex(byte[] bytes) {
+            StringBuilder builder = new StringBuilder();
+            for (byte b : bytes) {
+                builder.append(String.format("%02x", b));
+            }
+            return builder.toString();
+        }
+
     }
 
     /**

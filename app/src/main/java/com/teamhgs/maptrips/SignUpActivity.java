@@ -36,6 +36,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -373,6 +374,13 @@ public class SignUpActivity extends AppCompatActivity {
             String email = (String) params[5];
 
             String serverURL = (String) params[0];
+
+            try {
+                password = User.SHA256.encrypt(username + password);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            }
+
             String postParameters = "usercode=" + usercode + "&username=" + username + "&password=" + password + "&name=" + name + "&email=" + email;
 
 
