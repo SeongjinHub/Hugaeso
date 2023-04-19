@@ -5,6 +5,8 @@ import static android.content.ContentValues.TAG;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -12,9 +14,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,30 +41,21 @@ import java.time.LocalTime;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    int step = 0;
+
     boolean id, pw, name, email = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_sign_up_main);
 
-        EditText editTextUsername = (EditText) findViewById(R.id.editTextUserName);
-        EditText editTextPassword1 = (EditText) findViewById(R.id.editTextPassword1);
-        EditText editTextPassword2 = (EditText) findViewById(R.id.editTextPassword2);
-        EditText editTextName = (EditText) findViewById(R.id.editTextName);
-        EditText editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+        overridePendingTransition(R.anim.none, R.anim.none);
 
-        TextView textViewUsernameSub1 = (TextView) findViewById(R.id.textViewUsernameSub1);
+        ViewGroup container = (ViewGroup) findViewById(R.id.container);
 
-        TextView textViewPasswordSub1 = (TextView) findViewById(R.id.textViewPasswordSub1);
-        TextView textViewPasswordSub2 = (TextView) findViewById(R.id.textViewPasswordSub2);
-
-        TextView textViewNameSub = (TextView) findViewById(R.id.textViewNameSub);
-        TextView textViewEmaiilSub = (TextView) findViewById(R.id.textViewEmailSub);
-
-        CheckBox checkBoxUserInfoAgr = (CheckBox) findViewById(R.id.checkBoxUserInfoAgr);
-
-        Button buttonSignUp = (Button) findViewById(R.id.buttonSignUp);
+        Button buttonCancel = (Button) findViewById(R.id.button_cancel);
+        Button buttonConfirm = (Button) findViewById(R.id.button_confirm);
 
         Drawable editTextNormalUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner);
         Drawable editTextErrorUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner_err);
@@ -67,6 +63,20 @@ public class SignUpActivity extends AppCompatActivity {
         int errColor = ContextCompat.getColor(getApplicationContext(), com.google.android.material.R.color.design_default_color_error);
         int defaultTextColor = ContextCompat.getColor(getApplicationContext(), R.color.default_text_color);
         int correctColor = ContextCompat.getColor(getApplicationContext(), R.color.correct_color);
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        layoutInflater.inflate(R.layout.activity_sign_up_username, container, true);
+
+        Animation fade_in = AnimationUtils.loadAnimation(SignUpActivity.this, R.anim.fade_in);
+
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) EditText editTextUsername = (EditText) findViewById(R.id.editTextUserName);
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView textViewUsernameSub1 = (TextView) findViewById(R.id.textViewUsernameSub1);
+
+        editTextUsername.startAnimation(fade_in);
+        textViewUsernameSub1.startAnimation(fade_in);
+
+        User newUser = new User();
 
         // .addTextChangedListener() 실시간 입력 값 검증
         editTextUsername.addTextChangedListener(new TextWatcher() {
@@ -85,7 +95,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 id = false;
 
-                User.username = editTextUsername.getText().toString();
+                newUser.setUsername(editTextUsername.getText().toString());
 
                 // DB접속을 통해 User.username 검증 (입력여부 및 길이검증 포함)
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -95,27 +105,30 @@ public class SignUpActivity extends AppCompatActivity {
                             JSONObject jsonResponse = new JSONObject(response);
                             boolean usernameNotDup = jsonResponse.getBoolean("chkResult"); //DB에 중복될 시 true 반환
 
-                            if (User.username.length() < 1) {
+                            if (newUser.getUsername().length() < 1) {
                                 editTextUsername.setBackground(editTextErrorUI);
                                 textViewUsernameSub1.setTextColor(errColor);
                                 textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_sub1));
+                                buttonConfirm.setVisibility(View.INVISIBLE);
                             }
-                            else if (!User.chkUsernameRegEx(User.username)) {
+                            else if (!newUser.chkUsernameRegEx()) {
                                 editTextUsername.setBackground(editTextErrorUI);
                                 textViewUsernameSub1.setTextColor(errColor);
                                 textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_sub2));
+                                buttonConfirm.setVisibility(View.INVISIBLE);
                             }
                             else if (usernameNotDup) {
                                 editTextUsername.setBackground(editTextErrorUI);
                                 textViewUsernameSub1.setTextColor(errColor);
-                                textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_dup));
-                                id = false; //중복될 경우
+                                textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_dup)); //중복될 경우
+                                buttonConfirm.setVisibility(View.INVISIBLE);
                             }
                             else {
                                 editTextUsername.setBackground(editTextNormalUI);
                                 textViewUsernameSub1.setText(getResources().getString(R.string.activity_signup_username_verified));
                                 textViewUsernameSub1.setTextColor(correctColor);
                                 id = true;
+                                buttonConfirm.setVisibility(View.VISIBLE);
                             }
                         } catch (Exception e) {
                             id = false;
@@ -124,170 +137,208 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 };
 
-                User.chkUsernameRequest Request = new User.chkUsernameRequest(User.username, responseListener);
+                User.chkUsernameRequest Request = new User.chkUsernameRequest(newUser.getUsername(), responseListener);
                 RequestQueue queue = Volley.newRequestQueue(SignUpActivity.this);
                 queue.add(Request);
 
             }
         });
 
-        editTextPassword1.addTextChangedListener(new TextWatcher() {
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onClick(View v) {
+                buttonConfirm.setVisibility(View.INVISIBLE);
+                if (step == 0 && id) {
+                    step = 1;
 
-            }
+                    container.removeAllViews();
+                    layoutInflater.inflate(R.layout.activity_sign_up_password, container, true);
+                    Animation anim = AnimationUtils.loadAnimation(SignUpActivity.this, R.anim.slide_left_enter);
+                    container.startAnimation(anim);
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    EditText editTextPassword1 = (EditText) findViewById(R.id.editTextPassword1);
+                    EditText editTextPassword2 = (EditText) findViewById(R.id.editTextPassword2);
 
-            }
+                    TextView textViewPasswordSub1 = (TextView) findViewById(R.id.textViewPasswordSub1);
+                    TextView textViewPasswordSub2 = (TextView) findViewById(R.id.textViewPasswordSub2);
 
-            @Override
-            public void afterTextChanged(Editable editable) {
+                    editTextPassword1.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                pw = false;
+                        }
 
-                User.password = editTextPassword1.getText().toString();
-                String password2 = editTextPassword2.getText().toString();
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                if (!User.chkPasswordRegEx(User.password)) {
-                    editTextPassword1.setBackground(editTextErrorUI);
-                    textViewPasswordSub1.setTextColor(errColor);
-                } else {
-                    editTextPassword1.setBackground(editTextNormalUI);
-                    textViewPasswordSub1.setTextColor(defaultTextColor);
-                }
+                        }
 
-                if (!User.password.equals(password2)) {
-                    editTextPassword2.setBackground(editTextErrorUI);
-                    textViewPasswordSub2.setTextColor(errColor);
-                } else {
-                    editTextPassword2.setBackground(editTextNormalUI);
-                    textViewPasswordSub2.setTextColor(defaultTextColor);
-                    pw = true;
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                            buttonConfirm.setVisibility(View.INVISIBLE);
+                            pw = false;
+
+                            newUser.setPassword(editTextPassword1.getText().toString());
+                            String password2 = editTextPassword2.getText().toString();
+
+                            if (!newUser.chkPasswordRegEx()) {
+                                editTextPassword1.setBackground(editTextErrorUI);
+                                textViewPasswordSub1.setTextColor(errColor);
+                            } else {
+                                editTextPassword1.setBackground(editTextNormalUI);
+                                textViewPasswordSub1.setTextColor(defaultTextColor);
+                            }
+
+                            if (!newUser.getPassword().equals(password2)) {
+                                editTextPassword2.setBackground(editTextErrorUI);
+                                textViewPasswordSub2.setTextColor(errColor);
+                            } else {
+                                editTextPassword2.setBackground(editTextNormalUI);
+                                textViewPasswordSub2.setTextColor(defaultTextColor);
+                                pw = true;
+                                buttonConfirm.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+
+                    editTextPassword2.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                            buttonConfirm.setVisibility(View.INVISIBLE);
+                            pw = false;
+
+                            newUser.setPassword(editTextPassword1.getText().toString());
+                            String password2 = editTextPassword2.getText().toString();
+
+                            if (!newUser.getPassword().equals(password2) || newUser.getPassword().length() < 1) {
+                                editTextPassword2.setBackground(editTextErrorUI);
+                                textViewPasswordSub2.setTextColor(errColor);
+                            } else {
+                                editTextPassword2.setBackground(editTextNormalUI);
+                                textViewPasswordSub2.setTextColor(defaultTextColor);
+                                pw = true;
+                                buttonConfirm.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+                } else if (step == 1 && pw) {
+                    step = 2;
+                    buttonConfirm.setVisibility(View.INVISIBLE);
+
+                    container.removeAllViews();
+                    layoutInflater.inflate(R.layout.activity_sign_up_userinfo, container, true);
+
+                    Animation anim = AnimationUtils.loadAnimation(SignUpActivity.this, R.anim.slide_left_enter);
+                    container.startAnimation(anim);
+
+                    EditText editTextName = (EditText) findViewById(R.id.editTextName);
+                    EditText editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+
+                    TextView textViewNameSub = (TextView) findViewById(R.id.textViewNameSub);
+                    TextView textViewEmailSub = (TextView) findViewById(R.id.textViewEmailSub);
+
+                    editTextName.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                            buttonConfirm.setVisibility(View.INVISIBLE);
+                            name = false;
+
+                            newUser.setName(editTextName.getText().toString());
+
+                            if (!newUser.chkNameRegEx()) {
+                                editTextName.setBackground(editTextErrorUI);
+                                textViewNameSub.setVisibility(View.VISIBLE);
+                            } else {
+                                editTextName.setBackground(editTextNormalUI);
+                                textViewNameSub.setVisibility(View.GONE);
+                                name = true;
+                            }
+                            if (name && email)
+                                buttonConfirm.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+                    editTextEmail.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                            buttonConfirm.setVisibility(View.INVISIBLE);
+                            email = false;
+
+                            newUser.setEmail(editTextEmail.getText().toString());
+
+                            if (newUser.getEmail().length() < 1) {
+                                editTextEmail.setBackground(editTextErrorUI);
+                                textViewEmailSub.setVisibility(View.VISIBLE);
+                            } else if (!newUser.isValidEmailAddress()) {
+                                editTextEmail.setBackground(editTextErrorUI);
+                                textViewEmailSub.setVisibility(View.VISIBLE);
+                            } else {
+                                editTextEmail.setBackground(editTextNormalUI);
+                                textViewEmailSub.setVisibility(View.GONE);
+                                email = true;
+                            }
+                            if (name && email)
+                                buttonConfirm.setVisibility(View.VISIBLE);
+                        }
+                    });
+                } else if (step == 2 && (name && email)) {
+
+                    SignUpActivity.InsertData task = new SignUpActivity.InsertData();
+
+                    newUser.setUsercode("Android");
+                    newUser.usercode = newUser.getUsercode() + LocalDate.now() + "." + LocalTime.now();
+                    task.execute(DB_Framework.IP_ADDRESS + "/db_signup.php", newUser.usercode, newUser.username, newUser.password, newUser.name, newUser.email);
                 }
             }
         });
 
-        editTextPassword2.addTextChangedListener(new TextWatcher() {
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                pw = false;
-
-                User.password = editTextPassword1.getText().toString();
-                String password2 = editTextPassword2.getText().toString();
-
-                if (!User.password.equals(password2)) {
-                    editTextPassword2.setBackground(editTextErrorUI);
-                    textViewPasswordSub2.setTextColor(errColor);
-                } else {
-                    editTextPassword2.setBackground(editTextNormalUI);
-                    textViewPasswordSub2.setTextColor(defaultTextColor);
-                    pw = true;
-                }
+            public void onClick(View v) {
+                Intent loginActivity = new Intent(SignUpActivity.this, LoginActivity.class);
+                finish();
             }
         });
+    }
 
-        editTextName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                name = false;
-
-                User.name = editTextName.getText().toString();
-
-                if (!User.chkNameRegEx(User.name)) {
-                    editTextName.setBackground(editTextErrorUI);
-                    textViewNameSub.setVisibility(View.VISIBLE);
-                } else {
-                    editTextName.setBackground(editTextNormalUI);
-                    textViewNameSub.setVisibility(View.GONE);
-                    name = true;
-                }
-            }
-        });
-
-        editTextEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                email = false;
-
-                User.email = editTextEmail.getText().toString();
-
-                if (User.email.length() < 1) {
-                    editTextEmail.setBackground(editTextErrorUI);
-                    textViewEmaiilSub.setVisibility(View.VISIBLE);
-                } else if (!User.isValidEmailAddress(User.email)) {
-                    editTextEmail.setBackground(editTextErrorUI);
-                    textViewEmaiilSub.setVisibility(View.VISIBLE);
-                } else {
-                    editTextEmail.setBackground(editTextNormalUI);
-                    textViewEmaiilSub.setVisibility(View.GONE);
-                    email = true;
-                }
-            }
-        });
-
-        buttonSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (!id) {
-                    editTextUsername.setBackground(editTextErrorUI);
-                } else if (!pw) {
-                    editTextPassword1.setBackground(editTextErrorUI);
-                } else if (!name) {
-                    editTextName.setBackground(editTextErrorUI);
-                } else if (!email) {
-                    editTextEmail.setBackground(editTextErrorUI);
-                } else if (!checkBoxUserInfoAgr.isChecked()) {
-                    checkBoxUserInfoAgr.setTextColor(errColor);
-                } else {
-
-                    // DB INSERT Query 실행
-                    InsertData task = new InsertData();
-
-                    User.usercode = "Android";
-                    User.usercode = User.usercode + LocalDate.now() + "." + LocalTime.now();
-                    task.execute(DB_Framework.IP_ADDRESS + "/db_signup.php", User.usercode, User.username, User.password, User.name, User.email);
-
-
-                }
-            }
-        });
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(R.anim.none, R.anim.none);
     }
 
     /** DB INSERT Query를 수행하는 Class 및 Method **/
@@ -378,5 +429,4 @@ public class SignUpActivity extends AppCompatActivity {
 
         }
     }
-
 }
