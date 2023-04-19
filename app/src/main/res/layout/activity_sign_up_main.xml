@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".SignUpActivity">
 
     <LinearLayout
@@ -49,13 +50,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="@color/app_main_color">
+            android:background="@drawable/layout_title_area">
 
             <ImageView
                 android:id="@+id/logo"
                 android:layout_width="wrap_content"
-                android:layout_height="180dp"
-                android:src="@drawable/sample_img" />
+                android:layout_height="@dimen/title_logo_height"
+                android:padding="@dimen/title_logo_padding"
+                android:src="@drawable/logo" />
 
             <TextView
                 android:id="@+id/sub_title"
@@ -87,7 +89,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
             android:text="Next"
-            android:visibility="invisible"/>
+            android:textColor="@color/white"
+            android:visibility="invisible"
+            android:background="@drawable/btn_login_ui_sign_in"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

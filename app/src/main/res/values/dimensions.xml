@@ -9,4 +9,7 @@
     <dimen name="app_bottom_padding_bottom">5dp</dimen>
     <dimen name="app_bottom_padding_left">0dp</dimen>
     <dimen name="app_bottom_padding_right">0dp</dimen>
+    <dimen name="title_area_background_radius">25dp</dimen>
+    <dimen name="title_logo_height">180dp</dimen>
+    <dimen name="title_logo_padding">50dp</dimen>
 </resources>

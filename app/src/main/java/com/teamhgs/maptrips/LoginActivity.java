@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         Drawable editTextNormalUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner);
         Drawable editTextErrorUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner_err);
 
-        Animation fade_in = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade_in);
+        Animation fade_in = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade_in_login);
         Animation fade_out = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade_out);
 
         TextView loginSub = (TextView)  findViewById(R.id.textViewLoginSub);
