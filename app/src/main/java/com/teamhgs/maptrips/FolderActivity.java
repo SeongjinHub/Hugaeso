@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -50,27 +49,27 @@ public class FolderActivity extends AppCompatActivity {
         //For Debug
         Toast.makeText(getApplicationContext(), "UserCode = " + defaultUser.getUsercode(), Toast.LENGTH_LONG).show();
 
-        Button btm_feed_btn = (Button) findViewById(R.id.feedButton);
-        Button btm_search_btn = (Button) findViewById(R.id.searchButton);
-        Button btm_write_btn = (Button) findViewById(R.id.writeButton);
-        Button btm_folder_btn = (Button) findViewById(R.id.folderButton);
-        Button btm_mypage_btn = (Button) findViewById(R.id.mypageButton);
+        Button buttonFeedTab = (Button) findViewById(R.id.button_feed);
+        Button buttonSearchTab = (Button) findViewById(R.id.button_search);
+        Button buttonWriteTab = (Button) findViewById(R.id.button_write);
+        Button buttonFolderTab = (Button) findViewById(R.id.button_folder);
+        Button buttonMypageTab = (Button) findViewById(R.id.button_mypage);
 
-        btm_feed_btn.setOnClickListener(new View.OnClickListener() {
+        buttonFeedTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
 
-        btm_search_btn.setOnClickListener(new View.OnClickListener() {
+        buttonSearchTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
 
-        btm_write_btn.setOnClickListener(new View.OnClickListener() {
+        buttonWriteTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -84,7 +83,7 @@ public class FolderActivity extends AppCompatActivity {
 //            }
 //        });
 
-        btm_mypage_btn.setOnClickListener(new View.OnClickListener() {
+        buttonMypageTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FolderActivity.this, MypageActivity.class);

@@ -61,7 +61,7 @@
             android:divider="@color/default_text_color">
 
             <Button
-                android:id="@+id/feedButton"
+                android:id="@+id/button_feed"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -75,7 +75,7 @@
                 android:drawableTop="@drawable/btn_bottom_feed" />
 
             <Button
-                android:id="@+id/searchButton"
+                android:id="@+id/button_search"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -89,7 +89,7 @@
                 android:drawableTop="@drawable/btn_bottom_search" />
 
             <Button
-                android:id="@+id/writeButton"
+                android:id="@+id/button_write"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -103,7 +103,7 @@
                 android:drawableTop="@drawable/btn_bottom_write" />
 
             <Button
-                android:id="@+id/folderButton"
+                android:id="@+id/button_folder"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -118,7 +118,7 @@
                 android:drawableTop="@drawable/btn_bottom_folder_selected" />
 
             <Button
-                android:id="@+id/mypageButton"
+                android:id="@+id/button_mypage"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

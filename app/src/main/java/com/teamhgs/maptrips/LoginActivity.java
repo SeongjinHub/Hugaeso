@@ -36,12 +36,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button signInBtn = (Button) findViewById(R.id.buttonSignIn);
-        Button signUpBtn = (Button) findViewById(R.id.buttonSignUp);
-        Button forgotBtn = (Button) findViewById(R.id.buttonForgot);
+        Button buttonSignIn = (Button) findViewById(R.id.button_signin);
+        Button buttonSignUp = (Button) findViewById(R.id.button_signup);
+        Button buttonForgot = (Button) findViewById(R.id.button_forgot);
 
-        EditText editTextUsername = (EditText) findViewById(R.id.editTextUserName);
-        EditText editTextPassword = (EditText) findViewById(R.id.editTextPassword1);
+        EditText editTextUsername = (EditText) findViewById(R.id.et_username);
+        EditText editTextPassword = (EditText) findViewById(R.id.et_password);
 
         LinearLayout parent_area = (LinearLayout) findViewById(R.id.parent_area);
         LinearLayout title_area = (LinearLayout) findViewById(R.id.title_area);
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         Animation fade_in = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade_in_login);
         Animation fade_out = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade_out);
 
-        TextView loginSub = (TextView)  findViewById(R.id.textViewLoginSub);
+        TextView loginSub = (TextView)  findViewById(R.id.text_login_sub);
 
         Intent intentMainActivity = new Intent(LoginActivity.this, FolderActivity.class);
 
@@ -73,9 +73,9 @@ public class LoginActivity extends AppCompatActivity {
             parent_area.setVisibility(View.VISIBLE);
             title_area.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.slide_btm_enter_login));
 
-            signInBtn.startAnimation(fade_in);
-            forgotBtn.startAnimation(fade_in);
-            signUpBtn.startAnimation(fade_in);
+            buttonSignIn.startAnimation(fade_in);
+            buttonForgot.startAnimation(fade_in);
+            buttonSignUp.startAnimation(fade_in);
             editTextUsername.startAnimation(fade_in);
             editTextPassword.startAnimation(fade_in);
 
@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-            signInBtn.setOnClickListener(new OnClickListener() {
+            buttonSignIn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -202,7 +202,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-            signUpBtn.setOnClickListener(new OnClickListener() {
+            buttonSignUp.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intentSignUpActivity = new Intent(LoginActivity.this, SignUpActivity.class);

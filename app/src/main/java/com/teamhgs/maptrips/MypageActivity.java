@@ -22,7 +22,7 @@ public class MypageActivity extends AppCompatActivity {
 
         User defaultUser = (User) getIntent().getSerializableExtra("defaultUser");
 
-        TextView header_title = (TextView) findViewById(R.id.header_title_text);
+        TextView header_title = (TextView) findViewById(R.id.text_header_title);
 
         header_title.setText("@"  + defaultUser.getUsername());
 
@@ -31,34 +31,34 @@ public class MypageActivity extends AppCompatActivity {
         String temp = defaultUser.getUsercode() + " " + defaultUser.getUsername() + " " + defaultUser.getName() + " " + defaultUser.getEmail();
         Toast.makeText(getApplicationContext(), "Userinfo = " + temp, Toast.LENGTH_LONG).show();
 
-        Button btm_feed_btn = (Button) findViewById(R.id.feedButton);
-        Button btm_search_btn = (Button) findViewById(R.id.searchButton);
-        Button btm_write_btn = (Button) findViewById(R.id.writeButton);
-        Button btm_folder_btn = (Button) findViewById(R.id.folderButton);
-        Button btm_mypage_btn = (Button) findViewById(R.id.mypageButton);
+        Button buttonFeedTab = (Button) findViewById(R.id.button_feed);
+        Button buttonSearchTab = (Button) findViewById(R.id.button_search);
+        Button buttonWriteTab = (Button) findViewById(R.id.button_write);
+        Button buttonFolderTab = (Button) findViewById(R.id.button_folder);
+        Button buttonMypageTab = (Button) findViewById(R.id.button_mypage);
 
-        btm_feed_btn.setOnClickListener(new View.OnClickListener() {
+        buttonFeedTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
 
-        btm_search_btn.setOnClickListener(new View.OnClickListener() {
+        buttonSearchTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
 
-        btm_write_btn.setOnClickListener(new View.OnClickListener() {
+        buttonWriteTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
 
-        btm_folder_btn.setOnClickListener(new View.OnClickListener() {
+        buttonFolderTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MypageActivity.this, FolderActivity.class);
@@ -78,9 +78,9 @@ public class MypageActivity extends AppCompatActivity {
 //            }
 //        });
 
-        ImageButton header_setting_btn = (ImageButton) findViewById(R.id.settingButton);
+        ImageButton buttonSetting = (ImageButton) findViewById(R.id.button_setting);
 
-        header_setting_btn.setOnClickListener(new View.OnClickListener() {
+        buttonSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

@@ -71,8 +71,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         Animation fade_in = AnimationUtils.loadAnimation(SignUpActivity.this, R.anim.fade_in);
 
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) EditText editTextUsername = (EditText) findViewById(R.id.editTextUserName);
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView textViewUsernameSub1 = (TextView) findViewById(R.id.textViewUsernameSub1);
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) EditText editTextUsername = (EditText) findViewById(R.id.et_username);
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView textViewUsernameSub1 = (TextView) findViewById(R.id.et_username_sub);
 
         editTextUsername.startAnimation(fade_in);
         textViewUsernameSub1.startAnimation(fade_in);
@@ -157,11 +157,11 @@ public class SignUpActivity extends AppCompatActivity {
                     Animation anim = AnimationUtils.loadAnimation(SignUpActivity.this, R.anim.slide_left_enter);
                     container.startAnimation(anim);
 
-                    EditText editTextPassword1 = (EditText) findViewById(R.id.editTextPassword1);
-                    EditText editTextPassword2 = (EditText) findViewById(R.id.editTextPassword2);
+                    EditText editTextPassword1 = (EditText) findViewById(R.id.et_password);
+                    EditText editTextPassword2 = (EditText) findViewById(R.id.et_password2);
 
-                    TextView textViewPasswordSub1 = (TextView) findViewById(R.id.textViewPasswordSub1);
-                    TextView textViewPasswordSub2 = (TextView) findViewById(R.id.textViewPasswordSub2);
+                    TextView textViewPasswordSub1 = (TextView) findViewById(R.id.text_password_sub1);
+                    TextView textViewPasswordSub2 = (TextView) findViewById(R.id.text_password_sub2);
 
                     editTextPassword1.addTextChangedListener(new TextWatcher() {
                         @Override
@@ -244,11 +244,11 @@ public class SignUpActivity extends AppCompatActivity {
                     Animation anim = AnimationUtils.loadAnimation(SignUpActivity.this, R.anim.slide_left_enter);
                     container.startAnimation(anim);
 
-                    EditText editTextName = (EditText) findViewById(R.id.editTextName);
-                    EditText editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+                    EditText editTextName = (EditText) findViewById(R.id.et_name);
+                    EditText editTextEmail = (EditText) findViewById(R.id.et_email);
 
-                    TextView textViewNameSub = (TextView) findViewById(R.id.textViewNameSub);
-                    TextView textViewEmailSub = (TextView) findViewById(R.id.textViewEmailSub);
+                    TextView textViewNameSub = (TextView) findViewById(R.id.text_name_sub);
+                    TextView textViewEmailSub = (TextView) findViewById(R.id.text_email_sub);
 
                     editTextName.addTextChangedListener(new TextWatcher() {
                         @Override

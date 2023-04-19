@@ -21,7 +21,7 @@
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/header_title_text"
+                android:id="@+id/text_header_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -37,7 +37,7 @@
                 android:layout_weight="1" />
 
             <ImageButton
-                android:id="@+id/settingButton"
+                android:id="@+id/button_setting"
                 android:layout_width="@dimen/app_header_btn_size"
                 android:layout_height="@dimen/app_header_btn_size"
                 android:background="@color/white"
@@ -69,7 +69,7 @@
             android:divider="@color/default_text_color">
 
             <Button
-                android:id="@+id/feedButton"
+                android:id="@+id/button_feed"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -83,7 +83,7 @@
                 android:drawableTop="@drawable/btn_bottom_feed" />
 
             <Button
-                android:id="@+id/searchButton"
+                android:id="@+id/button_search"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -97,7 +97,7 @@
                 android:drawableTop="@drawable/btn_bottom_search" />
 
             <Button
-                android:id="@+id/writeButton"
+                android:id="@+id/button_write"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -111,7 +111,7 @@
                 android:drawableTop="@drawable/btn_bottom_write" />
 
             <Button
-                android:id="@+id/folderButton"
+                android:id="@+id/button_folder"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -125,7 +125,7 @@
                 android:drawableTop="@drawable/btn_bottom_folder" />
 
             <Button
-                android:id="@+id/mypageButton"
+                android:id="@+id/button_mypage"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

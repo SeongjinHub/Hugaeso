@@ -10,7 +10,7 @@
 
 
         <EditText
-            android:id="@+id/editTextName"
+            android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_login_ui_rounded_corner"
@@ -22,7 +22,7 @@
             android:visibility="visible" />
 
         <TextView
-            android:id="@+id/textViewNameSub"
+            android:id="@+id/text_name_sub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -31,7 +31,7 @@
             android:visibility="gone" />
 
         <EditText
-            android:id="@+id/editTextEmail"
+            android:id="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -44,7 +44,7 @@
             android:visibility="visible" />
 
         <TextView
-            android:id="@+id/textViewEmailSub"
+            android:id="@+id/text_email_sub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
