@@ -37,8 +37,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
+import java.util.Locale;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -321,7 +324,9 @@ public class SignUpActivity extends AppCompatActivity {
                     SignUpActivity.InsertData task = new SignUpActivity.InsertData();
 
                     newUser.setUsercode("Android");
-                    newUser.usercode = newUser.getUsercode() + LocalDate.now() + "." + LocalTime.now();
+                    Date date = new Date();
+                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+                    newUser.usercode = newUser.getUsercode() + format.format(date) + Locale.getDefault().getCountry();
                     task.execute(DB_Framework.IP_ADDRESS + "/db_signup.php", newUser.usercode, newUser.username, newUser.password, newUser.name, newUser.email);
                 }
             }

@@ -13,4 +13,5 @@
     <dimen name="title_area_background_radius">25dp</dimen>
     <dimen name="title_logo_height">180dp</dimen>
     <dimen name="title_logo_padding">50dp</dimen>
+    <dimen name="content_default_padding">30dp</dimen>
 </resources>

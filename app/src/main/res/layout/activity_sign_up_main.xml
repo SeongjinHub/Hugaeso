@@ -75,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/container"
-            android:padding="30dp">
+            android:padding="@dimen/content_default_padding">
         </ScrollView>
 
         <View

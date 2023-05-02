@@ -17,6 +17,12 @@ public class MypageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         setContentView(R.layout.activity_mypage);
         overridePendingTransition(R.anim.none, R.anim.none);
 
@@ -24,7 +30,7 @@ public class MypageActivity extends AppCompatActivity {
 
         TextView header_title = (TextView) findViewById(R.id.text_header_title);
 
-        header_title.setText("@"  + defaultUser.getUsername());
+        header_title.setText("@" + defaultUser.getUsername());
 
 
         //For Debug
@@ -40,21 +46,30 @@ public class MypageActivity extends AppCompatActivity {
         buttonFeedTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MypageActivity.this, FeedActivity.class);
+                intent.putExtra("defaultUser", defaultUser);
+                startActivity(intent);
+                finish();
             }
         });
 
         buttonSearchTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MypageActivity.this, SearchActivity.class);
+                intent.putExtra("defaultUser", defaultUser);
+                startActivity(intent);
+                finish();
             }
         });
 
         buttonWriteTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MypageActivity.this, WriteActivity.class);
+                intent.putExtra("defaultUser", defaultUser);
+                startActivity(intent);
+//                finish();
             }
         });
 

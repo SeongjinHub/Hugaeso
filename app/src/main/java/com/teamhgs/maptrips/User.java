@@ -12,7 +12,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -32,9 +31,7 @@ public class User implements Serializable {
 
     private static Map<String, String> parameters;
 
-    public User() {
-
-    }
+    public User() { }
 
     public User(String usercode) {
         this.usercode = usercode;
@@ -237,15 +234,15 @@ public class User implements Serializable {
 
     }
 
-    public static class getUserinfoRequest extends StringRequest {
+    public static class getUserInfoRequest extends StringRequest {
 
-        public getUserinfoRequest(String usercode, Response.Listener<String> listener) {
-            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_get_userinfo.php", listener, null);
+        public getUserInfoRequest(String usercode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_get_user_info.php", listener, null);
             parameters = new HashMap<>();
             try {
                 parameters.put("usercode", usercode);
             } catch (Exception e) {
-                Log.d("getUserinfoRequest", "parameter put error");
+                Log.d("getUserInfoRequest", "parameter put error");
             }
         }
 

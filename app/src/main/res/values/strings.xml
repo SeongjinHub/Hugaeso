@@ -26,4 +26,9 @@
     <string name="bottom_write">Write</string>
     <string name="bottom_folder">Folder</string>
     <string name="bottom_mypage">My</string>
+    <string name="activity_write_commit">Commit</string>
+    <string name="activity_write_title">Title</string>
+    <string name="activity_write_text">Text</string>
+    <string name="activity_write_upload_err">Failed to upload. Try Later.</string>
+    <string name="activity_write_upload_complete">Complete.</string>
 </resources>
