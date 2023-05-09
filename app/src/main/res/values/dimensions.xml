@@ -14,4 +14,6 @@
     <dimen name="title_logo_height">180dp</dimen>
     <dimen name="title_logo_padding">50dp</dimen>
     <dimen name="content_default_padding">30dp</dimen>
+    <dimen name="activity_mypage_profile_img">120dp</dimen>
+    <dimen name="activity_mypage_profile_btn">80dp</dimen>
 </resources>
