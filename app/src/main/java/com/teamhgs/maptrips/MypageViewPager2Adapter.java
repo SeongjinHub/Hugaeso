@@ -8,8 +8,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class MypageViewPager2Adapter extends FragmentStateAdapter {
 
-    public MypageViewPager2Adapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+    User currentUser;
+
+    public MypageViewPager2Adapter(User user, @NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
+        currentUser = user;
     }
 
     @NonNull
@@ -17,9 +20,9 @@ public class MypageViewPager2Adapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new MypagePostsFragment();
+                return new MypagePostsFragment().newInstance(currentUser);
             case 1:
-                return new MypageFavoritesFragment();
+                return new MypageFavoritesFragment().newInstance(currentUser);
             default:
                 return null;
         }

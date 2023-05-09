@@ -37,15 +37,15 @@ public class MypageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mypage);
         overridePendingTransition(R.anim.none, R.anim.none);
 
-        User defaultUser = (User) getIntent().getSerializableExtra("defaultUser");
+        User currentUser = (User) getIntent().getSerializableExtra(User.CURRENT_USER);
 
         TextView header_title = (TextView) findViewById(R.id.text_header_title);
 
-        header_title.setText("@" + defaultUser.getUsername());
+        header_title.setText("@" + currentUser.getUsername());
 
 
         //For Debug
-        String temp = defaultUser.getUsercode() + " " + defaultUser.getUsername() + " " + defaultUser.getName() + " " + defaultUser.getEmail();
+        String temp = currentUser.getUsercode() + " " + currentUser.getUsername() + " " + currentUser.getName() + " " + currentUser.getEmail();
         Toast.makeText(getApplicationContext(), "Userinfo = " + temp, Toast.LENGTH_LONG).show();
 
         Button buttonFeedTab = (Button) findViewById(R.id.button_feed);
@@ -58,7 +58,7 @@ public class MypageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MypageActivity.this, FeedActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
                 finish();
             }
@@ -68,7 +68,7 @@ public class MypageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MypageActivity.this, SearchActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
                 finish();
             }
@@ -78,7 +78,7 @@ public class MypageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MypageActivity.this, WriteActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
 //                finish();
             }
@@ -88,7 +88,7 @@ public class MypageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MypageActivity.this, FolderActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
                 finish();
             }
@@ -98,7 +98,7 @@ public class MypageActivity extends AppCompatActivity {
 //            @Override
 //            public void onClick(View v) {
 //                Intent intent = new Intent(MypageActivity.this, MypageActivity.class);
-//                intent.putExtra("defaultUser", defaultUser);
+//                intent.putExtra(User.CURRENT_USER, currentUser);
 //                startActivity(intent);
 //                finish();
 //            }
@@ -142,7 +142,7 @@ public class MypageActivity extends AppCompatActivity {
                     }
                 }
             };
-            User.getPostsCountRequest request = new User.getPostsCountRequest(defaultUser.getUsercode(), responseListener);
+            User.getPostsCountRequest request = new User.getPostsCountRequest(currentUser.getUsercode(), responseListener);
             RequestQueue queue = Volley.newRequestQueue(MypageActivity.this);
             queue.add(request);
         }
@@ -164,7 +164,7 @@ public class MypageActivity extends AppCompatActivity {
                     }
                 }
             };
-            User.getFollowerCountRequest request = new User.getFollowerCountRequest(defaultUser.getUsercode(), responseListener);
+            User.getFollowerCountRequest request = new User.getFollowerCountRequest(currentUser.getUsercode(), responseListener);
             RequestQueue queue = Volley.newRequestQueue(MypageActivity.this);
             queue.add(request);
         }
@@ -186,12 +186,13 @@ public class MypageActivity extends AppCompatActivity {
                     }
                 }
             };
-            User.getFollowingCountRequest request = new User.getFollowingCountRequest(defaultUser.getUsercode(), responseListener);
+            User.getFollowingCountRequest request = new User.getFollowingCountRequest(currentUser.getUsercode(), responseListener);
             RequestQueue queue = Volley.newRequestQueue(MypageActivity.this);
             queue.add(request);
         }
 
-        MypageViewPager2Adapter mypageViewPager2Adapter = new MypageViewPager2Adapter(getSupportFragmentManager(), getLifecycle());
+        // ViewPager2 를 이용해 좌,우 슬라이드 제스쳐 및 탭 기능을 구현
+        MypageViewPager2Adapter mypageViewPager2Adapter = new MypageViewPager2Adapter(currentUser, getSupportFragmentManager(), getLifecycle());
         ViewPager2 viewPager2 = (ViewPager2) findViewById(R.id.viewPager2);
         viewPager2.setAdapter(mypageViewPager2Adapter);
 
@@ -209,5 +210,6 @@ public class MypageActivity extends AppCompatActivity {
                 }
             }
         }).attach();
+
     }
 }

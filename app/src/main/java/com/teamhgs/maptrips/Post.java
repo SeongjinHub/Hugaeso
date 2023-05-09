@@ -20,6 +20,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -36,8 +38,7 @@ public class Post {
     String city;
     String area;
     int privateStatus;
-    String url;
-
+    ArrayList<String> url = new ArrayList<>();
     private static Map<String, String> parameters;
 
     static FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -51,6 +52,10 @@ public class Post {
         this.postcode = "Post" + format.format(date) + Locale.getDefault().getCountry();
 
         privateStatus = 0;
+    }
+
+    public Post(String postcode) {
+        this.postcode = postcode;
     }
 
     public String getPostcode() {
@@ -125,11 +130,11 @@ public class Post {
         this.privateStatus = privateStatus;
     }
 
-    public String getUrl() {
+    public ArrayList<String> getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(ArrayList<String> url) {
         this.url = url;
     }
 
@@ -194,7 +199,7 @@ public class Post {
             parameters = new HashMap<>();
             try {
                 parameters.put("postcode", post.getPostcode());
-                parameters.put("url", post.getUrl());
+                parameters.put("url", post.getUrl().get(0));
             } catch (Exception e) {
                 Log.d("insertPostUrlRequest", "parameter put error");
             }
@@ -205,5 +210,59 @@ public class Post {
             return parameters;
         }
 
+    }
+
+    public static class getPostsListRequest extends StringRequest {
+
+        public getPostsListRequest(String usercode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_mypage_posts_list.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("usercode", usercode);
+            } catch (Exception e) {
+                Log.d("getPostsListRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+    }
+
+    public static class getPostsUrlListRequest extends StringRequest {
+
+        public getPostsUrlListRequest(String postcode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_mypage_posts_url_list.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("postcode", postcode);
+            } catch (Exception e) {
+                Log.d("getPostUrlListRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+    }
+
+    public static class getPostsRequest extends StringRequest {
+
+        public getPostsRequest(String usercode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_mypage_posts.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("usercode", usercode);
+            } catch (Exception e) {
+                Log.d("getPostRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
     }
 }

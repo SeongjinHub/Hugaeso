@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -35,6 +36,7 @@ public class WriteActivity extends AppCompatActivity {
     ImageButton buttonAddImage;
     String filename;
     String imgPath;
+    ArrayList<String> url = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class WriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_write);
         overridePendingTransition(R.anim.none, R.anim.none);
 
-        User defaultUser = (User) getIntent().getSerializableExtra("defaultUser");
+        User currentUser = (User) getIntent().getSerializableExtra(User.CURRENT_USER);
 
         Post post = new Post();
 
@@ -122,7 +124,8 @@ public class WriteActivity extends AppCompatActivity {
                         imgPath = getCacheDir() + "/" + filename;   // 내부 저장소에 저장되어 있는 이미지 경로
 
                         post.uploadStorageStream(imgPath, filename);
-                        post.setUrl("Posts/" + post.getPostcode() + "/" + filename);
+                        url.add("Posts/" + post.getPostcode() + "/" + filename);
+                        post.setUrl(url);
 
                         Response.Listener<String> responseListener = new Response.Listener<String>() {
                             @Override
@@ -152,7 +155,7 @@ public class WriteActivity extends AppCompatActivity {
                                                 }
                                             }
                                         };
-                                        Post.insertPostRequest request = new Post.insertPostRequest(defaultUser.getUsercode(), post, responseListener);
+                                        Post.insertPostRequest request = new Post.insertPostRequest(currentUser.getUsercode(), post, responseListener);
                                         RequestQueue queue = Volley.newRequestQueue(WriteActivity.this);
                                         queue.add(request);
                                     } else {

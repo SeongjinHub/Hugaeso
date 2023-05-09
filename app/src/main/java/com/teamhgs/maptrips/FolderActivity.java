@@ -29,7 +29,7 @@ public class FolderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_folder);
         overridePendingTransition(R.anim.none, R.anim.none);
 
-        User defaultUser = (User) getIntent().getSerializableExtra("defaultUser");
+        User currentUser = (User) getIntent().getSerializableExtra(User.CURRENT_USER);
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -39,16 +39,16 @@ public class FolderActivity extends AppCompatActivity {
                     boolean result = jsonResponse.getBoolean("responseResult");
 
                     if (result) {
-                        defaultUser.setUsername(jsonResponse.getString("username"));
-                        defaultUser.setName(jsonResponse.getString("name"));
-                        defaultUser.setEmail(jsonResponse.getString("email"));
+                        currentUser.setUsername(jsonResponse.getString("username"));
+                        currentUser.setName(jsonResponse.getString("name"));
+                        currentUser.setEmail(jsonResponse.getString("email"));
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
             }
         };
-        User.getUserInfoRequest request = new User.getUserInfoRequest(defaultUser.getUsercode(), responseListener);
+        User.getUserInfoRequest request = new User.getUserInfoRequest(currentUser.getUsercode(), responseListener);
         RequestQueue queue = Volley.newRequestQueue(FolderActivity.this);
         queue.add(request);
 
@@ -62,7 +62,7 @@ public class FolderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FolderActivity.this, FeedActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
                 finish();
             }
@@ -72,7 +72,7 @@ public class FolderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FolderActivity.this, SearchActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
                 finish();
             }
@@ -82,7 +82,7 @@ public class FolderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FolderActivity.this, WriteActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
 //                finish();
             }
@@ -92,7 +92,7 @@ public class FolderActivity extends AppCompatActivity {
 //            @Override
 //            public void onClick(View v) {
 //                Intent intent = new Intent(FolderActivity.this, FolderActivity.class);
-//                intent.putExtra("defaultUser", defaultUser);
+//                intent.putExtra(User.CURRENT_USER, currentUser);
 //                startActivity(intent);
 //                finish();
 //            }
@@ -102,7 +102,7 @@ public class FolderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FolderActivity.this, MypageActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
                 finish();
             }

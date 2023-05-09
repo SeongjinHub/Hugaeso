@@ -60,11 +60,11 @@ public class LoginActivity extends AppCompatActivity {
         // SharedPreference Key-Value 쌍 비교를 통해 로그인 정보를 불러옴
         SharedPreferences pref = getSharedPreferences("com.teamhgs.maptrips.user", Activity.MODE_PRIVATE);
 
-        User defaultUser = new User(pref.getString("UserCode", ""));
+        User currentUser = new User(pref.getString("UserCode", ""));
 
         // 이전의 로그인 기록이 없는 경우 (SharedPref에 값이 없는 경우)
-        if (defaultUser.getUsercode().length() == 0) {
-            Log.d("Authentication failed. authInfo = ", defaultUser.getUsercode());
+        if (currentUser.getUsercode().length() == 0) {
+            Log.d("Authentication failed. authInfo = ", currentUser.getUsercode());
 
             getWindow().setStatusBarColor(getResources().getColor(R.color.app_main_color));
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE);
@@ -121,23 +121,23 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    defaultUser.setUsername(editTextUsername.getText().toString());
-                    defaultUser.setPassword(editTextPassword.getText().toString());
+                    currentUser.setUsername(editTextUsername.getText().toString());
+                    currentUser.setPassword(editTextPassword.getText().toString());
 //                    user.username = editTextUsername.getText().toString();
 //                    user.password = editTextPassword.getText().toString();
 
-                    if (!defaultUser.chkUsernameRegEx()) {
+                    if (!currentUser.chkUsernameRegEx()) {
                         loginSub.setVisibility(View.VISIBLE);
                         editTextUsername.setBackground(editTextErrorUI);
                     }
-                    else if (!defaultUser.chkPasswordRegEx()) {
+                    else if (!currentUser.chkPasswordRegEx()) {
                         loginSub.setVisibility(View.VISIBLE);
                         editTextPassword.setBackground(editTextErrorUI);
                     }
                     else {
 
                         try {
-                            defaultUser.setPassword(User.SHA256.encrypt(defaultUser.getUsername() + defaultUser.getPassword()));
+                            currentUser.setPassword(User.SHA256.encrypt(currentUser.getUsername() + currentUser.getPassword()));
                         } catch (NoSuchAlgorithmException e) {
                             throw new RuntimeException(e);
                         }
@@ -151,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
                                     boolean loginResult = jsonResponse.getBoolean("responseResult");
 
                                     if (loginResult) { // 일치할 경우
-                                        defaultUser.setUsercode(jsonResponse.getString("usercode"));
+                                        currentUser.setUsercode(jsonResponse.getString("usercode"));
 //                                        User.username = jsonResponse.getString("username");
 //                                        User.name = jsonResponse.getString("name");
 //                                        User.email = jsonResponse.getString("email");
@@ -166,9 +166,9 @@ public class LoginActivity extends AppCompatActivity {
 
                                                     if (result) {
                                                         SharedPreferences.Editor editor = pref.edit();
-                                                        editor.putString("UserCode", defaultUser.getUsercode()); // 내부 저장소에 Usercode를 저장합니다.
+                                                        editor.putString("UserCode", currentUser.getUsercode()); // 내부 저장소에 Usercode를 저장합니다.
                                                         editor.commit();
-                                                        intentMainActivity.putExtra("defaultUser", defaultUser);
+                                                        intentMainActivity.putExtra(User.CURRENT_USER, currentUser);
                                                         startActivity(intentMainActivity); // 메인화면으로 이동
                                                         finish(); // 뒤로가기를 통해 LoginActivity 재 접근 차단
                                                     }
@@ -180,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 }
                                             }
                                         };
-                                        User.insertSavedLoginRequest request = new User.insertSavedLoginRequest(defaultUser.getUsercode(), Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), 1, responseListener2);
+                                        User.insertSavedLoginRequest request = new User.insertSavedLoginRequest(currentUser.getUsercode(), Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), 1, responseListener2);
                                         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                                         queue.add(request);
                                     }
@@ -194,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         };
 
-                        User.loginRequest Request = new User.loginRequest(defaultUser.getUsername(), defaultUser.getPassword(), responseListener);
+                        User.loginRequest Request = new User.loginRequest(currentUser.getUsername(), currentUser.getPassword(), responseListener);
                         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                         queue.add(Request);
 
@@ -223,8 +223,8 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject jsonResponse = new JSONObject(response);
                         boolean result = jsonResponse.getBoolean("responseResult");
                         if(result) {
-                            Log.d("Authentication succeeded. UserCode = ", defaultUser.getUsercode());
-                            intentMainActivity.putExtra("defaultUser", defaultUser);
+                            Log.d("Authentication succeeded. UserCode = ", currentUser.getUsercode());
+                            intentMainActivity.putExtra(User.CURRENT_USER, currentUser);
                             startActivity(intentMainActivity);
                             finish();
                         }
@@ -244,7 +244,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             };
 
-            User.savedLoginRequest Request = new User.savedLoginRequest(defaultUser.getUsercode(), Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), 1, responseListener);
+            User.savedLoginRequest Request = new User.savedLoginRequest(currentUser.getUsercode(), Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), 1, responseListener);
             RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
             queue.add(Request);
         }

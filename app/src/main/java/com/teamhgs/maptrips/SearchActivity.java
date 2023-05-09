@@ -23,7 +23,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         overridePendingTransition(R.anim.none, R.anim.none);
 
-        User defaultUser = (User) getIntent().getSerializableExtra("defaultUser");
+        User currentUser = (User) getIntent().getSerializableExtra(User.CURRENT_USER);
 
         Button buttonFeedTab = (Button) findViewById(R.id.button_feed);
         Button buttonSearchTab = (Button) findViewById(R.id.button_search);
@@ -35,7 +35,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SearchActivity.this, FeedActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
                 finish();
             }
@@ -45,7 +45,7 @@ public class SearchActivity extends AppCompatActivity {
 //            @Override
 //            public void onClick(View v) {
 //                Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
-//                intent.putExtra("defaultUser", defaultUser);
+//                intent.putExtra(User.CURRENT_USER, currentUser);
 //                startActivity(intent);
 //                finish();
 //            }
@@ -55,7 +55,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SearchActivity.this, WriteActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
 //                finish();
             }
@@ -65,7 +65,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SearchActivity.this, FolderActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
                 finish();
             }
@@ -75,7 +75,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SearchActivity.this, MypageActivity.class);
-                intent.putExtra("defaultUser", defaultUser);
+                intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
                 finish();
             }
