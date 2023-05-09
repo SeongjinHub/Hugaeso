@@ -27,6 +27,7 @@ public class User implements Serializable {
     int year;
     int month;
     String deviceinfo;
+    String img;
 
 
     private static Map<String, String> parameters;
@@ -75,6 +76,14 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
     /**
@@ -243,6 +252,63 @@ public class User implements Serializable {
                 parameters.put("usercode", usercode);
             } catch (Exception e) {
                 Log.d("getUserInfoRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+
+    }
+
+    public static class getPostsCountRequest extends StringRequest {
+
+        public getPostsCountRequest(String usercode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_mypage_posts_count.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("usercode", usercode);
+            } catch (Exception e) {
+                Log.d("getPostsCount", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+
+    }
+
+    public static class getFollowerCountRequest extends StringRequest {
+
+        public getFollowerCountRequest(String usercode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_mypage_follower_count.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("usercode", usercode);
+            } catch (Exception e) {
+                Log.d("getPostsCount", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+
+    }
+
+    public static class getFollowingCountRequest extends StringRequest {
+
+        public getFollowingCountRequest(String usercode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_mypage_following_count.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("usercode", usercode);
+            } catch (Exception e) {
+                Log.d("getPostsCount", "parameter put error");
             }
         }
 

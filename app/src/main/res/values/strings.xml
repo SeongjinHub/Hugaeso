@@ -31,4 +31,10 @@
     <string name="activity_write_text">Text</string>
     <string name="activity_write_upload_err">Failed to upload. Try Later.</string>
     <string name="activity_write_upload_complete">Complete.</string>
+    <string name="activity_mypage_tab_posts">Posts</string>
+    <string name="activity_mypage_tab_favorites">Favorites</string>
+    <string name="activity_mypage_follower">Followers</string>
+    <string name="activity_mypage_following">Following</string>
+    <string name="activity_mypage_posts">Posts</string>
+    <!-- TODO: Remove or change this placeholder text -->
 </resources>

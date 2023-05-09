@@ -32,4 +32,9 @@
     <string name="activity_write_text">본문</string>
     <string name="activity_write_upload_err">업로드에 실패하였습니다. 나중에 다시 시도하세요.</string>
     <string name="activity_write_upload_complete">업로드가 완료되었습니다.</string>
+    <string name="activity_mypage_tab_posts">전체 게시글</string>
+    <string name="activity_mypage_tab_favorites">즐겨찾기</string>
+    <string name="activity_mypage_follower">팔로워</string>
+    <string name="activity_mypage_following">팔로잉</string>
+    <string name="activity_mypage_posts">게시글</string>
 </resources>

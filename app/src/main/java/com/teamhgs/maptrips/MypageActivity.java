@@ -1,6 +1,8 @@
 package com.teamhgs.maptrips;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +13,15 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MypageActivity extends AppCompatActivity {
 
@@ -109,5 +120,94 @@ public class MypageActivity extends AppCompatActivity {
 
             }
         });
+
+        Button buttonAllPosts = (Button) findViewById(R.id.button_allpost);
+        Button buttonFollowing = (Button) findViewById(R.id.button_following);
+        Button buttonFollower = (Button) findViewById(R.id.button_follower);
+
+        { // Get Count of current User's all posts.
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean result = jsonResponse.getBoolean("responseResult");
+
+                        if (result) {
+                            String temp = jsonResponse.getString("posts") + "\n" + getResources().getString(R.string.activity_mypage_posts);
+                            buttonAllPosts.setText(temp);
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            };
+            User.getPostsCountRequest request = new User.getPostsCountRequest(defaultUser.getUsercode(), responseListener);
+            RequestQueue queue = Volley.newRequestQueue(MypageActivity.this);
+            queue.add(request);
+        }
+
+        { // Get Count of current User's followers.
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean result = jsonResponse.getBoolean("responseResult");
+
+                        if (result) {
+                            String temp = jsonResponse.getString("follower") + "\n" + getResources().getString(R.string.activity_mypage_follower);
+                            buttonFollower.setText(temp);
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            };
+            User.getFollowerCountRequest request = new User.getFollowerCountRequest(defaultUser.getUsercode(), responseListener);
+            RequestQueue queue = Volley.newRequestQueue(MypageActivity.this);
+            queue.add(request);
+        }
+
+        { // Get Count of current User's following.
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean result = jsonResponse.getBoolean("responseResult");
+
+                        if (result) {
+                            String temp = jsonResponse.getString("following") + "\n" + getResources().getString(R.string.activity_mypage_following);
+                            buttonFollowing.setText(temp);
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            };
+            User.getFollowingCountRequest request = new User.getFollowingCountRequest(defaultUser.getUsercode(), responseListener);
+            RequestQueue queue = Volley.newRequestQueue(MypageActivity.this);
+            queue.add(request);
+        }
+
+        MypageViewPager2Adapter mypageViewPager2Adapter = new MypageViewPager2Adapter(getSupportFragmentManager(), getLifecycle());
+        ViewPager2 viewPager2 = (ViewPager2) findViewById(R.id.viewPager2);
+        viewPager2.setAdapter(mypageViewPager2Adapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+
+        new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+
+                if (position == 0) {
+                    tab.setText(getResources().getString(R.string.activity_mypage_tab_posts));
+                }
+                else {
+                    tab.setText(getResources().getString(R.string.activity_mypage_tab_favorites));
+                }
+            }
+        }).attach();
     }
 }
