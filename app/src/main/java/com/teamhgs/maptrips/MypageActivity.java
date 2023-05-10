@@ -45,8 +45,8 @@ public class MypageActivity extends AppCompatActivity {
 
 
         //For Debug
-        String temp = currentUser.getUsercode() + " " + currentUser.getUsername() + " " + currentUser.getName() + " " + currentUser.getEmail();
-        Toast.makeText(getApplicationContext(), "Userinfo = " + temp, Toast.LENGTH_LONG).show();
+//        String temp = currentUser.getUsercode() + " " + currentUser.getUsername() + " " + currentUser.getName() + " " + currentUser.getEmail();
+//        Toast.makeText(getApplicationContext(), "Userinfo = " + temp, Toast.LENGTH_LONG).show();
 
         Button buttonFeedTab = (Button) findViewById(R.id.button_feed);
         Button buttonSearchTab = (Button) findViewById(R.id.button_search);

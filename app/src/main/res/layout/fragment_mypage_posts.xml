@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".MypagePostsFragment">
 
-    <TableLayout
+    <!-- Java 코드로 동적으로 추가되는 영역, 하단 메뉴바로 인해 내부 여백 필요. -->
+    <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </TableLayout>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/app_bottom">
+    </LinearLayout>
 
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="match_parent"
-        android:layout_height="1600dp"
-        android:text="posts" />
-
-</FrameLayout>
+</LinearLayout>
