@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
         TextView loginSub = (TextView)  findViewById(R.id.text_login_sub);
 
-        Intent intentMainActivity = new Intent(LoginActivity.this, FolderActivity.class);
+        Intent intentMainActivity = new Intent(LoginActivity.this, MainActivity.class);
 
 
         // SharedPreference Key-Value 쌍 비교를 통해 로그인 정보를 불러옴
