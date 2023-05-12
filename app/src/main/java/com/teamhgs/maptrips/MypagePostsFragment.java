@@ -211,7 +211,10 @@ public class MypagePostsFragment extends Fragment {
                                                         Glide.with(getActivity().getApplicationContext())
                                                                 .load(uri)
                                                                 .downsample(DownsampleStrategy.AT_LEAST)
+                                                                .override(width-1, width-1)
+                                                                .centerCrop()
                                                                 .into(imageButton);
+                                                        imageButton.setBackground(getResources().getDrawable(R.drawable.imgview_sqaure_border));
                                                         linearLayout.addView(imageButton);
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {

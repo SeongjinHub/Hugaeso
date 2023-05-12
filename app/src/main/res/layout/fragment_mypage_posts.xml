@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     tools:context=".MypagePostsFragment">
 
     <!-- Java 코드로 동적으로 추가되는 영역, 하단 메뉴바로 인해 내부 여백 필요. -->
