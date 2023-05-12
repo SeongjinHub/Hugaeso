@@ -1,30 +1,32 @@
 package com.teamhgs.maptrips;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.google.firebase.storage.network.ListNetworkRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,8 +45,9 @@ public class MypagePostsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     User currentUser;
     ArrayList<Post> postArrayList = new ArrayList<>();
-    int i;
+    int postIndex, urlIndex;
     int num;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
 
 
     public MypagePostsFragment() {
@@ -113,83 +116,140 @@ public class MypagePostsFragment extends Fragment {
                     JSONObject jsonObject;
 
                     if (jsonResponse.length() > 0) {
-                        for (i = 0; i < jsonResponse.length(); i++) {
+                        for (postIndex = 0; postIndex < jsonResponse.length(); postIndex++) {
 
-                            jsonObject = jsonResponse.getJSONObject(i);
+                            jsonObject = jsonResponse.getJSONObject(postIndex);
                             String postcode = jsonObject.getString("postcode");
 
                             postArrayList.add(new Post(postcode));
                         }
+                        postIndex = 0;
                     } else {
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
-                i = 0;
 
-                if (postArrayList.size() > 0) { // ArrayList에 Post 객체가 존재할 경우
-                    for (int j = 0; j < postArrayList.size(); j++) { // 각 Postcode와 일치하는 이미지 Url을 반복 검색
-                        Response.Listener<String> responseListener_url = new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONArray jsonResponse_url = new JSONArray(response);
-                                    JSONObject jsonObject_url;
+                if (postArrayList.size() > 0) { // ArrayList에 Post 객체가 존재할 경우.
+                    // Image Url 불러오기.
+                    Response.Listener<String> responseListener_url = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                ArrayList<String> url = new ArrayList<>();
 
-                                    if (jsonResponse_url.length() > 0) {
-                                        ArrayList<String> url = new ArrayList<>();
-                                        for (int k = 0; k < jsonResponse_url.length(); k++) {
+                                JSONArray jsonResponse_url = new JSONArray(response);
+                                JSONObject jsonObject_url;
 
-                                            jsonObject_url = jsonResponse_url.getJSONObject(k);
+                                // 한 Post에 여러 이미지가 있을 경우 대비
+                                String postcodePrev = "";
+                                String postcodeNow = "";
+
+                                if (jsonResponse_url.length() > 0) {
+//                                    ArrayList<String> url = new ArrayList<>();
+                                    for (int k = 0; k < jsonResponse_url.length(); k++) {
+                                        jsonObject_url = jsonResponse_url.getJSONObject(k);
+                                        postcodeNow = jsonObject_url.getString("postcode");
+
+                                        if (!postcodeNow.equals(postcodePrev)) { // Postcode값 중복여부 검사 - 불일치.
+                                            postcodePrev = postcodeNow;
+
+                                            url = new ArrayList<>();
                                             url.add(jsonObject_url.getString("url"));
-                                        }
-                                        postArrayList.get(i).setUrl(url);
-                                        i++;
 
-                                        if (i == postArrayList.size()){ // 모든 URL 검색 및 저장 완료.
-
-                                            int row = postArrayList.size();
-                                            int col = postArrayList.size();
-                                            for (int i = 0; i <= postArrayList.size() / 3; i++) {
-
-                                                LinearLayout linearLayout = new LinearLayout(getActivity().getApplicationContext());
-                                                linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                                                linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-                                                row = row - 3;
-                                                if (row < 0) { row = 0; }
-
-                                                for (num = col - 1; num >= row; num--) {
-                                                    Button imageButton = new Button(getActivity().getApplicationContext());
-                                                    imageButton.setLayoutParams(new ViewGroup.LayoutParams(width, height));
-                                                    imageButton.setTag(num);
-                                                    imageButton.setText(String.valueOf(num)); // For Dev.
-                                                    linearLayout.addView(imageButton);
-
-                                                    imageButton.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
-                                                            int index = (int) v.getTag(); // View 객체의 Tag를 이용, ArrayList 내 객체 접근에 사용.
-                                                            Intent intent = new Intent(getActivity(), MypagePostActivity.class);
-                                                            intent.putExtra("Post", postArrayList.get(index));
-                                                            startActivity(intent);
-                                                        }
-                                                    });
+                                            // ArrayList<Post> 내 Postcode가 일치하는 요소 탐색.
+                                            for (int l = 0; l < postArrayList.size(); l++) {
+                                                if (postArrayList.get(l).getPostcode().equals(postcodeNow)) {
+                                                    postArrayList.get(l).setUrl(url);
+                                                    break;
                                                 }
-                                                col = col - 3;
-                                                container.addView(linearLayout);
+                                            }
+                                        }
+                                        else { // 중복될 경우
+                                            // 이전에 생성한 ArrayList<String> url 객체에 요소 추가.
+                                            url.add(jsonObject_url.getString("url"));
+                                            for (int l = 0; l < postArrayList.size(); l++) {
+                                                if (postArrayList.get(l).getPostcode().equals(postcodeNow)) {
+                                                    postArrayList.get(l).setUrl(url);
+                                                }
                                             }
                                         }
                                     }
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
+                                    boolean downloadUrlStat = true;
+
+                                    for (int l = 0; l < postArrayList.size(); l++) {
+                                        if (postArrayList.get(l).getUrl().size() == 0)
+                                            downloadUrlStat = false;
+                                    }
+
+                                    if (downloadUrlStat) { // 모든 URL 검색 및 저장 완료.
+
+                                        int row = postArrayList.size();
+                                        int col = postArrayList.size();
+
+                                        for (int i = 0; i <= postArrayList.size() / 3; i++) { // 가로 3개.
+
+                                            LinearLayout linearLayout = new LinearLayout(getActivity().getApplicationContext());
+                                            linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                                            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                                            row = row - 3;
+                                            if (row < 0) {
+                                                row = 0;
+                                            }
+
+                                            for (num = col - 1; num >= row; num--) { // 내림차순으로 3개씩 배치.
+                                                ImageButton imageButton = new ImageButton(getActivity().getApplicationContext());
+                                                imageButton.setLayoutParams(new ViewGroup.LayoutParams(width, height));
+                                                imageButton.setTag(num);
+
+                                                StorageReference storageReference = storage.getReference().getRoot();
+                                                storageReference = storageReference.child(postArrayList.get(num).getUrl().get(0));
+                                                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                    @Override
+                                                    public void onSuccess(Uri uri) {
+                                                        Glide.with(getActivity().getApplicationContext())
+                                                                .load(uri)
+                                                                .downsample(DownsampleStrategy.AT_LEAST)
+                                                                .into(imageButton);
+                                                        linearLayout.addView(imageButton);
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        // 나중에 @String 요소로 바꿔주세요.
+                                                        Toast.makeText(getActivity().getApplicationContext(), "'네트워크 연결을 확인해주세요.", Toast.LENGTH_LONG).show();
+                                                    }
+                                                });
+
+//                                                    linearLayout.addView(imageButton);
+
+                                                imageButton.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        int index = (int) v.getTag(); // View 객체의 Tag를 이용, ArrayList 내 객체 접근에 사용.
+                                                        Intent intent = new Intent(getActivity(), MypagePostActivity.class);
+                                                        intent.putExtra("Post", postArrayList.get(index));
+                                                        startActivity(intent);
+                                                    }
+                                                });
+                                            }
+                                            col = col - 3;
+                                            container.addView(linearLayout);
+                                        }
+
+                                    }
                                 }
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
                             }
-                        };
-                        RequestQueue queue_url = Volley.newRequestQueue(getActivity().getApplicationContext());
-                        Post.getPostsUrlListRequest request_url = new Post.getPostsUrlListRequest(postArrayList.get(i).getPostcode(), responseListener_url);
-                        queue_url.add(request_url);
-                    }
+                        }
+                    };
+
+                    RequestQueue queue_url = Volley.newRequestQueue(getActivity().getApplicationContext());
+                    Post.getPostsUrlListRequest request_url = new Post.getPostsUrlListRequest(currentUser.getUsercode(), responseListener_url);
+                    queue_url.add(request_url);
+
                 }
             }
         };

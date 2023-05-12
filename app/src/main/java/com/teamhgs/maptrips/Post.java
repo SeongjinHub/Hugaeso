@@ -195,11 +195,12 @@ public class Post implements Serializable {
 
     public static class insertPostUrlRequest extends StringRequest {
 
-        public insertPostUrlRequest(Post post, Response.Listener<String> listener) {
+        public insertPostUrlRequest(Post post, String usercode, Response.Listener<String> listener) {
             super(Method.POST, DB_Framework.IP_ADDRESS + "/db_post_url_insert.php", listener, null);
             parameters = new HashMap<>();
             try {
                 parameters.put("postcode", post.getPostcode());
+                parameters.put("usercode", usercode);
                 parameters.put("url", post.getUrl().get(0));
             } catch (Exception e) {
                 Log.d("insertPostUrlRequest", "parameter put error");
@@ -233,11 +234,11 @@ public class Post implements Serializable {
 
     public static class getPostsUrlListRequest extends StringRequest {
 
-        public getPostsUrlListRequest(String postcode, Response.Listener<String> listener) {
+        public getPostsUrlListRequest(String usercode, Response.Listener<String> listener) {
             super(Method.POST, DB_Framework.IP_ADDRESS + "/db_mypage_posts_url_list.php", listener, null);
             parameters = new HashMap<>();
             try {
-                parameters.put("postcode", postcode);
+                parameters.put("usercode", usercode);
             } catch (Exception e) {
                 Log.d("getPostUrlListRequest", "parameter put error");
             }

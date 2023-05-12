@@ -168,7 +168,7 @@ public class WriteActivity extends AppCompatActivity {
                                 }
                             }
                         };
-                        Post.insertPostUrlRequest request = new Post.insertPostUrlRequest(post, responseListener);
+                        Post.insertPostUrlRequest request = new Post.insertPostUrlRequest(post, currentUser.getUsercode(), responseListener);
                         RequestQueue queue = Volley.newRequestQueue(WriteActivity.this);
                         queue.add(request);
 
