@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -212,6 +213,7 @@ public class MypagePostsFragment extends Fragment {
                                                                 .load(uri)
                                                                 .downsample(DownsampleStrategy.AT_LEAST)
                                                                 .override(width-1, width-1)
+                                                                .transition(DrawableTransitionOptions.withCrossFade())
                                                                 .centerCrop()
                                                                 .into(imageButton);
                                                         imageButton.setBackground(getResources().getDrawable(R.drawable.imgview_sqaure_border));
