@@ -1,5 +1,6 @@
 package com.teamhgs.maptrips;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentResolver;
@@ -19,11 +20,18 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -37,6 +45,8 @@ public class WriteActivity extends AppCompatActivity {
     String filename;
     String imgPath;
     ArrayList<String> url = new ArrayList<>();
+    static FirebaseStorage storage = FirebaseStorage.getInstance();
+    static StorageReference storageRef = storage.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,61 +132,92 @@ public class WriteActivity extends AppCompatActivity {
                 if (filename != null) {
                     try {
                         imgPath = getCacheDir() + "/" + filename;   // 내부 저장소에 저장되어 있는 이미지 경로
-
-                        post.uploadStorageStream(imgPath, filename);
-                        url.add("Posts/" + post.getPostcode() + "/" + filename);
-                        post.setUrl(url);
-
-                        Response.Listener<String> responseListener = new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonResponse = new JSONObject(response);
-                                    boolean result = jsonResponse.getBoolean("responseResult");
-
-                                    if (result) {
-                                        Response.Listener<String> responseListener = new Response.Listener<String>() {
-                                            @Override
-                                            public void onResponse(String response) {
-                                                try {
-                                                    JSONObject jsonResponse = new JSONObject(response);
-                                                    boolean result = jsonResponse.getBoolean("responseResult");
-
-                                                    if (result) {
-                                                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_write_upload_complete), Toast.LENGTH_LONG).show();
-                                                        finish();
-                                                    } else {
-                                                        deleteCacheImg();
-                                                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_write_upload_err), Toast.LENGTH_LONG).show();
-                                                        finish();
-                                                    }
-                                                } catch (JSONException e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                            }
-                                        };
-                                        Post.insertPostRequest request = new Post.insertPostRequest(currentUser.getUsercode(), post, responseListener);
-                                        RequestQueue queue = Volley.newRequestQueue(WriteActivity.this);
-                                        queue.add(request);
-                                    } else {
-                                        deleteCacheImg();
-                                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_write_upload_err), Toast.LENGTH_LONG).show();
-                                        finish();
-                                    }
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }
-                        };
-                        Post.insertPostUrlRequest request = new Post.insertPostUrlRequest(post, currentUser.getUsercode(), responseListener);
-                        RequestQueue queue = Volley.newRequestQueue(WriteActivity.this);
-                        queue.add(request);
-
                     } catch (Exception e) {
 //                    Toast.makeText(getApplicationContext(), "파일 로드 실패", Toast.LENGTH_SHORT).show();
                     }
-                }
-                else {
+
+                    InputStream stream = null;
+
+                    try {
+                        stream = new FileInputStream(new File(imgPath));
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    StorageReference postsImageRef = storageRef.child("Posts/" + post.getPostcode() + "/" + filename);
+
+                    UploadTask uploadTask = postsImageRef.putStream(stream);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            url.add("");
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                            // ...
+                            postsImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    url.add(uri.toString());
+                                    post.setUrl(url);
+
+                                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            try {
+                                                JSONObject jsonResponse = new JSONObject(response);
+                                                boolean result = jsonResponse.getBoolean("responseResult");
+
+                                                if (result) {
+                                                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                                        @Override
+                                                        public void onResponse(String response) {
+                                                            try {
+                                                                JSONObject jsonResponse = new JSONObject(response);
+                                                                boolean result = jsonResponse.getBoolean("responseResult");
+
+                                                                if (result) {
+                                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_write_upload_complete), Toast.LENGTH_LONG).show();
+                                                                    finish();
+                                                                } else {
+                                                                    deleteCacheImg();
+                                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_write_upload_err), Toast.LENGTH_LONG).show();
+                                                                    finish();
+                                                                }
+                                                            } catch (JSONException e) {
+                                                                throw new RuntimeException(e);
+                                                            }
+                                                        }
+                                                    };
+                                                    Post.insertPostRequest request = new Post.insertPostRequest(currentUser.getUsercode(), post, responseListener);
+                                                    RequestQueue queue = Volley.newRequestQueue(WriteActivity.this);
+                                                    queue.add(request);
+                                                } else {
+                                                    deleteCacheImg();
+                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_write_upload_err), Toast.LENGTH_LONG).show();
+                                                    finish();
+                                                }
+                                            } catch (JSONException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }
+                                    };
+                                    Post.insertPostUrlRequest request = new Post.insertPostUrlRequest(post, currentUser.getUsercode(), responseListener);
+                                    RequestQueue queue = Volley.newRequestQueue(WriteActivity.this);
+                                    queue.add(request);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplicationContext(), "ERROR CODE - GET URL Failure", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    });
+                } else {
 
                 }
             }
@@ -229,7 +270,7 @@ public class WriteActivity extends AppCompatActivity {
             File[] fileList = file.listFiles();
             for (int i = 0; i < fileList.length; i++) {    // 배열의 크기만큼 반복
 //                if (fileList[i].getName().equals(filename)) {   // 삭제하고자 하는 이름과 같은 파일명이 있으면 실행
-                    fileList[i].delete();  // 파일 삭제
+                fileList[i].delete();  // 파일 삭제
 //                    Toast.makeText(getApplicationContext(), "파일 삭제 성공", Toast.LENGTH_SHORT).show();
 //                }
             }

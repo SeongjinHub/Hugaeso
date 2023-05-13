@@ -42,9 +42,6 @@ public class Post implements Serializable {
     ArrayList<String> url = new ArrayList<>();
     private static Map<String, String> parameters;
 
-    static FirebaseStorage storage = FirebaseStorage.getInstance();
-    static StorageReference storageRef = storage.getReference();
-    static StorageReference postsRef = storageRef.child("Posts");
 
     public Post() {
         Date date = new Date();
@@ -137,31 +134,6 @@ public class Post implements Serializable {
 
     public void setUrl(ArrayList<String> url) {
         this.url = url;
-    }
-
-    public void uploadStorageStream(String fromFilePath, String newFileName) {
-        InputStream stream = null;
-        try {
-            stream = new FileInputStream(new File(fromFilePath));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        StorageReference postsImageRef = storageRef.child("Posts/" + getPostcode() + "/" + newFileName);
-
-        UploadTask uploadTask = postsImageRef.putStream(stream);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
-            }
-        });
     }
 
     public static class insertPostRequest extends StringRequest {

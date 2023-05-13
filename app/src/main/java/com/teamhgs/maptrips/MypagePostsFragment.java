@@ -48,7 +48,6 @@ public class MypagePostsFragment extends Fragment {
     ArrayList<Post> postArrayList = new ArrayList<>();
     int postIndex, urlIndex;
     int num;
-    FirebaseStorage storage = FirebaseStorage.getInstance();
 
 
     public MypagePostsFragment() {
@@ -204,30 +203,15 @@ public class MypagePostsFragment extends Fragment {
                                                 imageButton.setLayoutParams(new ViewGroup.LayoutParams(width, height));
                                                 imageButton.setTag(num);
 
-                                                StorageReference storageReference = storage.getReference().getRoot();
-                                                storageReference = storageReference.child(postArrayList.get(num).getUrl().get(0));
-                                                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                    @Override
-                                                    public void onSuccess(Uri uri) {
-                                                        Glide.with(getActivity().getApplicationContext())
-                                                                .load(uri)
-                                                                .downsample(DownsampleStrategy.AT_LEAST)
-                                                                .override(width-1, width-1)
-                                                                .transition(DrawableTransitionOptions.withCrossFade())
-                                                                .centerCrop()
-                                                                .into(imageButton);
-                                                        imageButton.setBackground(getResources().getDrawable(R.drawable.imgview_sqaure_border));
-                                                        linearLayout.addView(imageButton);
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        // 나중에 @String 요소로 바꿔주세요.
-                                                        Toast.makeText(getActivity().getApplicationContext(), "'네트워크 연결을 확인해주세요.", Toast.LENGTH_LONG).show();
-                                                    }
-                                                });
-
-//                                                    linearLayout.addView(imageButton);
+                                                Glide.with(getActivity().getApplicationContext())
+                                                        .load(postArrayList.get(num).getUrl().get(0))
+                                                        .downsample(DownsampleStrategy.AT_LEAST)
+                                                        .override(width-1, width-1)
+                                                        .transition(DrawableTransitionOptions.withCrossFade())
+                                                        .centerCrop()
+                                                        .into(imageButton);
+                                                imageButton.setBackground(getResources().getDrawable(R.drawable.imgview_sqaure_border));
+                                                linearLayout.addView(imageButton);
 
                                                 imageButton.setOnClickListener(new View.OnClickListener() {
                                                     @Override
