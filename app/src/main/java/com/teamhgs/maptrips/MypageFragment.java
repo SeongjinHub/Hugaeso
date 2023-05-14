@@ -8,13 +8,16 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -40,6 +43,8 @@ public class MypageFragment extends Fragment {
     // TODO: Rename and change types of parameters
     User currentUser;
     ViewGroup viewGroup;
+    MypageViewPager2Adapter mypageViewPager2Adapter;
+
     public MypageFragment() {
         // Required empty public constructor
     }
@@ -99,30 +104,30 @@ public class MypageFragment extends Fragment {
         Button buttonFollowing = (Button) viewGroup.findViewById(R.id.button_following);
         Button buttonFollower = (Button) viewGroup.findViewById(R.id.button_follower);
 
-        { // Get Count of current User's all posts.
-            Response.Listener<String> responseListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        boolean result = jsonResponse.getBoolean("responseResult");
+        // Get Count of current User's all posts.
+        Response.Listener<String> allPostsListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean result = jsonResponse.getBoolean("responseResult");
 
-                        if (result) {
-                            String temp = jsonResponse.getString("posts") + "\n" + getResources().getString(R.string.activity_mypage_posts);
-                            buttonAllPosts.setText(temp);
-                        }
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
+                    if (result) {
+                        String temp = jsonResponse.getString("posts") + "\n" + getResources().getString(R.string.activity_mypage_posts);
+                        buttonAllPosts.setText(temp);
                     }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
                 }
-            };
-            User.getPostsCountRequest request = new User.getPostsCountRequest(currentUser.getUsercode(), responseListener);
-            RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-            queue.add(request);
-        }
+            }
+        };
+        User.getPostsCountRequest allPostsRequest = new User.getPostsCountRequest(currentUser.getUsercode(), allPostsListener);
+        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        queue.add(allPostsRequest);
 
-        { // Get Count of current User's followers.
-            Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+         // Get Count of current User's followers.
+            Response.Listener<String> followerListener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -138,13 +143,12 @@ public class MypageFragment extends Fragment {
                     }
                 }
             };
-            User.getFollowerCountRequest request = new User.getFollowerCountRequest(currentUser.getUsercode(), responseListener);
-            RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-            queue.add(request);
-        }
+            User.getFollowerCountRequest followerRequest = new User.getFollowerCountRequest(currentUser.getUsercode(), followerListener);
+            queue.add(followerRequest);
 
-        { // Get Count of current User's following.
-            Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+         // Get Count of current User's following.
+            Response.Listener<String> followingListener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -160,13 +164,14 @@ public class MypageFragment extends Fragment {
                     }
                 }
             };
-            User.getFollowingCountRequest request = new User.getFollowingCountRequest(currentUser.getUsercode(), responseListener);
-            RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-            queue.add(request);
-        }
+            User.getFollowingCountRequest followingRequest = new User.getFollowingCountRequest(currentUser.getUsercode(), followingListener);
+            queue.add(followingRequest);
+
 
         // ViewPager2 를 이용해 좌,우 슬라이드 제스쳐 및 탭 기능을 구현
-        MypageViewPager2Adapter mypageViewPager2Adapter = new MypageViewPager2Adapter(currentUser, getActivity());
+//        MypageViewPager2Adapter mypageViewPager2Adapter = new MypageViewPager2Adapter(currentUser, getActivity());
+        mypageViewPager2Adapter = new MypageViewPager2Adapter(currentUser, getActivity());
+
         ViewPager2 viewPager2 = (ViewPager2) viewGroup.findViewById(R.id.viewPager2);
         viewPager2.setAdapter(mypageViewPager2Adapter);
 
@@ -183,6 +188,36 @@ public class MypageFragment extends Fragment {
                 }
             }
         }).attach();
+
+        SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) viewGroup.findViewById(R.id.refresh_layout);
+        ScrollView scrollView = (ScrollView) viewGroup.findViewById(R.id.scroll_view);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                User.getPostsCountRequest allPostsRequest = new User.getPostsCountRequest(currentUser.getUsercode(), allPostsListener);
+                User.getFollowerCountRequest followerRequest = new User.getFollowerCountRequest(currentUser.getUsercode(), followerListener);
+                User.getFollowingCountRequest followingRequest = new User.getFollowingCountRequest(currentUser.getUsercode(), followingListener);
+                queue.add(allPostsRequest);
+                queue.add(followerRequest);
+                queue.add(followingRequest);
+
+                mypageViewPager2Adapter = new MypageViewPager2Adapter(currentUser, getActivity());
+                viewPager2.setAdapter(mypageViewPager2Adapter);
+                refreshLayout.setRefreshing(false);
+
+            }
+        });
+        refreshLayout.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (scrollView.getScrollY() == 0)
+                    refreshLayout.setEnabled(true);
+                else
+                    refreshLayout.setEnabled(false);
+            }
+        });
 
         // Inflate the layout for this fragment
         return viewGroup;
