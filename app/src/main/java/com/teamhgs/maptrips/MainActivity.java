@@ -18,6 +18,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
     MypageFragment mypageFragment;
     BottomNavigationView bottomNavigationView;
     FragmentTransaction transaction;
+
+    public final String TAG_FEED = "Feed";
+    public final String TAG_SEARCH = "Search";
+    public final String TAG_WRITE = "Write";
+    public final String TAG_FOLDER = "Folder";
+    public final String TAG_MYPAGE = "Mypage";
 
 
     @Override
@@ -73,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         mypageFragment = new MypageFragment().newInstance(currentUser);
 
         transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.container, folderFragment).commitAllowingStateLoss();
+        transaction.replace(R.id.container, folderFragment, TAG_FOLDER).commitAllowingStateLoss();
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -82,26 +90,22 @@ public class MainActivity extends AppCompatActivity {
                 transaction = fragmentManager.beginTransaction();
                 switch (item.getItemId()) {
                     case R.id.feed:
-                        transaction.replace(R.id.container, feedFragment).commitAllowingStateLoss();
+                        transaction.replace(R.id.container, feedFragment, TAG_FEED).commitAllowingStateLoss();
                         break;
                     case R.id.search:
-                        transaction.replace(R.id.container, searchFragment).commitAllowingStateLoss();
+                        transaction.replace(R.id.container, searchFragment, TAG_SEARCH).commitAllowingStateLoss();
                         break;
                     case R.id.write:
 //                        transaction.replace(R.id.container, writeFragment).addToBackStack(null).commit();
                         Intent intent = new Intent(MainActivity.this, WriteActivity.class);
                         intent.putExtra(User.CURRENT_USER, currentUser);
                         startActivity(intent);
-
-                        // Mypage Fragment 호출
-//                        bottomNavigationView.getMenu().findItem(R.id.mypage).setChecked(true);
-                        transaction.replace(R.id.container, mypageFragment, "Mypage").commitAllowingStateLoss();
                         break;
                     case R.id.folder:
-                        transaction.replace(R.id.container, folderFragment).commitAllowingStateLoss();
+                        transaction.replace(R.id.container, folderFragment, TAG_FOLDER).commitAllowingStateLoss();
                         break;
                     case R.id.mypage:
-                        transaction.replace(R.id.container, mypageFragment).commitAllowingStateLoss();
+                        transaction.replace(R.id.container, mypageFragment, TAG_MYPAGE).commitAllowingStateLoss();
                         break;
                 }
                 return true;
@@ -116,10 +120,27 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_navi);
 
-        Fragment tag = fragmentManager.findFragmentByTag("Mypage");
+        Fragment feed = fragmentManager.findFragmentByTag(TAG_FEED);
+        Fragment search = fragmentManager.findFragmentByTag(TAG_SEARCH);
+//        Fragment write = fragmentManager.findFragmentByTag(TAG_WRITE);
+        Fragment folder = fragmentManager.findFragmentByTag(TAG_FOLDER);
+        Fragment mypage = fragmentManager.findFragmentByTag(TAG_MYPAGE);
 
-        if (tag != null && tag.isVisible())
+        if (feed != null && feed.isVisible()) {
+            bottomNavigationView.getMenu().findItem(R.id.feed).setChecked(true);
+        }
+        else if (search != null && search.isVisible()) {
+            bottomNavigationView.getMenu().findItem(R.id.search).setChecked(true);
+        }
+//        else if (write != null && write.isVisible()) {
+//            bottomNavigationView.getMenu().findItem(R.id.write).setChecked(true);
+//        }
+        else if (folder != null && folder.isVisible()) {
+            bottomNavigationView.getMenu().findItem(R.id.folder).setChecked(true);
+        }
+        else if (mypage != null && mypage.isVisible()) {
             bottomNavigationView.getMenu().findItem(R.id.mypage).setChecked(true);
+        }
 
 
     }
