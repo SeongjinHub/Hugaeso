@@ -146,7 +146,7 @@ public class Post implements Serializable {
                 parameters.put("postcode", post.getPostcode());
                 parameters.put("title", post.getTitle());
                 parameters.put("text", post.getText());
-                parameters.put("date", LocalDate.now().toString());
+                parameters.put("date", post.getDate());
 //                parameters.put("country", post.getCountry());
 //                parameters.put("city", post.getCity());
 //                parameters.put("area", post.getArea());

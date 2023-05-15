@@ -38,8 +38,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.Locale;
 
@@ -61,8 +59,8 @@ public class SignUpActivity extends AppCompatActivity {
         Button buttonCancel = (Button) findViewById(R.id.button_cancel);
         Button buttonConfirm = (Button) findViewById(R.id.button_confirm);
 
-        Drawable editTextNormalUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner);
-        Drawable editTextErrorUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner_err);
+        Drawable editTextNormalUI = getResources().getDrawable(R.drawable.edit_rad_corner_sign);
+        Drawable editTextErrorUI = getResources().getDrawable(R.drawable.edit_rad_corner_sign_err);
 
         int errColor = ContextCompat.getColor(getApplicationContext(), com.google.android.material.R.color.design_default_color_error);
         int defaultTextColor = ContextCompat.getColor(getApplicationContext(), R.color.default_text_color);

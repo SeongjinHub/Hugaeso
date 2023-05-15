@@ -3,16 +3,19 @@ package com.teamhgs.maptrips;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -35,8 +38,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -48,6 +53,9 @@ public class WriteActivity extends AppCompatActivity {
     ArrayList<String> url = new ArrayList<>();
     static FirebaseStorage storage = FirebaseStorage.getInstance();
     static StorageReference storageRef = storage.getReference();
+    String dateString;
+    Button calenderButton; // 메타데이터에서 날짜 불러올 때 쓸 것 같은 느낌
+    Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +73,41 @@ public class WriteActivity extends AppCompatActivity {
 
         EditText etTitle = (EditText) findViewById(R.id.et_title);
         EditText etText = (EditText) findViewById(R.id.et_text);
+
+        calenderButton = (Button) findViewById(R.id.button_calander);
+
+        dateString = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DATE);
+        String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_write_date_year)
+                    + (calendar.get(Calendar.MONTH) + 1) + getString(R.string.activity_write_date_month)
+                    + calendar.get(Calendar.DATE) + getString(R.string.activity_write_date_day);
+        calenderButton.setText(temp);
+
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                dateString = year + "-" + (month + 1) + "-" + dayOfMonth;
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    dateString = format.format(format.parse(dateString));
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                String temp = year + getString(R.string.activity_write_date_year)
+                            + (month + 1) + getString(R.string.activity_write_date_month)
+                            + dayOfMonth + getString(R.string.activity_write_date_day);
+                calenderButton.setText(temp);
+                calenderButton.setTextColor(Color.BLACK);
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+
+        // Calender Dialog
+        calenderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show();
+            }
+        });
 
         buttonAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +169,8 @@ public class WriteActivity extends AppCompatActivity {
                     if (post.getText().length() < 1) {
                         post.setText("\n");
                     }
+
+                    post.setDate(dateString);
                 } catch (Exception e) {
 
                 }

@@ -46,8 +46,8 @@ public class LoginActivity extends AppCompatActivity {
         LinearLayout parent_area = (LinearLayout) findViewById(R.id.parent_area);
         LinearLayout title_area = (LinearLayout) findViewById(R.id.title_area);
 
-        Drawable editTextNormalUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner);
-        Drawable editTextErrorUI = getResources().getDrawable(R.drawable.edittext_login_ui_rounded_corner_err);
+        Drawable editTextNormalUI = getResources().getDrawable(R.drawable.edit_rad_corner_sign);
+        Drawable editTextErrorUI = getResources().getDrawable(R.drawable.edit_rad_corner_sign_err);
 
         Animation fade_in = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade_in_login);
         Animation fade_out = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.fade_out);

@@ -38,5 +38,10 @@
     <string name="activity_mypage_posts">Posts</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="activity_write_date_year">-</string>
+    <string name="activity_write_date_month">-</string>
+    <string name="activity_write_date_day"></string>
+    <string name="activity_write_date_metadata">Date form Picture.</string>
+    <string name="activity_write_date_sub">Touch to change date.</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
