@@ -2,15 +2,22 @@ package com.teamhgs.maptrips;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -18,6 +25,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -25,7 +33,6 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -37,9 +44,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,9 +65,10 @@ public class WriteActivity extends AppCompatActivity {
     ArrayList<String> url = new ArrayList<>();
     static FirebaseStorage storage = FirebaseStorage.getInstance();
     static StorageReference storageRef = storage.getReference();
-    String dateString;
+    String date;
     Button calenderButton; // 메타데이터에서 날짜 불러올 때 쓸 것 같은 느낌
     Calendar calendar = Calendar.getInstance();
+    ExifInterface exifInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,20 +89,20 @@ public class WriteActivity extends AppCompatActivity {
 
         calenderButton = (Button) findViewById(R.id.button_calander);
 
-        dateString = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DATE);
+        date = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DATE);
         String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_write_date_year)
                     + (calendar.get(Calendar.MONTH) + 1) + getString(R.string.activity_write_date_month)
                     + calendar.get(Calendar.DATE) + getString(R.string.activity_write_date_day);
         calenderButton.setText(temp);
 
-
+        // 날짜 선택을 위한 달력 UI Dailog.
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateString = year + "-" + (month + 1) + "-" + dayOfMonth;
-                try {
+                date = year + "-" + (month + 1) + "-" + dayOfMonth;
+                try { // 2023-5-1 to 2023-05-01
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    dateString = format.format(format.parse(dateString));
+                    date = format.format(format.parse(date));
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -101,7 +114,7 @@ public class WriteActivity extends AppCompatActivity {
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
 
-        // Calender Dialog
+        // Calender Dialog.
         calenderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,13 +122,14 @@ public class WriteActivity extends AppCompatActivity {
             }
         });
 
+        // Add Image.
         buttonAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, 101);
+                intent.setAction(Intent.ACTION_PICK);
+                startActivityForResult(intent, 201);
             }
         });
 
@@ -170,7 +184,7 @@ public class WriteActivity extends AppCompatActivity {
                         post.setText("\n");
                     }
 
-                    post.setDate(dateString);
+                    post.setDate(date);
                 } catch (Exception e) {
 
                 }
@@ -274,15 +288,47 @@ public class WriteActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { // 갤러리
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 101) {
+        if (requestCode == 201) {
             if (resultCode == RESULT_OK) {
+
                 Uri fileUri = data.getData();
+
+                // 미디어 액세스 권한이 허용된 경우에만 동작하도록 하였습니다.
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_MEDIA_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    try { // 이미지 메타데이터를 가져옵니다.
+                        exifInterface = new ExifInterface(uriToPath(fileUri));
+
+                        // Image 에 메타데이터가 존재하고 날짜 및 시간 값이 존재합니다.
+                        if (exifInterface != null && exifInterface.getAttribute(ExifInterface.TAG_DATETIME) != null) {
+                            String exifDate = exifInterface.getAttribute(ExifInterface.TAG_DATETIME).replace(":", "-");
+                            date = exifDate.substring(0, 10); // 2023-05-15 22-13-34 to 2023-05-15
+
+                            calendar.set(Calendar.YEAR, Integer.parseInt(date.substring(0, 4)));
+                            calendar.set(Calendar.MONTH, Integer.parseInt(date.substring(5, 7)) - 1);
+                            calendar.set(Calendar.DATE, Integer.parseInt(date.substring(8, 10)));
+
+                            String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_write_date_year)
+                                        + (calendar.get(Calendar.MONTH) + 1) + getString(R.string.activity_write_date_month)
+                                        + calendar.get(Calendar.DATE) + getString(R.string.activity_write_date_day);
+                            calenderButton.setText(temp);
+                            calenderButton.setTextColor(getColor(R.color.app_main_color));
+
+                            TextView calenderText = (TextView) findViewById(R.id.text_calander);
+                            calenderText.setText(getString(R.string.activity_write_date_metadata));
+                        }
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
                 ContentResolver resolver = getContentResolver();
+
                 try {
                     InputStream instream = resolver.openInputStream(fileUri);
                     Bitmap imgBitmap = BitmapFactory.decodeStream(instream);
                     saveBitmapToPNG(imgBitmap);    // 내부 저장소에 저장
-                    buttonAddImage.setImageBitmap(imgBitmap);    // 선택한 이미지 이미지뷰에 셋
+                    buttonAddImage.setImageBitmap(imgBitmap);    // 선택한 이미지를 이미지 버튼에 표시합니다.
                     instream.close();   // 스트림 닫아주기
 //                    Toast.makeText(getApplicationContext(), "파일 불러오기 성공", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
@@ -323,5 +369,18 @@ public class WriteActivity extends AppCompatActivity {
         } catch (Exception e) {
 //            Toast.makeText(getApplicationContext(), "파일 삭제 실패", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public String uriToPath(Uri contentUri) {
+
+        String[] proj = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        cursor.moveToNext();
+        @SuppressLint("Range") String path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
+        Uri uri = Uri.fromFile(new File(path));
+
+        cursor.close();
+        return path;
     }
 }

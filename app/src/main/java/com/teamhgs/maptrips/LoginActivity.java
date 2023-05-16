@@ -1,10 +1,15 @@
 package com.teamhgs.maptrips;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -28,12 +33,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.Permission;
 
 public class LoginActivity extends AppCompatActivity {
+
+    boolean init = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Init();
         setContentView(R.layout.activity_login);
 
         Button buttonSignIn = (Button) findViewById(R.id.button_signin);
@@ -209,7 +219,6 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intentSignUpActivity);
                 }
             });
-
         } else {
             /* Usercode와 Device ID값을 DB에 검색하여 인증값(Auth)이 참인지 확인합니다.
              * Value of "auth"
@@ -247,6 +256,42 @@ public class LoginActivity extends AppCompatActivity {
             User.savedLoginRequest Request = new User.savedLoginRequest(currentUser.getUsercode(), Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), 1, responseListener);
             RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
             queue.add(Request);
+        }
+    }
+
+    private void Init() { // 앱 권한 확인 및 허가 요청.
+        String[] permissions;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_MEDIA_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                init = false;
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_MEDIA_LOCATION}, 101);
+            }
+        }
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            init = false;
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 102);
+        }
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
+            init = false;
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 103);
+        }
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            init = false;
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 104);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults.length > 0) {
+           if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+               // 권한 거부 시
+           }
+           else {
+               // 권한 허가 시
+           }
         }
     }
 }
