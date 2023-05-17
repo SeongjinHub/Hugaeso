@@ -59,7 +59,7 @@
             android:ems="10"
             android:hint="USERNAME"
             android:inputType="text"
-            android:padding="15dp"
+            android:padding="@dimen/edittext_default_padding"
             android:visibility="visible" />
 
         <EditText
@@ -73,7 +73,7 @@
             android:ems="10"
             android:hint="PASSWORD"
             android:inputType="textPassword"
-            android:padding="15dp"
+            android:padding="@dimen/edittext_default_padding"
             android:selectAllOnFocus="true"
             android:visibility="visible" />
 
@@ -94,13 +94,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/btn_login_ui_sign_in"
             android:text="@string/activity_login_sign_in_btn"
             android:textColor="@color/white"
-            android:textSize="9pt"
-            android:padding="15dp"
+            android:textSize="8pt"
+            android:padding="@dimen/edittext_default_padding"
             android:visibility="visible" />
 
         <Button
@@ -129,8 +129,8 @@
             android:background="@drawable/btn_login_ui_sign_up"
             android:text="@string/activity_login_sign_up_btn"
             android:textColor="@color/white"
-            android:textSize="9pt"
-            android:padding="15dp"
+            android:textSize="8pt"
+            android:padding="@dimen/edittext_default_padding"
             android:visibility="visible" />
 
     </LinearLayout>

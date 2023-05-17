@@ -8,9 +8,9 @@
     <dimen name="title_logo_height">180dp</dimen>
     <dimen name="title_logo_padding">50dp</dimen>
     <dimen name="content_default_padding">30dp</dimen>
+    <dimen name="edittext_default_padding">15dp</dimen>
     <dimen name="activity_mypage_profile_img">100dp</dimen>
     <dimen name="activity_mypage_profile_btn">80dp</dimen>
-    <dimen name="activity_mypage_profile_btn_textsize">6pt</dimen>
+    <dimen name="activity_mypage_profile_btn_textsize">7pt</dimen>
     <dimen name="edittext_padding_default">15dp</dimen>
-    <dimen name="edittext_margin_default">15dp</dimen>
 </resources>
