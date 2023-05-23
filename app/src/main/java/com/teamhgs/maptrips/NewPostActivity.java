@@ -48,16 +48,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class WriteActivity extends AppCompatActivity {
+public class NewPostActivity extends AppCompatActivity {
 
     ImageButton buttonAddImage;
     String filename;
@@ -73,7 +69,7 @@ public class WriteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_write);
+        setContentView(R.layout.activity_new_post);
         overridePendingTransition(R.anim.none, R.anim.none);
 
         User currentUser = (User) getIntent().getSerializableExtra(User.CURRENT_USER);
@@ -90,9 +86,9 @@ public class WriteActivity extends AppCompatActivity {
         calenderButton = (Button) findViewById(R.id.button_calander);
 
         date = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DATE);
-        String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_write_date_year)
-                    + (calendar.get(Calendar.MONTH) + 1) + getString(R.string.activity_write_date_month)
-                    + calendar.get(Calendar.DATE) + getString(R.string.activity_write_date_day);
+        String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_new_post_date_year)
+                    + (calendar.get(Calendar.MONTH) + 1) + getString(R.string.activity_new_post_date_month)
+                    + calendar.get(Calendar.DATE) + getString(R.string.activity_new_post_date_day);
         calenderButton.setText(temp);
 
         // 날짜 선택을 위한 달력 UI Dailog.
@@ -106,9 +102,9 @@ public class WriteActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
-                String temp = year + getString(R.string.activity_write_date_year)
-                            + (month + 1) + getString(R.string.activity_write_date_month)
-                            + dayOfMonth + getString(R.string.activity_write_date_day);
+                String temp = year + getString(R.string.activity_new_post_date_year)
+                            + (month + 1) + getString(R.string.activity_new_post_date_month)
+                            + dayOfMonth + getString(R.string.activity_new_post_date_day);
                 calenderButton.setText(temp);
                 calenderButton.setTextColor(Color.BLACK);
             }
@@ -240,11 +236,11 @@ public class WriteActivity extends AppCompatActivity {
                                                                 boolean result = jsonResponse.getBoolean("responseResult");
 
                                                                 if (result) {
-                                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_write_upload_complete), Toast.LENGTH_LONG).show();
+                                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_new_post_upload_complete), Toast.LENGTH_LONG).show();
                                                                     finish();
                                                                 } else {
                                                                     deleteCacheImg();
-                                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_write_upload_err), Toast.LENGTH_LONG).show();
+                                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_new_post_upload_err), Toast.LENGTH_LONG).show();
                                                                     finish();
                                                                 }
                                                             } catch (JSONException e) {
@@ -253,11 +249,11 @@ public class WriteActivity extends AppCompatActivity {
                                                         }
                                                     };
                                                     Post.insertPostRequest request = new Post.insertPostRequest(currentUser.getUsercode(), post, responseListener);
-                                                    RequestQueue queue = Volley.newRequestQueue(WriteActivity.this);
+                                                    RequestQueue queue = Volley.newRequestQueue(NewPostActivity.this);
                                                     queue.add(request);
                                                 } else {
                                                     deleteCacheImg();
-                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_write_upload_err), Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_new_post_upload_err), Toast.LENGTH_LONG).show();
                                                     finish();
                                                 }
                                             } catch (JSONException e) {
@@ -266,7 +262,7 @@ public class WriteActivity extends AppCompatActivity {
                                         }
                                     };
                                     Post.insertPostUrlRequest request = new Post.insertPostUrlRequest(post, currentUser.getUsercode(), responseListener);
-                                    RequestQueue queue = Volley.newRequestQueue(WriteActivity.this);
+                                    RequestQueue queue = Volley.newRequestQueue(NewPostActivity.this);
                                     queue.add(request);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -307,14 +303,14 @@ public class WriteActivity extends AppCompatActivity {
                             calendar.set(Calendar.MONTH, Integer.parseInt(date.substring(5, 7)) - 1);
                             calendar.set(Calendar.DATE, Integer.parseInt(date.substring(8, 10)));
 
-                            String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_write_date_year)
-                                        + (calendar.get(Calendar.MONTH) + 1) + getString(R.string.activity_write_date_month)
-                                        + calendar.get(Calendar.DATE) + getString(R.string.activity_write_date_day);
+                            String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_new_post_date_year)
+                                        + (calendar.get(Calendar.MONTH) + 1) + getString(R.string.activity_new_post_date_month)
+                                        + calendar.get(Calendar.DATE) + getString(R.string.activity_new_post_date_day);
                             calenderButton.setText(temp);
                             calenderButton.setTextColor(getColor(R.color.app_main_color));
 
                             TextView calenderText = (TextView) findViewById(R.id.text_calander);
-                            calenderText.setText(getString(R.string.activity_write_date_metadata));
+                            calenderText.setText(getString(R.string.activity_new_post_date_metadata));
                         }
 
                     } catch (IOException e) {

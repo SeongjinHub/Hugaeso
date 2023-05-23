@@ -1,7 +1,6 @@
 package com.teamhgs.maptrips;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,10 +22,6 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +40,7 @@ public class MypagePostsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     User currentUser;
     ArrayList<Post> postArrayList = new ArrayList<>();
-    int postIndex, urlIndex;
+    int postIndex;
     int num;
 
 
@@ -142,8 +136,8 @@ public class MypagePostsFragment extends Fragment {
                                 JSONObject jsonObject_url;
 
                                 // 한 Post에 여러 이미지가 있을 경우 대비
-                                String postcodePrev = "";
-                                String postcodeNow = "";
+                                String postcodePrev = null;
+                                String postcodeNow;
 
                                 if (jsonResponse_url.length() > 0) {
 //                                    ArrayList<String> url = new ArrayList<>();

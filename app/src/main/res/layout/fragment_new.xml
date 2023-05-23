@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".WriteActivity">
+    tools:context=".NewFragment">
 
+    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,15 +37,9 @@
 
             <Button
                 android:id="@+id/button_upload"
-                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:minWidth="60dp"
-                android:padding="0dp"
-                android:textSize="8pt"
-                android:text="@string/activity_write_commit" />
-            <!-- 나중에 버튼 클릭 이펙트 만들어주세요 -->
+                android:text="@string/activity_new_post_commit" />
 
         </LinearLayout>
 
@@ -67,9 +61,7 @@
                     android:id="@+id/Button_addimage"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
-                    android:layout_margin="0dp"
-                    android:background="@drawable/btn_write_add_img"
-                    android:scaleType="centerCrop" />
+                    tools:srcCompat="@tools:sample/avatars" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -81,46 +73,17 @@
                         android:id="@+id/et_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/edittext_default_padding"
-                        android:background="@drawable/edit_rad_corner_light"
                         android:ems="10"
-                        android:hint="@string/activity_write_title"
                         android:inputType="text"
-                        android:maxLength="30"
-                        android:maxLines="1"
-                        android:padding="@dimen/edittext_padding_default" />
+                        android:hint="@string/activity_new_post_title" />
 
                     <EditText
                         android:id="@+id/et_text"
                         android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_marginBottom="@dimen/edittext_default_padding"
-                        android:background="@drawable/edit_rad_corner_light"
+                        android:layout_height="wrap_content"
                         android:ems="10"
-                        android:hint="@string/activity_write_text"
-                        android:inputType="textMultiLine"
-                        android:maxLength="130"
-                        android:maxLines="5"
-                        android:padding="@dimen/edittext_padding_default" />
-
-                    <Button
-                        android:id="@+id/button_calander"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/btn_write_calender"
-                        android:padding="@dimen/edittext_padding_default"
-                        android:text="YYYY-mm-DD"
-                        android:textAlignment="textStart"
-                        android:textAllCaps="false"
-                        android:textColor="@color/default_text_color"
-                        android:textSize="8pt"
-                        android:textStyle="normal" />
-
-                    <TextView
-                        android:id="@+id/text_calander"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/activity_write_date_sub" />
+                        android:inputType="text"
+                        android:hint="@string/activity_new_post_text" />
 
                 </LinearLayout>
 
@@ -130,4 +93,4 @@
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

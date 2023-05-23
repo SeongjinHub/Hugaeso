@@ -6,20 +6,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager = getSupportFragmentManager();
     FeedFragment feedFragment = new FeedFragment();
     SearchFragment searchFragment;
-    WriteFragment writeFragment;
+    NewFragment newFragment;
     FolderFragment folderFragment;
     MypageFragment mypageFragment;
     BottomNavigationView bottomNavigationView;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     public final String TAG_FEED = "Feed";
     public final String TAG_SEARCH = "Search";
-    public final String TAG_WRITE = "Write";
+    public final String TAG_NEW = "New";
     public final String TAG_FOLDER = "Folder";
     public final String TAG_MYPAGE = "Mypage";
 
@@ -71,12 +72,44 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
         queue.add(request);
 
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View newTabDialogView = layoutInflater.inflate(R.layout.activity_main_new_tab_dialog, null, false);
+        BottomSheetDialog newTabDialog = new BottomSheetDialog(this);
+        newTabDialog.setContentView(newTabDialogView);
+
+        Button newPost = (Button) newTabDialogView.findViewById(R.id.button_new_post);
+        Button newFolder = (Button) newTabDialogView.findViewById(R.id.button_new_folder);
+        newPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newTabDialog.dismiss();
+                Intent intent = new Intent(MainActivity.this, NewPostActivity.class);
+                intent.putExtra(User.CURRENT_USER, currentUser);
+                startActivity(intent);
+            }
+        });
+
+        newFolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newTabDialog.dismiss();
+            }
+        });
+
+        newTabDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                bottomNaviViewChecker();
+            }
+        });
+
         bottomNavigationView = findViewById(R.id.bottom_navi);
         bottomNavigationView.setSelectedItemId(R.id.folder);
 
         feedFragment = new FeedFragment().newInstance(currentUser);
         searchFragment = new SearchFragment().newInstance(currentUser);
-//        writeFragment = new WriteFragment().newInstance(currentUser);
+//        newFragment = new NewFragment().newInstance(currentUser);
         folderFragment = new FolderFragment().newInstance(currentUser);
         mypageFragment = new MypageFragment().newInstance(currentUser);
 
@@ -95,11 +128,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.search:
                         transaction.replace(R.id.container, searchFragment, TAG_SEARCH).commitAllowingStateLoss();
                         break;
-                    case R.id.write:
-//                        transaction.replace(R.id.container, writeFragment).addToBackStack(null).commit();
-                        Intent intent = new Intent(MainActivity.this, WriteActivity.class);
-                        intent.putExtra(User.CURRENT_USER, currentUser);
-                        startActivity(intent);
+                    case R.id.new_tab:
+//                        transaction.replace(R.id.container, newFragment).addToBackStack(null).commit();
+                        newTabDialog.show();
                         break;
                     case R.id.folder:
                         transaction.replace(R.id.container, folderFragment, TAG_FOLDER).commitAllowingStateLoss();
@@ -117,8 +148,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        bottomNaviViewChecker();
+    }
 
-        bottomNavigationView = findViewById(R.id.bottom_navi);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        bottomNaviViewChecker();
+    }
+
+    protected void bottomNaviViewChecker() {
 
         Fragment feed = fragmentManager.findFragmentByTag(TAG_FEED);
         Fragment search = fragmentManager.findFragmentByTag(TAG_SEARCH);
@@ -141,7 +180,5 @@ public class MainActivity extends AppCompatActivity {
         else if (mypage != null && mypage.isVisible()) {
             bottomNavigationView.getMenu().findItem(R.id.mypage).setChecked(true);
         }
-
-
     }
 }

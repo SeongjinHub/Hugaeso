@@ -13,4 +13,7 @@
     <dimen name="activity_mypage_profile_btn">80dp</dimen>
     <dimen name="activity_mypage_profile_btn_textsize">7pt</dimen>
     <dimen name="edittext_padding_default">15dp</dimen>
+    <dimen name="new_tab_dialog_radius">25dp</dimen>
+    <dimen name="new_tab_dialog_btn_radius">15dp</dimen>
+    <dimen name="new_tab_dialog_btn_padding">20dp</dimen>
 </resources>

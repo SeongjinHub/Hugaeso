@@ -17,10 +17,10 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/write"
+        android:id="@+id/new_tab"
         android:enabled="true"
         android:icon="@drawable/ic_write"
-        android:title="@string/bottom_write"
+        android:title="@string/bottom_new"
         app:showAsAction="always"/>
 
     <item

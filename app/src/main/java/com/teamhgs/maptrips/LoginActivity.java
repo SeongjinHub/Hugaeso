@@ -133,8 +133,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     currentUser.setUsername(editTextUsername.getText().toString());
                     currentUser.setPassword(editTextPassword.getText().toString());
-//                    user.username = editTextUsername.getText().toString();
-//                    user.password = editTextPassword.getText().toString();
 
                     if (!currentUser.chkUsernameRegEx()) {
                         loginSub.setVisibility(View.VISIBLE);
@@ -162,9 +160,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                     if (loginResult) { // 일치할 경우
                                         currentUser.setUsercode(jsonResponse.getString("usercode"));
-//                                        User.username = jsonResponse.getString("username");
-//                                        User.name = jsonResponse.getString("name");
-//                                        User.email = jsonResponse.getString("email");
 
                                         /* DB에 Usercode, Device ID, DateTime, Auth 정보를 기록합니다. */
                                         Response.Listener<String> responseListener2 = new Response.Listener<String>() {
@@ -260,7 +255,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void Init() { // 앱 권한 확인 및 허가 요청.
-        String[] permissions;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_MEDIA_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 init = false;

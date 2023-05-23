@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="25dp"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="300dp"
+    app:behavior_draggable="false"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <Button
+        android:id="@+id/button_new_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:padding="@dimen/new_tab_dialog_btn_padding"
+        android:background="@drawable/btn_new_tab_dialog"
+        android:text="@string/activity_main_new_menu_newpost" />
+
+    <Button
+        android:id="@+id/button_new_folder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:padding="@dimen/new_tab_dialog_btn_padding"
+        android:background="@drawable/btn_new_tab_dialog"
+        android:text="@string/activity_main_new_menu_newfolder" />
+
+</LinearLayout>
