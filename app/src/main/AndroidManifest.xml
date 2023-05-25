@@ -34,11 +34,11 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MypagePostActivity"
+            android:name=".PostActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".NewPostActivity"
+            android:name=".AddPostActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

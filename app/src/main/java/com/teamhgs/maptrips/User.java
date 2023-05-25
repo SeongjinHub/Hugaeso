@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 public class User implements Serializable {
 
     static final String CURRENT_USER = "currentUser";
+    static final String POST_WRITER = "postWriter";
     String usercode;
     String username;
     String password;

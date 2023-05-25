@@ -222,13 +222,13 @@ public class Post implements Serializable {
         }
     }
 
-    public static class getPostsRequest extends StringRequest {
+    public static class getPostRequest extends StringRequest {
 
-        public getPostsRequest(String usercode, Response.Listener<String> listener) {
-            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_mypage_posts.php", listener, null);
+        public getPostRequest(String postcode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_get_post.php", listener, null);
             parameters = new HashMap<>();
             try {
-                parameters.put("usercode", usercode);
+                parameters.put("postcode", postcode);
             } catch (Exception e) {
                 Log.d("getPostRequest", "parameter put error");
             }

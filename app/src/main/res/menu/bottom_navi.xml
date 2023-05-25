@@ -17,7 +17,7 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/new_tab"
+        android:id="@+id/add"
         android:enabled="true"
         android:icon="@drawable/ic_write"
         android:title="@string/bottom_new"

@@ -11,21 +11,21 @@
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <Button
-        android:id="@+id/button_new_post"
+        android:id="@+id/button_add_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:padding="@dimen/new_tab_dialog_btn_padding"
-        android:background="@drawable/btn_new_tab_dialog"
+        android:background="@drawable/btn_add_tab_dialog"
         android:text="@string/activity_main_new_menu_newpost" />
 
     <Button
-        android:id="@+id/button_new_folder"
+        android:id="@+id/button_add_folder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:padding="@dimen/new_tab_dialog_btn_padding"
-        android:background="@drawable/btn_new_tab_dialog"
+        android:background="@drawable/btn_add_tab_dialog"
         android:text="@string/activity_main_new_menu_newfolder" />
 
 </LinearLayout>

@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager = getSupportFragmentManager();
     FeedFragment feedFragment = new FeedFragment();
     SearchFragment searchFragment;
-    NewFragment newFragment;
+    AddFragment addFragment;
     FolderFragment folderFragment;
     MypageFragment mypageFragment;
     BottomNavigationView bottomNavigationView;
@@ -74,30 +74,30 @@ public class MainActivity extends AppCompatActivity {
 
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View newTabDialogView = layoutInflater.inflate(R.layout.activity_main_new_tab_dialog, null, false);
-        BottomSheetDialog newTabDialog = new BottomSheetDialog(this);
-        newTabDialog.setContentView(newTabDialogView);
+        View addTabDialogView = layoutInflater.inflate(R.layout.activity_main_add_dialog, null, false);
+        BottomSheetDialog addTabDialog = new BottomSheetDialog(this);
+        addTabDialog.setContentView(addTabDialogView);
 
-        Button newPost = (Button) newTabDialogView.findViewById(R.id.button_new_post);
-        Button newFolder = (Button) newTabDialogView.findViewById(R.id.button_new_folder);
-        newPost.setOnClickListener(new View.OnClickListener() {
+        Button addPost = (Button) addTabDialogView.findViewById(R.id.button_add_post);
+        Button addFolder = (Button) addTabDialogView.findViewById(R.id.button_add_folder);
+        addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newTabDialog.dismiss();
-                Intent intent = new Intent(MainActivity.this, NewPostActivity.class);
+                addTabDialog.dismiss();
+                Intent intent = new Intent(MainActivity.this, AddPostActivity.class);
                 intent.putExtra(User.CURRENT_USER, currentUser);
                 startActivity(intent);
             }
         });
 
-        newFolder.setOnClickListener(new View.OnClickListener() {
+        addFolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newTabDialog.dismiss();
+                addTabDialog.dismiss();
             }
         });
 
-        newTabDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        addTabDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 bottomNaviViewChecker();
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
         feedFragment = new FeedFragment().newInstance(currentUser);
         searchFragment = new SearchFragment().newInstance(currentUser);
-//        newFragment = new NewFragment().newInstance(currentUser);
+//        addFragment = new AddFragment().newInstance(currentUser);
         folderFragment = new FolderFragment().newInstance(currentUser);
         mypageFragment = new MypageFragment().newInstance(currentUser);
 
@@ -128,9 +128,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.search:
                         transaction.replace(R.id.container, searchFragment, TAG_SEARCH).commitAllowingStateLoss();
                         break;
-                    case R.id.new_tab:
-//                        transaction.replace(R.id.container, newFragment).addToBackStack(null).commit();
-                        newTabDialog.show();
+                    case R.id.add:
+//                        transaction.replace(R.id.container, addFragment).addToBackStack(null).commit();
+                        addTabDialog.show();
                         break;
                     case R.id.folder:
                         transaction.replace(R.id.container, folderFragment, TAG_FOLDER).commitAllowingStateLoss();

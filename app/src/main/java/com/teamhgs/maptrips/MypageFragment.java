@@ -79,9 +79,9 @@ public class MypageFragment extends Fragment {
 
         viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_mypage, container, false);
 
-        TextView header_title = (TextView) viewGroup.findViewById(R.id.text_header_title);
+        TextView headerTitle = (TextView) viewGroup.findViewById(R.id.text_header_title);
 
-        header_title.setText("@" + currentUser.getUsername());
+        headerTitle.setText("@" + currentUser.getUsername());
 
         ImageButton buttonSetting = (ImageButton) viewGroup.findViewById(R.id.button_setting);
 
@@ -169,7 +169,6 @@ public class MypageFragment extends Fragment {
 
 
         // ViewPager2 를 이용해 좌,우 슬라이드 제스쳐 및 탭 기능을 구현
-//        MypageViewPager2Adapter mypageViewPager2Adapter = new MypageViewPager2Adapter(currentUser, getActivity());
         mypageViewPager2Adapter = new MypageViewPager2Adapter(currentUser, getActivity());
 
         ViewPager2 viewPager2 = (ViewPager2) viewGroup.findViewById(R.id.viewPager2);

@@ -5,11 +5,15 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +63,24 @@ public class FolderFragment extends Fragment {
         // Inflate the layout for this fragment
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_folder, container, false);
 
+        FolderViewPager2Adapter folderViewPager2Adapter = new FolderViewPager2Adapter(currentUser, getActivity());
 
+        ViewPager2 viewPager2 = (ViewPager2) viewGroup.findViewById(R.id.viewPager2);
+        viewPager2.setAdapter(folderViewPager2Adapter);
+
+        TabLayout tabLayout = (TabLayout) viewGroup.findViewById(R.id.tab_layout);
+
+        new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+
+                if (position == 0) {
+                    tab.setText(getResources().getString(R.string.activity_folder_tab_map));
+                } else {
+                    tab.setText(getResources().getString(R.string.activity_folder_tab_lists));
+                }
+            }
+        }).attach();
 
         return viewGroup;
     }
