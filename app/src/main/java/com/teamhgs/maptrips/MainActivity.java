@@ -72,37 +72,35 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
         queue.add(request);
 
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//
+//        View addTabDialogView = layoutInflater.inflate(R.layout.activity_main_add_dialog, null, false);
+//        BottomSheetDialog addTabDialog = new BottomSheetDialog(this);
+//        addTabDialog.setContentView(addTabDialogView);
 
-        View addTabDialogView = layoutInflater.inflate(R.layout.activity_main_add_dialog, null, false);
-        BottomSheetDialog addTabDialog = new BottomSheetDialog(this);
-        addTabDialog.setContentView(addTabDialogView);
+//        Button addPost = (Button) addTabDialogView.findViewById(R.id.button_add_post);
+//        Button addFolder = (Button) addTabDialogView.findViewById(R.id.button_add_folder);
+//        addPost.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                addTabDialog.dismiss();
+//
+//            }
+//        });
+//
+//        addFolder.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                addTabDialog.dismiss();
+//            }
+//        });
 
-        Button addPost = (Button) addTabDialogView.findViewById(R.id.button_add_post);
-        Button addFolder = (Button) addTabDialogView.findViewById(R.id.button_add_folder);
-        addPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addTabDialog.dismiss();
-                Intent intent = new Intent(MainActivity.this, AddPostActivity.class);
-                intent.putExtra(User.CURRENT_USER, currentUser);
-                startActivity(intent);
-            }
-        });
-
-        addFolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addTabDialog.dismiss();
-            }
-        });
-
-        addTabDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                bottomNaviViewChecker();
-            }
-        });
+//        addTabDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                bottomNaviViewChecker();
+//            }
+//        });
 
         bottomNavigationView = findViewById(R.id.bottom_navi);
         bottomNavigationView.setSelectedItemId(R.id.folder);
@@ -130,7 +128,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.add:
 //                        transaction.replace(R.id.container, addFragment).addToBackStack(null).commit();
-                        addTabDialog.show();
+//                        addTabDialog.show();
+                        Intent intent = new Intent(MainActivity.this, AddPostActivity.class);
+                        intent.putExtra(User.CURRENT_USER, currentUser);
+                        startActivity(intent);
                         break;
                     case R.id.folder:
                         transaction.replace(R.id.container, folderFragment, TAG_FOLDER).commitAllowingStateLoss();
