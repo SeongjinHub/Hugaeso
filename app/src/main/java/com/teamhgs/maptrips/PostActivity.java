@@ -39,9 +39,9 @@ public class PostActivity extends AppCompatActivity {
         ImageButton buttonMenu = (ImageButton) findViewById(R.id.imageButton_header_menu);
         TextView headerTitle = (TextView) findViewById(R.id.text_header_title);
 
-        TextView postTitle = (TextView) findViewById(R.id.text_post_title);
         TextView postDate = (TextView) findViewById(R.id.text_post_date);
         TextView postText = (TextView) findViewById(R.id.text_post_text);
+        TextView postUser = (TextView) findViewById(R.id.text_post_user);
 
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -58,7 +58,7 @@ public class PostActivity extends AppCompatActivity {
         LinearLayout containerImg = findViewById(R.id.container_img);
 
         ImageView imageView = new ImageView(this);
-        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         Glide.with(this)
                 .load(currentPost.getUrl().get(0))
@@ -94,9 +94,9 @@ public class PostActivity extends AppCompatActivity {
                         currentPost.setPrivateStatus(Integer.parseInt(jsonResponse.getString("private")));
 
                         headerTitle.setText(currentPost.getTitle());
-                        postTitle.setText(currentPost.getTitle());
                         postDate.setText(currentPost.getDate());
                         postText.setText(currentPost.getText());
+                        postUser.setText(postWriter.getUsername());
                     }
                     else {
 
@@ -111,10 +111,10 @@ public class PostActivity extends AppCompatActivity {
         queue.add(request);
 
 
-        SupportMapFragment supportMapFragment = SupportMapFragment.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.mapView2, supportMapFragment)
-                .commitAllowingStateLoss();
+//        SupportMapFragment supportMapFragment = SupportMapFragment.newInstance();
+//        getSupportFragmentManager().beginTransaction()
+//                .add(R.id.mapView2, supportMapFragment)
+//                .commitAllowingStateLoss();
 
     }
 }

@@ -19,5 +19,6 @@
     <dimen name="activity_post_title_textsize">16pt</dimen>
     <dimen name="activity_post_date_textsize">10pt</dimen>
     <dimen name="activity_post_text_textsize">9pt</dimen>
-    <dimen name="activity_post_imgview_radius">15dp</dimen>
+    <dimen name="activity_post_imgview_radius">0dp</dimen>
+    <dimen name="activity_post_profile_img">50dp</dimen>
 </resources>

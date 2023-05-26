@@ -2,79 +2,152 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
     tools:context=".PostActivity">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/app_header"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                tools:layout_editor_absoluteX="-16dp"
-                tools:layout_editor_absoluteY="-317dp">
+                android:layout_height="@dimen/app_header"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/imageButton_header_back"
+                    android:layout_width="@dimen/app_header_btn_size"
+                    android:layout_height="@dimen/app_header_btn_size"
+                    app:srcCompat="?attr/homeAsUpIndicator" />
+
+                <TextView
+                    android:id="@+id/text_header_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text=""
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/app_header_fontsize"
+                    android:visibility="visible" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/imageButton_header_menu"
+                    android:layout_width="@dimen/app_header_btn_size"
+                    android:layout_height="@dimen/app_header_btn_size"
+                    app:srcCompat="?attr/homeAsUpIndicator" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider"
+                android:visibility="visible" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:id="@+id/app_header"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/app_header"
-                    android:background="@color/white"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <ImageButton
-                        android:id="@+id/imageButton_header_back"
-                        android:layout_width="@dimen/app_header_btn_size"
-                        android:layout_height="@dimen/app_header_btn_size"
-                        app:srcCompat="?attr/homeAsUpIndicator" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp">
 
-                    <TextView
-                        android:id="@+id/text_header_title"
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/imageView_profile"
+                            android:layout_width="@dimen/activity_post_profile_img"
+                            android:layout_height="@dimen/activity_post_profile_img"
+                            android:layout_marginRight="0dp"
+                            android:src="@drawable/sample_img"
+                            app:civ_border_color="@color/divider"
+                            app:civ_border_overlay="true"
+                            app:civ_border_width="2dp" />
+
+                        <TextView
+                            android:id="@+id/text_post_user"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="0dp"
+                            android:padding="8dp"
+                            android:text="TextView"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/activity_post_date_textsize" />
+
+                    </LinearLayout>
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp">
+
+                        <LinearLayout
+                            android:id="@+id/container_img"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical" />
+
+                    </ScrollView>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:text=""
-                        android:textAllCaps="false"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+
+                        <TextView
+                            android:id="@+id/text_post_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:text="TextView"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/activity_post_date_textsize" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/text_post_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:padding="10dp"
+                        android:text="TextView"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/app_header_fontsize"
-                        android:visibility="visible" />
-
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
-                    <ImageButton
-                        android:id="@+id/imageButton_header_menu"
-                        android:layout_width="@dimen/app_header_btn_size"
-                        android:layout_height="@dimen/app_header_btn_size"
-                        app:srcCompat="?attr/homeAsUpIndicator" />
+                        android:textSize="@dimen/activity_post_text_textsize" />
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider"
-                    android:visibility="visible" />
+            </ScrollView>
 
-                <com.google.android.gms.maps.MapView
-                    android:id="@+id/mapView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+        </LinearLayout>
 
-            </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <include layout="@layout/activity_post_bottom_sheet" />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
