@@ -5,14 +5,14 @@
             <stroke android:width="0dp"
                 android:color="@color/divider"/>
             <corners android:radius="@dimen/activity_post_imgview_radius"/>
-            <solid android:color="@color/black_10" />
+            <solid android:color="@color/transparent" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <stroke android:width="0dp"
                 android:color="@color/divider"/>
-            <corners android:radius="@dimen/activity_post_imgview_radius" />
+            <corners android:radius="0dp" />
             <solid android:color="@color/black_30" />
         </shape>
     </item>

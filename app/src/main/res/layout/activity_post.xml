@@ -27,7 +27,7 @@
                     android:id="@+id/imageButton_header_back"
                     android:layout_width="@dimen/app_header_btn_size"
                     android:layout_height="@dimen/app_header_btn_size"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:scaleType="fitCenter"
                     android:background="@color/white"
                     android:src="@drawable/ic_back" />
@@ -52,7 +52,7 @@
                     android:id="@+id/imageButton_header_menu"
                     android:layout_width="@dimen/app_header_btn_size"
                     android:layout_height="@dimen/app_header_btn_size"
-                    android:padding="10dp"
+                    android:padding="12dp"
                     android:scaleType="fitCenter"
                     android:background="@color/white"
                     android:src="@drawable/ic_menu" />

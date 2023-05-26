@@ -2,12 +2,16 @@ package com.teamhgs.maptrips;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,9 +24,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Calendar;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -94,7 +101,18 @@ public class PostActivity extends AppCompatActivity {
                         currentPost.setPrivateStatus(Integer.parseInt(jsonResponse.getString("private")));
 
                         headerTitle.setText(currentPost.getTitle());
-                        postDate.setText(currentPost.getDate());
+
+                        Calendar calendar = Calendar.getInstance();
+
+                        calendar.set(Calendar.YEAR, Integer.parseInt(currentPost.getDate().substring(0, 4)));
+                        calendar.set(Calendar.MONTH, Integer.parseInt(currentPost.getDate().substring(5, 7)) - 1);
+                        calendar.set(Calendar.DATE, Integer.parseInt(currentPost.getDate().substring(8, 10)));
+
+                        String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_add_post_date_year)
+                                + (calendar.get(Calendar.MONTH) + 1) + getString(R.string.activity_add_post_date_month)
+                                + calendar.get(Calendar.DATE) + getString(R.string.activity_add_post_date_day);
+
+                        postDate.setText(temp);
                         postText.setText(currentPost.getText());
                         postUser.setText(postWriter.getUsername());
                     }
@@ -110,6 +128,51 @@ public class PostActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
 
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View postMenuDialogView = layoutInflater.inflate(R.layout.activity_post_menu, null, false);
+        BottomSheetDialog postMenuDialog = new BottomSheetDialog(this);
+        postMenuDialog.setContentView(postMenuDialogView);
+
+        Button modifyPost = (Button) postMenuDialogView.findViewById(R.id.button_modify);
+        Button deletePost = (Button) postMenuDialogView.findViewById(R.id.button_delete);
+
+        if (currentUser.getUsercode().equals(postWriter.getUsercode())) {
+            modifyPost.setVisibility(View.VISIBLE);
+            modifyPost.setVisibility(View.VISIBLE);
+        }
+        else {
+            modifyPost.setVisibility(View.INVISIBLE);
+            modifyPost.setVisibility(View.INVISIBLE);
+        }
+        modifyPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postMenuDialog.dismiss();
+
+            }
+        });
+
+        deletePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postMenuDialog.dismiss();
+            }
+        });
+
+
+        postMenuDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+            }
+        });
+
+        buttonMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postMenuDialog.show();
+            }
+        });
 
 //        SupportMapFragment supportMapFragment = SupportMapFragment.newInstance();
 //        getSupportFragmentManager().beginTransaction()

@@ -46,4 +46,6 @@
     <string name="activity_folder_tab_lists">목록</string>
     <string name="activity_main_new_menu_newpost">게시글 추가하기</string>
     <string name="activity_main_new_menu_newfolder">폴더 추가하기</string>
+    <string name="activity_post_menu_delete">삭제하기</string>
+    <string name="activity_post_menu_modify">수정하기</string>
 </resources>

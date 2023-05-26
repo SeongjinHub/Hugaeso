@@ -22,8 +22,11 @@
     <color name="divider">#20000000</color>
     <color name="black_10">#10000000</color>
     <color name="black_20">#20000000</color>
+    <color name="black_30">#30000000</color>
     <color name="black_40">#40000000</color>
     <color name="black_50">#50000000</color>
     <color name="black_60">#60000000</color>
     <color name="black_70">#70000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="red_100">#FFFF0000</color>
 </resources>

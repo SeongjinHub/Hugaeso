@@ -47,5 +47,7 @@
     <string name="activity_folder_tab_lists">Lists</string>
     <string name="activity_main_new_menu_newpost">New Post</string>
     <string name="activity_main_new_menu_newfolder">New Folder</string>
+    <string name="activity_post_menu_delete">Delete</string>
+    <string name="activity_post_menu_modify">Modify</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
