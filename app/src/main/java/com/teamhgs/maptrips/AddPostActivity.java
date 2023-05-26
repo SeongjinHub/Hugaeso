@@ -62,7 +62,7 @@ public class AddPostActivity extends AppCompatActivity {
     static FirebaseStorage storage = FirebaseStorage.getInstance();
     static StorageReference storageRef = storage.getReference();
     String date;
-    Button calenderButton; // 메타데이터에서 날짜 불러올 때 쓸 것 같은 느낌
+    Button calendarButton; // 메타데이터에서 날짜 불러올 때 쓸 것 같은 느낌
     Calendar calendar = Calendar.getInstance();
     ExifInterface exifInterface;
 
@@ -83,13 +83,13 @@ public class AddPostActivity extends AppCompatActivity {
         EditText etTitle = (EditText) findViewById(R.id.et_title);
         EditText etText = (EditText) findViewById(R.id.et_text);
 
-        calenderButton = (Button) findViewById(R.id.button_calander);
+        calendarButton = (Button) findViewById(R.id.button_calander);
 
         date = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DATE);
         String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_add_post_date_year)
                     + (calendar.get(Calendar.MONTH) + 1) + getString(R.string.activity_add_post_date_month)
                     + calendar.get(Calendar.DATE) + getString(R.string.activity_add_post_date_day);
-        calenderButton.setText(temp);
+        calendarButton.setText(temp);
 
         // 날짜 선택을 위한 달력 UI Dailog.
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -105,13 +105,13 @@ public class AddPostActivity extends AppCompatActivity {
                 String temp = year + getString(R.string.activity_add_post_date_year)
                             + (month + 1) + getString(R.string.activity_add_post_date_month)
                             + dayOfMonth + getString(R.string.activity_add_post_date_day);
-                calenderButton.setText(temp);
-                calenderButton.setTextColor(Color.BLACK);
+                calendarButton.setText(temp);
+                calendarButton.setTextColor(Color.BLACK);
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
 
         // Calender Dialog.
-        calenderButton.setOnClickListener(new View.OnClickListener() {
+        calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 datePickerDialog.show();
@@ -306,10 +306,10 @@ public class AddPostActivity extends AppCompatActivity {
                             String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_add_post_date_year)
                                         + (calendar.get(Calendar.MONTH) + 1) + getString(R.string.activity_add_post_date_month)
                                         + calendar.get(Calendar.DATE) + getString(R.string.activity_add_post_date_day);
-                            calenderButton.setText(temp);
-                            calenderButton.setTextColor(getColor(R.color.app_main_color));
+                            calendarButton.setText(temp);
+                            calendarButton.setTextColor(getColor(R.color.app_main_color));
 
-                            TextView calenderText = (TextView) findViewById(R.id.text_calander);
+                            TextView calenderText = (TextView) findViewById(R.id.text_calendar);
                             calenderText.setText(getString(R.string.activity_add_post_date_metadata));
                         }
 

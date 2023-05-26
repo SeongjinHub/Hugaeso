@@ -117,7 +117,7 @@
                         android:textStyle="normal" />
 
                     <TextView
-                        android:id="@+id/text_calander"
+                        android:id="@+id/text_calendar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/activity_new_post_date_sub" />

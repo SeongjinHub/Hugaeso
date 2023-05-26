@@ -17,6 +17,7 @@
     <dimen name="new_tab_dialog_btn_radius">15dp</dimen>
     <dimen name="new_tab_dialog_btn_padding">20dp</dimen>
     <dimen name="activity_post_title_textsize">16pt</dimen>
+    <dimen name="activity_post_user_textsize">9pt</dimen>
     <dimen name="activity_post_date_textsize">8pt</dimen>
     <dimen name="activity_post_text_textsize">8pt</dimen>
     <dimen name="activity_post_imgview_radius">0dp</dimen>
