@@ -27,14 +27,17 @@
                     android:id="@+id/imageButton_header_back"
                     android:layout_width="@dimen/app_header_btn_size"
                     android:layout_height="@dimen/app_header_btn_size"
-                    app:srcCompat="?attr/homeAsUpIndicator" />
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:background="@color/white"
+                    android:src="@drawable/ic_back" />
 
                 <TextView
                     android:id="@+id/text_header_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text=""
+                    android:text="text"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="@dimen/app_header_fontsize"
@@ -49,7 +52,10 @@
                     android:id="@+id/imageButton_header_menu"
                     android:layout_width="@dimen/app_header_btn_size"
                     android:layout_height="@dimen/app_header_btn_size"
-                    app:srcCompat="?attr/homeAsUpIndicator" />
+                    android:padding="10dp"
+                    android:scaleType="fitCenter"
+                    android:background="@color/white"
+                    android:src="@drawable/ic_menu" />
 
             </LinearLayout>
 
@@ -71,7 +77,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="10dp">
+                        android:padding="10dp"
+                        android:gravity="center_vertical">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/imageView_profile"
@@ -86,9 +93,9 @@
                         <TextView
                             android:id="@+id/text_post_user"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="0dp"
-                            android:padding="8dp"
+                            android:padding="10dp"
                             android:text="TextView"
                             android:textColor="@color/black"
                             android:textSize="@dimen/activity_post_date_textsize" />
@@ -109,20 +116,100 @@
                     </ScrollView>
 
                     <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+                        <ImageButton
+                            android:id="@+id/imageButton_like"
+                            android:layout_width="@dimen/activity_post_social_btn_img"
+                            android:layout_height="@dimen/activity_post_social_btn_img"
+                            android:padding="0dp"
+                            android:scaleType="fitCenter"
+                            android:background="@color/white"
+                            android:src="@drawable/ic_like" />
+
+                        <ImageButton
+                            android:id="@+id/imageButton_comments"
+                            android:layout_width="@dimen/activity_post_social_btn_img"
+                            android:layout_height="@dimen/activity_post_social_btn_img"
+                            android:padding="0dp"
+                            android:scaleType="fitCenter"
+                            android:background="@color/white"
+                            android:src="@drawable/ic_comment" />
+
+                        <ImageButton
+                            android:id="@+id/imageButton_bookmark"
+                            android:layout_width="@dimen/activity_post_social_btn_img"
+                            android:layout_height="@dimen/activity_post_social_btn_img"
+                            android:padding="0dp"
+                            android:scaleType="fitCenter"
+                            android:background="@color/white"
+                            android:src="@drawable/ic_bookmark" />
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <ImageButton
+                            android:id="@+id/imageButton_map"
+                            android:layout_width="@dimen/activity_post_social_btn_img"
+                            android:layout_height="@dimen/activity_post_social_btn_img"
+                            android:padding="5dp"
+                            android:scaleType="fitCenter"
+                            android:background="@color/white"
+                            android:src="@drawable/ic_map" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="10dp">
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="10dp"
+                        android:gravity="center_vertical">
 
                         <ImageView
-                            android:id="@+id/imageView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+                            android:id="@+id/imageView_calander"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:scaleType="fitCenter"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_calendar" />
 
                         <TextView
                             android:id="@+id/text_post_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:text="TextView"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/activity_post_date_textsize" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp">
+
+                        <ImageView
+                            android:id="@+id/imageView_map"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:scaleType="fitCenter"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_pin" />
+
+                        <TextView
+                            android:id="@+id/text_post_map"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="0dp"
@@ -137,7 +224,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:padding="10dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
                         android:text="TextView"
                         android:textColor="@color/black"
                         android:textSize="@dimen/activity_post_text_textsize" />
