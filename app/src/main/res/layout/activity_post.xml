@@ -39,7 +39,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:paddingBottom="3dp"
-                    android:text="Text"
+                    android:text=""
                     android:textAllCaps="false"
                     android:textColor="@color/black"
                     android:textSize="@dimen/app_header_fontsize"
@@ -100,7 +100,7 @@
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:paddingBottom="7dp"
-                            android:text="textView"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="@dimen/activity_post_user_textsize" />
 
@@ -135,7 +135,7 @@
                             android:layout_marginLeft="-2dp"
                             android:scaleType="fitCenter"
                             android:background="@color/white"
-                            android:src="@drawable/ic_like" />
+                            android:src="@drawable/btn_post_like_default" />
 
                         <ImageButton
                             android:id="@+id/imageButton_comments"
@@ -144,7 +144,7 @@
                             android:padding="8dp"
                             android:scaleType="fitCenter"
                             android:background="@color/white"
-                            android:src="@drawable/ic_comment" />
+                            android:src="@drawable/btn_post_comment" />
 
                         <ImageButton
                             android:id="@+id/imageButton_bookmark"
@@ -153,7 +153,7 @@
                             android:padding="8dp"
                             android:scaleType="fitCenter"
                             android:background="@color/white"
-                            android:src="@drawable/ic_bookmark" />
+                            android:src="@drawable/btn_post_bookmark" />
 
                         <View
                             android:layout_width="wrap_content"
@@ -168,7 +168,7 @@
                             android:padding="8dp"
                             android:scaleType="fitCenter"
                             android:background="@color/white"
-                            android:src="@drawable/ic_map" />
+                            android:src="@drawable/btn_post_map" />
 
                     </LinearLayout>
 
@@ -193,7 +193,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="0dp"
-                            android:text="TextView"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="@dimen/activity_post_date_textsize" />
 
@@ -232,7 +232,7 @@
                         android:layout_marginTop="10dp"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
-                        android:text="TextView"
+                        android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/activity_post_text_textsize" />
 

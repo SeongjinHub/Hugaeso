@@ -226,7 +226,7 @@ public class User implements Serializable {
     public static class insertSavedLoginRequest extends StringRequest {
 
         public insertSavedLoginRequest(String usercode, String deviceinfo, int auth, Response.Listener<String> listener) {
-            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_saved_login_insert.php", listener, null);
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_insert_saved_login.php", listener, null);
             parameters = new HashMap<>();
             try {
                 parameters.put("usercode", usercode);

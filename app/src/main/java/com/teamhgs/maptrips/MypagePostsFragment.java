@@ -212,7 +212,7 @@ public class MypagePostsFragment extends Fragment {
                                                     public void onClick(View v) {
                                                         int index = (int) v.getTag(); // View 객체의 Tag를 이용, ArrayList 내 객체 접근에 사용.
                                                         Intent intent = new Intent(getActivity(), PostActivity.class);
-                                                        intent.putExtra("Post", postArrayList.get(index));
+                                                        intent.putExtra(Post.POST, postArrayList.get(index));
                                                         intent.putExtra(User.CURRENT_USER, currentUser);
                                                         intent.putExtra(User.POST_WRITER, currentUser);
                                                         startActivity(intent);

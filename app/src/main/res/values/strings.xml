@@ -49,5 +49,9 @@
     <string name="activity_main_new_menu_newfolder">New Folder</string>
     <string name="activity_post_menu_delete">Delete</string>
     <string name="activity_post_menu_modify">Modify</string>
+    <string name="activity_post_menu_alert_title">Sure to delete?</string>
+    <string name="activity_post_menu_alert_sub">sure?</string>
+    <string name="activity_post_menu_alert_btn_cancle">Cancel</string>
+    <string name="activity_post_menu_alert_btn_confirm">Delete</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

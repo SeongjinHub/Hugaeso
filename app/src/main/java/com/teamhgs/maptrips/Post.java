@@ -23,12 +23,15 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 public class Post implements Serializable {
+
+    static final String POST = "Post";
 
     String postcode;
     String title;
@@ -139,7 +142,7 @@ public class Post implements Serializable {
     public static class insertPostRequest extends StringRequest {
 
         public insertPostRequest(String usercode, Post post, Response.Listener<String> listener) {
-            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_post_insert.php", listener, null);
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_insert_post.php", listener, null);
             parameters = new HashMap<>();
             try {
                 parameters.put("usercode", usercode);
@@ -168,7 +171,7 @@ public class Post implements Serializable {
     public static class insertPostUrlRequest extends StringRequest {
 
         public insertPostUrlRequest(Post post, String usercode, Response.Listener<String> listener) {
-            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_post_url_insert.php", listener, null);
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_insert_post_url.php", listener, null);
             parameters = new HashMap<>();
             try {
                 parameters.put("postcode", post.getPostcode());
@@ -184,6 +187,39 @@ public class Post implements Serializable {
             return parameters;
         }
 
+    }
+
+    public static class deletePostRequest extends StringRequest {
+
+        public deletePostRequest(String usercode, Post post, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_delete_post.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("usercode", usercode);
+                parameters.put("postcode", post.getPostcode());
+                parameters.put("title", post.getTitle());
+                parameters.put("text", post.getText());
+                parameters.put("date", post.getDate());
+                parameters.put("country", post.getCountry());
+                parameters.put("city", post.getCity());
+                parameters.put("area", post.getArea());
+                parameters.put("private", String.valueOf(post.getPrivateStatus()));
+
+                Date date = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                String del_time = format.format(date) + Locale.getDefault().getCountry();
+
+                parameters.put("del_time", del_time);
+            } catch (Exception e) {
+                Log.d("deletePostRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
     }
 
     public static class getPostsListRequest extends StringRequest {
@@ -231,6 +267,77 @@ public class Post implements Serializable {
                 parameters.put("postcode", postcode);
             } catch (Exception e) {
                 Log.d("getPostRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+    }
+
+    public static class getPostLikeRequest extends StringRequest {
+
+        public getPostLikeRequest(String postcode, String usercode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_get_post_like.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("postcode", postcode);
+                parameters.put("usercode", usercode);
+            } catch (Exception e) {
+                Log.d("getPostLikeRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+    }
+
+    public static class insertPostLikeRequest extends StringRequest {
+
+        public insertPostLikeRequest(String postcode, String usercode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_insert_post_like.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("postcode", postcode);
+                parameters.put("usercode", usercode);
+
+                Date date = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                String datetime = format.format(date) + Locale.getDefault().getCountry();
+
+                parameters.put("datetime", datetime);
+            } catch (Exception e) {
+                Log.d("insertPostLikeRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+    }
+
+    public static class deletePostLikeRequest extends StringRequest {
+
+        public deletePostLikeRequest(String postcode, String usercode, String datetime, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_delete_post_like.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("postcode", postcode);
+                parameters.put("usercode", usercode);
+                parameters.put("datetime", datetime);
+
+                Date date = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                String del_time = format.format(date) + Locale.getDefault().getCountry();
+                parameters.put("del_time", del_time);
+            } catch (Exception e) {
+                Log.d("deletePostLikeRequest", "parameter put error");
             }
         }
 

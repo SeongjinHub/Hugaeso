@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
+    User currentUser;
     FragmentManager fragmentManager = getSupportFragmentManager();
     FeedFragment feedFragment = new FeedFragment();
     SearchFragment searchFragment;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         overridePendingTransition(R.anim.none, R.anim.none);
 
-        User currentUser = (User) getIntent().getSerializableExtra(User.CURRENT_USER);
+        currentUser = (User) getIntent().getSerializableExtra(User.CURRENT_USER);
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -150,6 +151,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         bottomNaviViewChecker();
+
+        Fragment folder = fragmentManager.findFragmentByTag(TAG_FOLDER);
+        Fragment mypage = fragmentManager.findFragmentByTag(TAG_MYPAGE);
+
+        transaction = fragmentManager.beginTransaction();
+
+        if (folder != null && folder.isVisible()) {
+            folderFragment = new FolderFragment().newInstance(currentUser);
+            transaction.replace(R.id.container, folderFragment, TAG_FOLDER).commitAllowingStateLoss();
+        }
+        else if (mypage != null && mypage.isVisible()) {
+            mypageFragment = new MypageFragment().newInstance(currentUser);
+            transaction.replace(R.id.container, mypageFragment, TAG_MYPAGE).commitAllowingStateLoss();
+        }
     }
 
     @Override
