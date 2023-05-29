@@ -152,19 +152,19 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         bottomNaviViewChecker();
 
-        Fragment folder = fragmentManager.findFragmentByTag(TAG_FOLDER);
-        Fragment mypage = fragmentManager.findFragmentByTag(TAG_MYPAGE);
-
-        transaction = fragmentManager.beginTransaction();
-
-        if (folder != null && folder.isVisible()) {
-            folderFragment = new FolderFragment().newInstance(currentUser);
-            transaction.replace(R.id.container, folderFragment, TAG_FOLDER).commitAllowingStateLoss();
-        }
-        else if (mypage != null && mypage.isVisible()) {
-            mypageFragment = new MypageFragment().newInstance(currentUser);
-            transaction.replace(R.id.container, mypageFragment, TAG_MYPAGE).commitAllowingStateLoss();
-        }
+//        Fragment folder = fragmentManager.findFragmentByTag(TAG_FOLDER);
+//        Fragment mypage = fragmentManager.findFragmentByTag(TAG_MYPAGE);
+//
+//        transaction = fragmentManager.beginTransaction();
+//
+//        if (folder != null && folder.isVisible()) {
+//            folderFragment = new FolderFragment().newInstance(currentUser);
+//            transaction.replace(R.id.container, folderFragment, TAG_FOLDER).commitAllowingStateLoss();
+//        }
+//        else if (mypage != null && mypage.isVisible()) {
+//            mypageFragment = new MypageFragment().newInstance(currentUser);
+//            transaction.replace(R.id.container, mypageFragment, TAG_MYPAGE).commitAllowingStateLoss();
+//        }
     }
 
     @Override
