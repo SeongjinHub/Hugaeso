@@ -153,7 +153,7 @@
                             android:padding="8dp"
                             android:scaleType="fitCenter"
                             android:background="@color/white"
-                            android:src="@drawable/btn_post_bookmark" />
+                            android:src="@drawable/btn_post_bookmark_default" />
 
                         <View
                             android:layout_width="wrap_content"

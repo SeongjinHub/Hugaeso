@@ -346,4 +346,75 @@ public class Post implements Serializable {
             return parameters;
         }
     }
+
+    public static class getBookmarkRequest extends StringRequest {
+
+        public getBookmarkRequest(String objectcode, String usercode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_get_bookmark.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("objectcode", objectcode);
+                parameters.put("usercode", usercode);
+            } catch (Exception e) {
+                Log.d("getBookmarkRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+    }
+
+    public static class insertBookmarkRequest extends StringRequest {
+
+        public insertBookmarkRequest(String objectcode, String usercode, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_insert_bookmark.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("objectcode", objectcode);
+                parameters.put("usercode", usercode);
+
+                Date date = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                String datetime = format.format(date) + Locale.getDefault().getCountry();
+
+                parameters.put("datetime", datetime);
+            } catch (Exception e) {
+                Log.d("insertBookmarkRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+    }
+
+    public static class deleteBookmarkRequest extends StringRequest {
+
+        public deleteBookmarkRequest(String objectcode, String usercode, String datetime, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_delete_bookmark.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("objectcode", objectcode);
+                parameters.put("usercode", usercode);
+                parameters.put("datetime", datetime);
+
+                Date date = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                String del_time = format.format(date) + Locale.getDefault().getCountry();
+                parameters.put("del_time", del_time);
+            } catch (Exception e) {
+                Log.d("deleteBookmarkRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+    }
 }

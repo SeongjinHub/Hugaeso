@@ -35,7 +35,9 @@ import java.util.Calendar;
 public class PostActivity extends AppCompatActivity {
 
     boolean likeStatus;
+    boolean bookmarkStatus;
     String likeDate;
+    String bookmarkDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +90,60 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        Response.Listener<String> postResponseListener = new Response.Listener<String>() {
+        ImageButton buttonLike = (ImageButton) findViewById(R.id.imageButton_like);
+        ImageButton buttonComments = (ImageButton) findViewById(R.id.imageButton_comments);
+        ImageButton buttonBookmark = (ImageButton) findViewById(R.id.imageButton_bookmark);
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        Response.Listener<String> getBookmarkResponseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject jsonResponse = null;
+                try {
+                    jsonResponse = new JSONObject(response);
+                    boolean result = jsonResponse.getBoolean("responseResult");
+                    if(result) {
+                        bookmarkStatus = true;
+                        bookmarkDate = jsonResponse.getString("datetime");
+                        buttonBookmark.setImageResource(R.drawable.btn_post_bookmark_selected);
+                    }
+                    else {
+                        bookmarkStatus = false;
+                        buttonBookmark.setImageResource(R.drawable.btn_post_bookmark_default);
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+
+        Response.Listener<String> getLikeResponseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject jsonResponse = null;
+                try {
+                    jsonResponse = new JSONObject(response);
+                    boolean result = jsonResponse.getBoolean("responseResult");
+                    if(result) {
+                        likeStatus = true;
+                        likeDate = jsonResponse.getString("datetime");
+                        buttonLike.setImageResource(R.drawable.btn_post_like_selected);
+                    }
+                    else {
+                        likeStatus = false;
+                        buttonLike.setImageResource(R.drawable.btn_post_like_default);
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                // 좋아요 정보 가져오기 완료 시 북마크에 저장 여부를 가져옵니다.
+                Post.getBookmarkRequest getBookmarkRequest = new Post.getBookmarkRequest(currentPost.getPostcode(), currentUser.getUsercode(), getBookmarkResponseListener);
+                queue.add(getBookmarkRequest);
+            }
+        };
+
+        Response.Listener<String> getPostResponseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 JSONObject jsonResponse = null;
@@ -119,6 +174,10 @@ public class PostActivity extends AppCompatActivity {
                         postDate.setText(temp);
                         postText.setText(currentPost.getText());
                         postUser.setText(postWriter.getUsername());
+
+                        // 게시글 정보 불러오기 완료 시 해당 게시글에 현재 사용자의 좋아요 여부를 가져옵니다.
+                        Post.getPostLikeRequest getPostLikeRequest = new Post.getPostLikeRequest(currentPost.getPostcode(), currentUser.getUsercode(), getLikeResponseListener);
+                        queue.add(getPostLikeRequest);
                     }
                     else {
 
@@ -128,37 +187,8 @@ public class PostActivity extends AppCompatActivity {
                 }
             }
         };
-        Post.getPostRequest getPostRequest = new Post.getPostRequest(currentPost.getPostcode(), postResponseListener);
-        RequestQueue queue = Volley.newRequestQueue(this);
+        Post.getPostRequest getPostRequest = new Post.getPostRequest(currentPost.getPostcode(), getPostResponseListener);
         queue.add(getPostRequest);
-
-        ImageButton buttonLike = (ImageButton) findViewById(R.id.imageButton_like);
-        ImageButton buttonComments = (ImageButton) findViewById(R.id.imageButton_comments);
-        ImageButton buttonBookmark = (ImageButton) findViewById(R.id.imageButton_bookmark);
-
-        Response.Listener<String> getLikeResponseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JSONObject jsonResponse = null;
-                try {
-                    jsonResponse = new JSONObject(response);
-                    boolean result = jsonResponse.getBoolean("responseResult");
-                    if(result) {
-                        likeStatus = true;
-                        likeDate = jsonResponse.getString("datetime");
-                        buttonLike.setImageResource(R.drawable.btn_post_like_selected);
-                    }
-                    else {
-                        likeStatus = false;
-                        buttonLike.setImageResource(R.drawable.btn_post_like_default);
-                    }
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
-        Post.getPostLikeRequest getPostLikeRequest = new Post.getPostLikeRequest(currentPost.getPostcode(), currentUser.getUsercode(), getLikeResponseListener);
-        queue.add(getPostLikeRequest);
 
         Response.Listener<String> insertLikeResponseListener = new Response.Listener<String>() {
             @Override
@@ -168,6 +198,7 @@ public class PostActivity extends AppCompatActivity {
                     jsonResponse = new JSONObject(response);
                     boolean result = jsonResponse.getBoolean("responseResult");
                     if(result) {
+                        Post.getPostLikeRequest getPostLikeRequest = new Post.getPostLikeRequest(currentPost.getPostcode(), currentUser.getUsercode(), getLikeResponseListener);
                         queue.add(getPostLikeRequest);
                     }
                     else {
@@ -187,7 +218,48 @@ public class PostActivity extends AppCompatActivity {
                     jsonResponse = new JSONObject(response);
                     boolean result = jsonResponse.getBoolean("responseResult");
                     if(!result) {
+                        Post.getPostLikeRequest getPostLikeRequest = new Post.getPostLikeRequest(currentPost.getPostcode(), currentUser.getUsercode(), getLikeResponseListener);
                         queue.add(getPostLikeRequest);
+                    }
+                    else {
+
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+
+        Response.Listener<String> insertBookmarkResponseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject jsonResponse = null;
+                try {
+                    jsonResponse = new JSONObject(response);
+                    boolean result = jsonResponse.getBoolean("responseResult");
+                    if(result) {
+                        Post.getBookmarkRequest getBookmarkRequest = new Post.getBookmarkRequest(currentPost.getPostcode(), currentUser.getUsercode(), getBookmarkResponseListener);
+                        queue.add(getBookmarkRequest);
+                    }
+                    else {
+
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+
+        Response.Listener<String> deleteBookmarkResponseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONObject jsonResponse = null;
+                try {
+                    jsonResponse = new JSONObject(response);
+                    boolean result = jsonResponse.getBoolean("responseResult");
+                    if(!result) {
+                        Post.getBookmarkRequest getBookmarkRequest = new Post.getBookmarkRequest(currentPost.getPostcode(), currentUser.getUsercode(), getBookmarkResponseListener);
+                        queue.add(getBookmarkRequest);
                     }
                     else {
 
@@ -236,6 +308,25 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+        buttonBookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+
+                if (bookmarkStatus) {
+                    buttonBookmark.setImageResource(R.drawable.btn_post_bookmark_default);
+                    Post.deleteBookmarkRequest deleteBookmarkRequest = new Post.deleteBookmarkRequest(currentPost.getPostcode(), currentUser.getUsercode(), bookmarkDate, deleteBookmarkResponseListener);
+                    queue.add(deleteBookmarkRequest);
+                }
+                else {
+                    buttonBookmark.setImageResource(R.drawable.btn_post_bookmark_selected);
+                    Post.insertBookmarkRequest insertBookmarkRequest = new Post.insertBookmarkRequest(currentPost.getPostcode(), currentUser.getUsercode(), insertBookmarkResponseListener);
+                    queue.add(insertBookmarkRequest);
+                }
+            }
+        });
+
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View postMenuDialogView = layoutInflater.inflate(R.layout.activity_post_menu, null, false);
@@ -254,11 +345,11 @@ public class PostActivity extends AppCompatActivity {
 
         if (currentUser.getUsercode().equals(postWriter.getUsercode())) {
             modifyPost.setVisibility(View.VISIBLE);
-            modifyPost.setVisibility(View.VISIBLE);
+            deletePost.setVisibility(View.VISIBLE);
         }
         else {
             modifyPost.setVisibility(View.INVISIBLE);
-            modifyPost.setVisibility(View.INVISIBLE);
+            deletePost.setVisibility(View.INVISIBLE);
         }
         modifyPost.setOnClickListener(new View.OnClickListener() {
             @Override
