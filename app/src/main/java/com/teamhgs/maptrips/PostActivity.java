@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -24,7 +23,6 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONException;
@@ -55,6 +53,7 @@ public class PostActivity extends AppCompatActivity {
         TextView postDate = (TextView) findViewById(R.id.text_post_date);
         TextView postText = (TextView) findViewById(R.id.text_post_text);
         TextView postUser = (TextView) findViewById(R.id.text_post_user);
+        TextView postPlace = (TextView) findViewById(R.id.text_post_place);
 
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -154,6 +153,8 @@ public class PostActivity extends AppCompatActivity {
                         currentPost.setTitle(jsonResponse.getString("title"));
                         currentPost.setText(jsonResponse.getString("text"));
                         currentPost.setDate(jsonResponse.getString("date"));
+                        currentPost.setLatitude(jsonResponse.getString("latitude"));
+                        currentPost.setLongitude(jsonResponse.getString("longitude"));
                         currentPost.setCountry(jsonResponse.getString("country"));
                         currentPost.setCity(jsonResponse.getString("city"));
                         currentPost.setArea(jsonResponse.getString("area"));
@@ -174,6 +175,7 @@ public class PostActivity extends AppCompatActivity {
                         postDate.setText(temp);
                         postText.setText(currentPost.getText());
                         postUser.setText(postWriter.getUsername());
+                        postPlace.setText(currentPost.getLatitude() + ", " + currentPost.getLongitude());
 
                         // 게시글 정보 불러오기 완료 시 해당 게시글에 현재 사용자의 좋아요 여부를 가져옵니다.
                         Post.getPostLikeRequest getPostLikeRequest = new Post.getPostLikeRequest(currentPost.getPostcode(), currentUser.getUsercode(), getLikeResponseListener);

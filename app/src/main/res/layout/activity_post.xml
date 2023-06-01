@@ -215,11 +215,11 @@
                             android:src="@drawable/ic_pin" />
 
                         <TextView
-                            android:id="@+id/text_post_map"
+                            android:id="@+id/text_post_place"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="0dp"
-                            android:text="TextView"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textSize="@dimen/activity_post_date_textsize" />
 

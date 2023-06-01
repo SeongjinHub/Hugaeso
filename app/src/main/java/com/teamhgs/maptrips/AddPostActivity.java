@@ -14,7 +14,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -65,6 +65,8 @@ public class AddPostActivity extends AppCompatActivity {
     Button calendarButton; // 메타데이터에서 날짜 불러올 때 쓸 것 같은 느낌
     Calendar calendar = Calendar.getInstance();
     ExifInterface exifInterface;
+    String latitude;
+    String longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,7 +182,16 @@ public class AddPostActivity extends AppCompatActivity {
                         post.setText("\n");
                     }
 
+
+                    // 위치 정보 미입력시 예외처리, 추후 구현 필요.
+                    if (latitude == null || longitude == null) {
+                        latitude = "0";
+                        longitude = "0";
+                    }
+
                     post.setDate(date);
+                    post.setLatitude(latitude);
+                    post.setLongitude(longitude);
                 } catch (Exception e) {
 
                 }
@@ -297,6 +308,7 @@ public class AddPostActivity extends AppCompatActivity {
                         // Image 에 메타데이터가 존재하고 날짜 및 시간 값이 존재합니다.
                         if (exifInterface != null && exifInterface.getAttribute(ExifInterface.TAG_DATETIME) != null) {
                             String exifDate = exifInterface.getAttribute(ExifInterface.TAG_DATETIME).replace(":", "-");
+
                             date = exifDate.substring(0, 10); // 2023-05-15 22-13-34 to 2023-05-15
 
                             calendar.set(Calendar.YEAR, Integer.parseInt(date.substring(0, 4)));
@@ -311,6 +323,29 @@ public class AddPostActivity extends AppCompatActivity {
 
                             TextView calenderText = (TextView) findViewById(R.id.text_calendar);
                             calenderText.setText(getString(R.string.activity_add_post_date_metadata));
+                        }
+
+                        // 이미지 메타데이터에서 위치 정보에 대한 값을 가져옵니다.
+                        if (exifInterface != null && exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE) != null) {
+                            String imgAttrLat = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                            String imgAttrLatRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+
+                            String imgAttrLong = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                            String imgAttrLongRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+
+                            // DMS 형태의 값을 Degree로 변환 후 계산합니다.
+                            if (imgAttrLatRef.equals("N")) {
+                                latitude = String.valueOf(convDMStoDegree(imgAttrLat));
+                            }
+                            else {
+                                latitude = String.valueOf(0 - convDMStoDegree(imgAttrLat));
+                            }
+                            if (imgAttrLongRef.equals("E")) {
+                                longitude = String.valueOf(convDMStoDegree(imgAttrLong));
+                            }
+                            else {
+                                longitude = String.valueOf(convDMStoDegree(imgAttrLong));
+                            }
                         }
 
                     } catch (IOException e) {
@@ -379,4 +414,30 @@ public class AddPostActivity extends AppCompatActivity {
         cursor.close();
         return path;
     }
+
+    // DMS를 Degree 형태로 변환합니다.
+    public float convDMStoDegree(String stringDMS) {
+        float result = 0;
+        String[] DMS = stringDMS.split(",", 3);
+
+        String[] stringD = DMS[0].split("/", 2);
+        double D0 = Double.parseDouble(stringD[0]);
+        double D1 = Double.parseDouble(stringD[1]);
+        double doubleD = D0 / D1;
+
+        String[] stringM = DMS[1].split("/", 2);
+        double M0 = Double.parseDouble(stringM[0]);
+        double M1 = Double.parseDouble(stringM[1]);
+        double doubleM = M0 / M1;
+
+        String[] stringS = DMS[2].split("/", 2);
+        double S0 = Double.parseDouble(stringS[0]);
+        double S1 = Double.parseDouble(stringS[1]);
+        double doubleS = S0 / S1;
+
+        result = (float) (doubleD + (doubleM / 60) + (doubleS / 3600));
+
+        return result;
+
+    };
 }

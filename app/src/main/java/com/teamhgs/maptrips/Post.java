@@ -43,8 +43,9 @@ public class Post implements Serializable {
     String area;
     int privateStatus;
     ArrayList<String> url = new ArrayList<>();
+    String latitude;
+    String longitude;
     private static Map<String, String> parameters;
-
 
     public Post() {
         Date date = new Date();
@@ -139,6 +140,22 @@ public class Post implements Serializable {
         this.url = url;
     }
 
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
     public static class insertPostRequest extends StringRequest {
 
         public insertPostRequest(String usercode, Post post, Response.Listener<String> listener) {
@@ -150,6 +167,8 @@ public class Post implements Serializable {
                 parameters.put("title", post.getTitle());
                 parameters.put("text", post.getText());
                 parameters.put("date", post.getDate());
+                parameters.put("latitude", post.getLatitude());
+                parameters.put("longitude", post.getLongitude());
 //                parameters.put("country", post.getCountry());
 //                parameters.put("city", post.getCity());
 //                parameters.put("area", post.getArea());
@@ -200,6 +219,8 @@ public class Post implements Serializable {
                 parameters.put("title", post.getTitle());
                 parameters.put("text", post.getText());
                 parameters.put("date", post.getDate());
+                parameters.put("latitude", post.getLatitude());
+                parameters.put("longitude", post.getLongitude());
                 parameters.put("country", post.getCountry());
                 parameters.put("city", post.getCity());
                 parameters.put("area", post.getArea());
