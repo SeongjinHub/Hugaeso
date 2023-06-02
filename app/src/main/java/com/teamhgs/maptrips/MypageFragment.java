@@ -104,6 +104,46 @@ public class MypageFragment extends Fragment {
         Button buttonFollowing = (Button) viewGroup.findViewById(R.id.button_following);
         Button buttonFollower = (Button) viewGroup.findViewById(R.id.button_follower);
 
+        // Get Count of current User's following.
+        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+
+        Response.Listener<String> followingListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean result = jsonResponse.getBoolean("responseResult");
+
+                    if (result) {
+                        String temp = jsonResponse.getString("following") + "\n" + getResources().getString(R.string.activity_mypage_following);
+                        buttonFollowing.setText(temp);
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+
+        // Get Count of current User's followers.
+        Response.Listener<String> followerListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean result = jsonResponse.getBoolean("responseResult");
+
+                    if (result) {
+                        String temp = jsonResponse.getString("follower") + "\n" + getResources().getString(R.string.activity_mypage_follower);
+                        buttonFollower.setText(temp);
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                User.getFollowingCountRequest followingRequest = new User.getFollowingCountRequest(currentUser.getUsercode(), followingListener);
+                queue.add(followingRequest);
+            }
+        };
+
         // Get Count of current User's all posts.
         Response.Listener<String> allPostsListener = new Response.Listener<String>() {
             @Override
@@ -119,54 +159,12 @@ public class MypageFragment extends Fragment {
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
+                User.getFollowerCountRequest followerRequest = new User.getFollowerCountRequest(currentUser.getUsercode(), followerListener);
+                queue.add(followerRequest);
             }
         };
         User.getPostsCountRequest allPostsRequest = new User.getPostsCountRequest(currentUser.getUsercode(), allPostsListener);
-        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
         queue.add(allPostsRequest);
-
-
-         // Get Count of current User's followers.
-            Response.Listener<String> followerListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        boolean result = jsonResponse.getBoolean("responseResult");
-
-                        if (result) {
-                            String temp = jsonResponse.getString("follower") + "\n" + getResources().getString(R.string.activity_mypage_follower);
-                            buttonFollower.setText(temp);
-                        }
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            };
-            User.getFollowerCountRequest followerRequest = new User.getFollowerCountRequest(currentUser.getUsercode(), followerListener);
-            queue.add(followerRequest);
-
-
-         // Get Count of current User's following.
-            Response.Listener<String> followingListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        boolean result = jsonResponse.getBoolean("responseResult");
-
-                        if (result) {
-                            String temp = jsonResponse.getString("following") + "\n" + getResources().getString(R.string.activity_mypage_following);
-                            buttonFollowing.setText(temp);
-                        }
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            };
-            User.getFollowingCountRequest followingRequest = new User.getFollowingCountRequest(currentUser.getUsercode(), followingListener);
-            queue.add(followingRequest);
-
 
         // ViewPager2 를 이용해 좌,우 슬라이드 제스쳐 및 탭 기능을 구현
         mypageViewPager2Adapter = new MypageViewPager2Adapter(currentUser, getActivity());
@@ -196,11 +194,7 @@ public class MypageFragment extends Fragment {
             public void onRefresh() {
 
                 User.getPostsCountRequest allPostsRequest = new User.getPostsCountRequest(currentUser.getUsercode(), allPostsListener);
-                User.getFollowerCountRequest followerRequest = new User.getFollowerCountRequest(currentUser.getUsercode(), followerListener);
-                User.getFollowingCountRequest followingRequest = new User.getFollowingCountRequest(currentUser.getUsercode(), followingListener);
                 queue.add(allPostsRequest);
-                queue.add(followerRequest);
-                queue.add(followingRequest);
 
                 mypageViewPager2Adapter = new MypageViewPager2Adapter(currentUser, getActivity());
                 viewPager2.setAdapter(mypageViewPager2Adapter);

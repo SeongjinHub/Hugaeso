@@ -1,6 +1,7 @@
 package com.teamhgs.maptrips;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -105,11 +106,11 @@ public class PostActivity extends AppCompatActivity {
                     if(result) {
                         bookmarkStatus = true;
                         bookmarkDate = jsonResponse.getString("datetime");
-                        buttonBookmark.setImageResource(R.drawable.btn_post_bookmark_selected);
+                        buttonBookmark.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.btn_post_bookmark_selected));
                     }
                     else {
                         bookmarkStatus = false;
-                        buttonBookmark.setImageResource(R.drawable.btn_post_bookmark_default);
+                        buttonBookmark.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.btn_post_bookmark_default));
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -127,11 +128,11 @@ public class PostActivity extends AppCompatActivity {
                     if(result) {
                         likeStatus = true;
                         likeDate = jsonResponse.getString("datetime");
-                        buttonLike.setImageResource(R.drawable.btn_post_like_selected);
+                        buttonLike.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.btn_post_like_selected));
                     }
                     else {
                         likeStatus = false;
-                        buttonLike.setImageResource(R.drawable.btn_post_like_default);
+                        buttonLike.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.btn_post_like_default));
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -295,15 +296,13 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-
-                if (likeStatus) {
-                    buttonLike.setImageResource(R.drawable.btn_post_like_default);
+                if (likeStatus) { // 이미 좋아요한 경우
+                    buttonLike.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.btn_post_like_default));
                     Post.deletePostLikeRequest deletePostLikeRequest = new Post.deletePostLikeRequest(currentPost.getPostcode(), currentUser.getUsercode(), likeDate, deleteLikeResponseListener);
                     queue.add(deletePostLikeRequest);
                 }
-                else {
-                    buttonLike.setImageResource(R.drawable.btn_post_like_selected);
+                else { // 좋아요 표시하는 경우
+                    buttonLike.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.btn_post_like_selected));
                     Post.insertPostLikeRequest insertPostLikeRequest = new Post.insertPostLikeRequest(currentPost.getPostcode(), currentUser.getUsercode(), insertLikeResponseListener);
                     queue.add(insertPostLikeRequest);
                 }
@@ -314,15 +313,13 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-
-                if (bookmarkStatus) {
-                    buttonBookmark.setImageResource(R.drawable.btn_post_bookmark_default);
+                if (bookmarkStatus) { // 이미 북마크에 저장된 경우
+                    buttonBookmark.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.btn_post_bookmark_default));
                     Post.deleteBookmarkRequest deleteBookmarkRequest = new Post.deleteBookmarkRequest(currentPost.getPostcode(), currentUser.getUsercode(), bookmarkDate, deleteBookmarkResponseListener);
                     queue.add(deleteBookmarkRequest);
                 }
-                else {
-                    buttonBookmark.setImageResource(R.drawable.btn_post_bookmark_selected);
+                else { // 북마크에 추가하는 경우
+                    buttonBookmark.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.btn_post_bookmark_selected));
                     Post.insertBookmarkRequest insertBookmarkRequest = new Post.insertBookmarkRequest(currentPost.getPostcode(), currentUser.getUsercode(), insertBookmarkResponseListener);
                     queue.add(insertBookmarkRequest);
                 }
