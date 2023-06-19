@@ -33,6 +33,7 @@ import java.util.Calendar;
 
 public class PostActivity extends AppCompatActivity {
 
+    boolean getBookmarkFirstTime = true;
     boolean likeStatus;
     boolean bookmarkStatus;
     String likeDate;
@@ -138,8 +139,11 @@ public class PostActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
                 // 좋아요 정보 가져오기 완료 시 북마크에 저장 여부를 가져옵니다.
-                Post.getBookmarkRequest getBookmarkRequest = new Post.getBookmarkRequest(currentPost.getPostcode(), currentUser.getUsercode(), getBookmarkResponseListener);
-                queue.add(getBookmarkRequest);
+                if(getBookmarkFirstTime) {
+                    Post.getBookmarkRequest getBookmarkRequest = new Post.getBookmarkRequest(currentPost.getPostcode(), currentUser.getUsercode(), getBookmarkResponseListener);
+                    queue.add(getBookmarkRequest);
+                    getBookmarkFirstTime = false;
+                }
             }
         };
 

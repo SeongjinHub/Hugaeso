@@ -42,7 +42,7 @@
     <string name="activity_add_post_date_month">-</string>
     <string name="activity_add_post_date_day"></string>
     <string name="activity_add_post_date_metadata">Date form Picture.</string>
-    <string name="activity_new_post_date_sub">Touch to change date.</string>
+    <string name="activity_add_post_date_sub">Touch to change date.</string>
     <string name="activity_folder_tab_map">Maps</string>
     <string name="activity_folder_tab_lists">Lists</string>
     <string name="activity_main_new_menu_newpost">New Post</string>
@@ -53,5 +53,7 @@
     <string name="activity_post_menu_alert_sub">sure?</string>
     <string name="activity_post_menu_alert_btn_cancle">Cancel</string>
     <string name="activity_post_menu_alert_btn_confirm">Delete</string>
+    <string name="activity_add_post_place_sub">Add place</string>
+    <string name="activity_add_post_place_metadata">find place from metadata</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

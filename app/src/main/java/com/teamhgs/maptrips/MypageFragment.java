@@ -43,6 +43,9 @@ public class MypageFragment extends Fragment {
     // TODO: Rename and change types of parameters
     User currentUser;
     ViewGroup viewGroup;
+    String allPost;
+    String follower;
+    String following;
     MypageViewPager2Adapter mypageViewPager2Adapter;
 
     public MypageFragment() {
@@ -115,8 +118,10 @@ public class MypageFragment extends Fragment {
                     boolean result = jsonResponse.getBoolean("responseResult");
 
                     if (result) {
-                        String temp = jsonResponse.getString("following") + "\n" + getResources().getString(R.string.activity_mypage_following);
-                        buttonFollowing.setText(temp);
+                        following = jsonResponse.getString("following") + "\n" + getResources().getString(R.string.activity_mypage_following);
+                        buttonAllPosts.setText(allPost);
+                        buttonFollower.setText(follower);
+                        buttonFollowing.setText(following);
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -133,8 +138,7 @@ public class MypageFragment extends Fragment {
                     boolean result = jsonResponse.getBoolean("responseResult");
 
                     if (result) {
-                        String temp = jsonResponse.getString("follower") + "\n" + getResources().getString(R.string.activity_mypage_follower);
-                        buttonFollower.setText(temp);
+                        follower = jsonResponse.getString("follower") + "\n" + getResources().getString(R.string.activity_mypage_follower);
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -153,8 +157,7 @@ public class MypageFragment extends Fragment {
                     boolean result = jsonResponse.getBoolean("responseResult");
 
                     if (result) {
-                        String temp = jsonResponse.getString("posts") + "\n" + getResources().getString(R.string.activity_mypage_posts);
-                        buttonAllPosts.setText(temp);
+                        allPost = jsonResponse.getString("posts") + "\n" + getResources().getString(R.string.activity_mypage_posts);
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);

@@ -31,8 +31,19 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -49,8 +60,10 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class AddPostActivity extends AppCompatActivity {
@@ -63,10 +76,13 @@ public class AddPostActivity extends AppCompatActivity {
     static StorageReference storageRef = storage.getReference();
     String date;
     Button calendarButton; // 메타데이터에서 날짜 불러올 때 쓸 것 같은 느낌
+    Button placeButton;
     Calendar calendar = Calendar.getInstance();
     ExifInterface exifInterface;
     String latitude;
     String longitude;
+
+    private PlacesClient placesClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +102,7 @@ public class AddPostActivity extends AppCompatActivity {
         EditText etText = (EditText) findViewById(R.id.et_text);
 
         calendarButton = (Button) findViewById(R.id.button_calander);
+        placeButton = (Button) findViewById(R.id.button_place);
 
         date = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DATE);
         String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_add_post_date_year)
@@ -231,7 +248,9 @@ public class AddPostActivity extends AppCompatActivity {
                                     url.add(uri.toString());
                                     post.setUrl(url);
 
-                                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                                    RequestQueue queue = Volley.newRequestQueue(AddPostActivity.this);
+
+                                    Response.Listener<String> insertPostResponseListener = new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
                                             try {
@@ -239,28 +258,29 @@ public class AddPostActivity extends AppCompatActivity {
                                                 boolean result = jsonResponse.getBoolean("responseResult");
 
                                                 if (result) {
-                                                    Response.Listener<String> responseListener = new Response.Listener<String>() {
-                                                        @Override
-                                                        public void onResponse(String response) {
-                                                            try {
-                                                                JSONObject jsonResponse = new JSONObject(response);
-                                                                boolean result = jsonResponse.getBoolean("responseResult");
+                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_add_post_upload_complete), Toast.LENGTH_LONG).show();
+                                                    finish();
+                                                } else {
+                                                    deleteCacheImg();
+                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_add_post_upload_err), Toast.LENGTH_LONG).show();
+                                                    finish();
+                                                }
+                                            } catch (JSONException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }
+                                    };
 
-                                                                if (result) {
-                                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_add_post_upload_complete), Toast.LENGTH_LONG).show();
-                                                                    finish();
-                                                                } else {
-                                                                    deleteCacheImg();
-                                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_add_post_upload_err), Toast.LENGTH_LONG).show();
-                                                                    finish();
-                                                                }
-                                                            } catch (JSONException e) {
-                                                                throw new RuntimeException(e);
-                                                            }
-                                                        }
-                                                    };
-                                                    Post.insertPostRequest request = new Post.insertPostRequest(currentUser.getUsercode(), post, responseListener);
-                                                    RequestQueue queue = Volley.newRequestQueue(AddPostActivity.this);
+                                    Response.Listener<String> insertPostUrlResponseListener = new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            try {
+                                                JSONObject jsonResponse = new JSONObject(response);
+                                                boolean result = jsonResponse.getBoolean("responseResult");
+
+                                                if (result) {
+                                                    // URL 업로드 완료 시 게시글 업로드
+                                                    Post.insertPostRequest request = new Post.insertPostRequest(currentUser.getUsercode(), post, insertPostResponseListener);
                                                     queue.add(request);
                                                 } else {
                                                     deleteCacheImg();
@@ -272,9 +292,8 @@ public class AddPostActivity extends AppCompatActivity {
                                             }
                                         }
                                     };
-                                    Post.insertPostUrlRequest request = new Post.insertPostUrlRequest(post, currentUser.getUsercode(), responseListener);
-                                    RequestQueue queue = Volley.newRequestQueue(AddPostActivity.this);
-                                    queue.add(request);
+                                    Post.insertPostUrlRequest insertPostUrlRequest = new Post.insertPostUrlRequest(post, currentUser.getUsercode(), insertPostUrlResponseListener);
+                                    queue.add(insertPostUrlRequest);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -346,6 +365,12 @@ public class AddPostActivity extends AppCompatActivity {
                             else {
                                 longitude = String.valueOf(convDMStoDegree(imgAttrLong));
                             }
+                            // 좌표를 기반으로 장소 찾기
+                            Places.initialize(getApplicationContext(), BuildConfig.MAPS_API_KEY);
+                            placesClient = Places.createClient(this);
+
+                            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+
                         }
 
                     } catch (IOException e) {
