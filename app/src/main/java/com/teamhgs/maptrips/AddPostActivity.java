@@ -1,11 +1,14 @@
 package com.teamhgs.maptrips;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -20,6 +23,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -31,19 +35,16 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -83,6 +84,21 @@ public class AddPostActivity extends AppCompatActivity {
     String longitude;
 
     private PlacesClient placesClient;
+
+    public final ActivityResultLauncher<Intent> startAutocomplete = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent intent = result.getData();
+                    if (intent != null) {
+                        Place place = Autocomplete.getPlaceFromIntent(intent);
+                        Log.i("TAG", "Place: ${place.getName()}, ${place.getId()}");
+                    }
+                } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
+                    // The user canceled the operation.
+                    Log.i("TAG", "User canceled autocomplete");
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,6 +325,21 @@ public class AddPostActivity extends AppCompatActivity {
             }
         });
 
+        Places.initialize(getApplicationContext(), BuildConfig.MAPS_API_KEY);
+        placesClient = Places.createClient(this);
+
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, placeFields)
+                .build(getApplicationContext());
+
+        placeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAutocomplete.launch(intent);
+            }
+        });
+
     }
 
     @Override
@@ -464,5 +495,5 @@ public class AddPostActivity extends AppCompatActivity {
 
         return result;
 
-    };
+    }
 }
