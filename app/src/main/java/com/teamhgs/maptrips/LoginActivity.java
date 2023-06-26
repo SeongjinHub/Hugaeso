@@ -186,7 +186,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 }
                                             }
                                         };
-                                        User.insertSavedLoginRequest request = new User.insertSavedLoginRequest(currentUser.getUsercode(), DeviceInfoUtil.getDeviceId(getApplicationContext()), 1, responseListener2);
+                                        User.insertSavedLoginRequest request = new User.insertSavedLoginRequest(currentUser.getUsercode(), Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), 1, responseListener2);
                                         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                                         queue.add(request);
                                     }
@@ -249,7 +249,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             };
 
-            User.savedLoginRequest Request = new User.savedLoginRequest(currentUser.getUsercode(), DeviceInfoUtil.getDeviceId(getApplicationContext()), 1, responseListener);
+            User.savedLoginRequest Request = new User.savedLoginRequest(currentUser.getUsercode(), Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID), 1, responseListener);
             RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
             queue.add(Request);
         }

@@ -24,19 +24,12 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -45,8 +38,6 @@ public class PostActivity extends AppCompatActivity {
     boolean bookmarkStatus;
     String likeDate;
     String bookmarkDate;
-    private PlacesClient placesClient;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,9 +158,11 @@ public class PostActivity extends AppCompatActivity {
                         currentPost.setTitle(jsonResponse.getString("title"));
                         currentPost.setText(jsonResponse.getString("text"));
                         currentPost.setDate(jsonResponse.getString("date"));
-                        currentPost.setPlaceID(jsonResponse.getString("placeid"));
                         currentPost.setLatitude(jsonResponse.getString("latitude"));
                         currentPost.setLongitude(jsonResponse.getString("longitude"));
+                        currentPost.setCountry(jsonResponse.getString("country"));
+                        currentPost.setCity(jsonResponse.getString("city"));
+                        currentPost.setArea(jsonResponse.getString("area"));
                         currentPost.setPrivateStatus(Integer.parseInt(jsonResponse.getString("private")));
 
                         headerTitle.setText(currentPost.getTitle());
@@ -187,28 +180,7 @@ public class PostActivity extends AppCompatActivity {
                         postDate.setText(temp);
                         postText.setText(currentPost.getText());
                         postUser.setText(postWriter.getUsername());
-
-                        // Place ID를 통해 장소 이름 가져오기
-                        Places.initialize(getApplicationContext(), BuildConfig.MAPS_API_KEY);
-                        placesClient = Places.createClient(getApplicationContext());
-
-                        final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
-
-                        final FetchPlaceRequest request = FetchPlaceRequest.newInstance(currentPost.getPlaceID(), placeFields);
-
-                        placesClient.fetchPlace(request).addOnSuccessListener((getPlaceNameResponse) -> {
-                            Place place = getPlaceNameResponse.getPlace();
-                            postPlace.setText(place.getName());
-
-
-                        }).addOnFailureListener((exception) -> {
-                            if (exception instanceof ApiException) {
-                                final ApiException apiException = (ApiException) exception;
-                                final int statusCode = apiException.getStatusCode();
-                                postPlace.setText("ERROR CODE - " + statusCode);
-                                // TODO: Handle error with given status code.
-                            }
-                        });
+                        postPlace.setText(currentPost.getLatitude() + ", " + currentPost.getLongitude());
 
                         // 게시글 정보 불러오기 완료 시 해당 게시글에 현재 사용자의 좋아요 여부를 가져옵니다.
                         Post.getPostLikeRequest getPostLikeRequest = new Post.getPostLikeRequest(currentPost.getPostcode(), currentUser.getUsercode(), getLikeResponseListener);

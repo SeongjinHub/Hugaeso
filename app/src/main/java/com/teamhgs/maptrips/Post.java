@@ -38,11 +38,13 @@ public class Post implements Serializable {
     String text;
     String date;
     String time;
-    String placeID;
-    String latitude;
-    String longitude;
+    String country;
+    String city;
+    String area;
     int privateStatus;
     ArrayList<String> url = new ArrayList<>();
+    String latitude;
+    String longitude;
     private static Map<String, String> parameters;
 
     public Post() {
@@ -98,28 +100,28 @@ public class Post implements Serializable {
         this.time = time;
     }
 
-    public String getPlaceID() {
-        return placeID;
+    public String getCountry() {
+        return country;
     }
 
-    public void setPlaceID(String placeID) {
-        this.placeID = placeID;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public String getCity() {
+        return city;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getLongitude() {
-        return longitude;
+    public String getArea() {
+        return area;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public int getPrivateStatus() {
@@ -138,6 +140,22 @@ public class Post implements Serializable {
         this.url = url;
     }
 
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
     public static class insertPostRequest extends StringRequest {
 
         public insertPostRequest(String usercode, Post post, Response.Listener<String> listener) {
@@ -149,9 +167,14 @@ public class Post implements Serializable {
                 parameters.put("title", post.getTitle());
                 parameters.put("text", post.getText());
                 parameters.put("date", post.getDate());
-                parameters.put("placeid", post.getPlaceID());
                 parameters.put("latitude", post.getLatitude());
                 parameters.put("longitude", post.getLongitude());
+//                parameters.put("country", post.getCountry());
+//                parameters.put("city", post.getCity());
+//                parameters.put("area", post.getArea());
+                parameters.put("country", "1");
+                parameters.put("city", "1");
+                parameters.put("area", "1");
                 parameters.put("private", String.valueOf(post.getPrivateStatus()));
             } catch (Exception e) {
                 Log.d("insertPostRequest", "parameter put error");
@@ -196,9 +219,11 @@ public class Post implements Serializable {
                 parameters.put("title", post.getTitle());
                 parameters.put("text", post.getText());
                 parameters.put("date", post.getDate());
-                parameters.put("placeid", post.getPlaceID());
                 parameters.put("latitude", post.getLatitude());
                 parameters.put("longitude", post.getLongitude());
+                parameters.put("country", post.getCountry());
+                parameters.put("city", post.getCity());
+                parameters.put("area", post.getArea());
                 parameters.put("private", String.valueOf(post.getPrivateStatus()));
 
                 Date date = new Date();
