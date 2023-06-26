@@ -82,7 +82,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         // .addTextChangedListener() 실시간 입력 값 검증
         editTextUsername.addTextChangedListener(new TextWatcher() {
-            @Override
+                @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
@@ -199,7 +199,8 @@ public class SignUpActivity extends AppCompatActivity {
                                 editTextPassword2.setBackground(editTextNormalUI);
                                 textViewPasswordSub2.setTextColor(defaultTextColor);
                                 pw = true;
-                                buttonConfirm.setVisibility(View.VISIBLE);
+                                if(newUser.chkPasswordRegEx())
+                                    buttonConfirm.setVisibility(View.VISIBLE);
                             }
                         }
                     });
@@ -231,7 +232,8 @@ public class SignUpActivity extends AppCompatActivity {
                                 editTextPassword2.setBackground(editTextNormalUI);
                                 textViewPasswordSub2.setTextColor(defaultTextColor);
                                 pw = true;
-                                buttonConfirm.setVisibility(View.VISIBLE);
+                                if(newUser.chkPasswordRegEx())
+                                    buttonConfirm.setVisibility(View.VISIBLE);
                             }
                         }
                     });
