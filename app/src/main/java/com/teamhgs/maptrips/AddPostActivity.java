@@ -76,12 +76,13 @@ public class AddPostActivity extends AppCompatActivity {
     static FirebaseStorage storage = FirebaseStorage.getInstance();
     static StorageReference storageRef = storage.getReference();
     String date;
-    Button calendarButton; // 메타데이터에서 날짜 불러올 때 쓸 것 같은 느낌
+    Button calendarButton;
     Button placeButton;
     Calendar calendar = Calendar.getInstance();
     ExifInterface exifInterface;
     String latitude;
     String longitude;
+    String placeID;
 
     private PlacesClient placesClient;
 
@@ -92,6 +93,19 @@ public class AddPostActivity extends AppCompatActivity {
                     Intent intent = result.getData();
                     if (intent != null) {
                         Place place = Autocomplete.getPlaceFromIntent(intent);
+
+                        placeID = place.getId();
+
+                        String latLng = String.valueOf(place.getLatLng());
+                        latLng = latLng.replaceAll("[lat/lng: ()]", "");
+                        String latLngSplit[] = latLng.split(",", 2);
+
+                        latitude = latLngSplit[0];
+                        longitude = latLngSplit[1];
+
+                        placeButton.setText(place.getName());
+                        placeButton.setTextColor(Color.BLACK);
+
                         Log.i("TAG", "Place: ${place.getName()}, ${place.getId()}");
                     }
                 } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
@@ -117,6 +131,7 @@ public class AddPostActivity extends AppCompatActivity {
         EditText etTitle = (EditText) findViewById(R.id.et_title);
         EditText etText = (EditText) findViewById(R.id.et_text);
 
+        TextView calenderText = (TextView) findViewById(R.id.text_calendar);
         calendarButton = (Button) findViewById(R.id.button_calander);
         placeButton = (Button) findViewById(R.id.button_place);
 
@@ -142,6 +157,7 @@ public class AddPostActivity extends AppCompatActivity {
                             + dayOfMonth + getString(R.string.activity_add_post_date_day);
                 calendarButton.setText(temp);
                 calendarButton.setTextColor(Color.BLACK);
+                calenderText.setText(getString(R.string.activity_add_post_date_sub));
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
 
@@ -215,21 +231,24 @@ public class AddPostActivity extends AppCompatActivity {
                         post.setText("\n");
                     }
 
-
-                    // 위치 정보 미입력시 예외처리, 추후 구현 필요.
-                    if (latitude == null || longitude == null) {
-                        latitude = "0";
-                        longitude = "0";
+                    // 이미지 미 선택 시 예외 처리
+                    if (filename == null) {
+                        buttonAddImage.setBackground(getDrawable(R.drawable.btn_add_post_add_img_err));
+                    }
+                    // 위치 정보 미 입력 시 예외 처리
+                    else if (placeID == null) {
+                        placeButton.setBackground(getDrawable(R.drawable.btn_add_post_calender_err));
                     }
 
                     post.setDate(date);
+                    post.setPlaceID(placeID);
                     post.setLatitude(latitude);
                     post.setLongitude(longitude);
                 } catch (Exception e) {
 
                 }
 
-                if (filename != null) {
+                if (filename != null && placeID != null) {
                     try {
                         imgPath = getCacheDir() + "/" + filename;   // 내부 저장소에 저장되어 있는 이미지 경로
                     } catch (Exception e) {
@@ -328,7 +347,7 @@ public class AddPostActivity extends AppCompatActivity {
         Places.initialize(getApplicationContext(), BuildConfig.MAPS_API_KEY);
         placesClient = Places.createClient(this);
 
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ID, Place.Field.LAT_LNG);
 
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, placeFields)
                 .build(getApplicationContext());
@@ -336,6 +355,7 @@ public class AddPostActivity extends AppCompatActivity {
         placeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                placeButton.setBackground(getDrawable(R.drawable.btn_add_post_calender));
                 startAutocomplete.launch(intent);
             }
         });
@@ -385,16 +405,16 @@ public class AddPostActivity extends AppCompatActivity {
 
                             // DMS 형태의 값을 Degree로 변환 후 계산합니다.
                             if (imgAttrLatRef.equals("N")) {
-                                latitude = String.valueOf(convDMStoDegree(imgAttrLat));
+//                                latitude = String.valueOf(convDMStoDegree(imgAttrLat));
                             }
                             else {
-                                latitude = String.valueOf(0 - convDMStoDegree(imgAttrLat));
+//                                latitude = String.valueOf(0 - convDMStoDegree(imgAttrLat));
                             }
                             if (imgAttrLongRef.equals("E")) {
-                                longitude = String.valueOf(convDMStoDegree(imgAttrLong));
+//                                longitude = String.valueOf(convDMStoDegree(imgAttrLong));
                             }
                             else {
-                                longitude = String.valueOf(convDMStoDegree(imgAttrLong));
+//                                longitude = String.valueOf(convDMStoDegree(imgAttrLong));
                             }
                             // 좌표를 기반으로 장소 찾기
                             Places.initialize(getApplicationContext(), BuildConfig.MAPS_API_KEY);
