@@ -54,6 +54,7 @@
     <string name="activity_post_menu_alert_btn_cancle">Cancel</string>
     <string name="activity_post_menu_alert_btn_confirm">Delete</string>
     <string name="activity_add_post_place_sub">Add place</string>
-    <string name="activity_add_post_place_metadata">find place from metadata</string>
+    <string name="activity_add_post_place_metadata">(Beta) find place from metadata</string>
+    <string name="activity_add_post_place_btn">ex) Hanshin University</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

@@ -200,7 +200,6 @@ public class PostActivity extends AppCompatActivity {
                             Place place = getPlaceNameResponse.getPlace();
                             postPlace.setText(place.getName());
 
-
                         }).addOnFailureListener((exception) -> {
                             if (exception instanceof ApiException) {
                                 final ApiException apiException = (ApiException) exception;

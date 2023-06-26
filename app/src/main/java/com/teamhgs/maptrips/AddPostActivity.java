@@ -17,7 +17,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+
 import androidx.exifinterface.media.ExifInterface;
+
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -35,11 +39,18 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceTypes;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
@@ -51,6 +62,7 @@ import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,6 +78,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class AddPostActivity extends AppCompatActivity {
 
@@ -347,9 +360,10 @@ public class AddPostActivity extends AppCompatActivity {
         Places.initialize(getApplicationContext(), BuildConfig.MAPS_API_KEY);
         placesClient = Places.createClient(this);
 
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ID, Place.Field.LAT_LNG);
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ID, Place.Field.ADDRESS, Place.Field.TYPES, Place.Field.LAT_LNG);
 
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, placeFields)
+                .setTypesFilter(Arrays.asList(PlaceTypes.ESTABLISHMENT)) // 비즈니스 정보가 등록된 장소로 검색범위를 제한
                 .build(getApplicationContext());
 
         placeButton.setOnClickListener(new View.OnClickListener() {
@@ -367,6 +381,27 @@ public class AddPostActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 201) {
             if (resultCode == RESULT_OK) {
+
+                { // 새 이미지를 불러올 시 기존에 입력한 날짜 및 장소를 초기화
+                    placeID = null;
+
+                    date = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DATE);
+                    String temp = calendar.get(Calendar.YEAR) + getString(R.string.activity_add_post_date_year)
+                            + (calendar.get(Calendar.MONTH) + 1) + getString(R.string.activity_add_post_date_month)
+                            + calendar.get(Calendar.DATE) + getString(R.string.activity_add_post_date_day);
+                    calendarButton.setText(temp);
+                    calendarButton.setTextColor(getColor(R.color.default_text_color));
+                    calendarButton.setBackground(getDrawable(R.drawable.btn_add_post_calender));
+
+                    TextView calenderText = (TextView) findViewById(R.id.text_calendar);
+                    calenderText.setText(getString(R.string.activity_add_post_date_sub));
+
+                    placeButton.setText(getString(R.string.activity_add_post_place_btn));
+                    placeButton.setTextColor(getColor(R.color.default_text_color));
+
+                    TextView placeText = (TextView) findViewById(R.id.text_place);
+                    placeText.setText(getString(R.string.activity_add_post_place_sub));
+                }
 
                 Uri fileUri = data.getData();
 
@@ -405,23 +440,88 @@ public class AddPostActivity extends AppCompatActivity {
 
                             // DMS 형태의 값을 Degree로 변환 후 계산합니다.
                             if (imgAttrLatRef.equals("N")) {
-//                                latitude = String.valueOf(convDMStoDegree(imgAttrLat));
-                            }
-                            else {
-//                                latitude = String.valueOf(0 - convDMStoDegree(imgAttrLat));
+                                latitude = String.valueOf(convDMStoDegree(imgAttrLat));
+                            } else {
+                                latitude = String.valueOf(0 - convDMStoDegree(imgAttrLat));
                             }
                             if (imgAttrLongRef.equals("E")) {
-//                                longitude = String.valueOf(convDMStoDegree(imgAttrLong));
+                                longitude = String.valueOf(convDMStoDegree(imgAttrLong));
+                            } else {
+                                longitude = String.valueOf(convDMStoDegree(imgAttrLong));
                             }
-                            else {
-//                                longitude = String.valueOf(convDMStoDegree(imgAttrLong));
-                            }
+
                             // 좌표를 기반으로 장소 찾기
                             Places.initialize(getApplicationContext(), BuildConfig.MAPS_API_KEY);
                             placesClient = Places.createClient(this);
 
-                            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+                            // Geocoding API를 통해 Latlng을 주소로 변환합니다.
+                            final Geocoder geocoder = new Geocoder(this);
 
+                            List<Address> list = geocoder.getFromLocation(Double.parseDouble(latitude), Double.parseDouble(longitude), 5);
+
+                            if (list != null) {
+                                if (list.size() > 0) {
+                                    String query = list.get(0).getAddressLine(0);
+
+                                    // Use the builder to create a FindAutocompletePredictionsRequest.
+                                    FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                                            // Call either setLocationBias() OR setLocationRestriction().
+                                            // .setLocationBias(bounds)
+                                            // .setLocationRestriction(bounds)
+                                            .setOrigin(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)))
+                                            // .setTypesFilter(Arrays.asList(PlaceTypes.ADDRESS))
+                                            .setTypesFilter(Arrays.asList(PlaceTypes.ESTABLISHMENT)) // 비즈니스 정보가 등록된 장소로 검색범위를 제한
+                                            // .setSessionToken(token)
+                                            .setQuery(query)
+                                            .build();
+
+                                    placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
+                                        for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                                            placeID = prediction.getPlaceId();
+
+                                            int distance = prediction.getDistanceMeters();
+
+                                            List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.ID, Place.Field.LAT_LNG);
+
+                                            final FetchPlaceRequest fetchPlaceRequest = FetchPlaceRequest.newInstance(placeID, placeFields);
+
+                                            placesClient.fetchPlace(fetchPlaceRequest).addOnSuccessListener((getPlaceNameResponse) -> {
+                                                Place place = getPlaceNameResponse.getPlace();
+
+                                                String latLng = String.valueOf(place.getLatLng());
+                                                latLng = latLng.replaceAll("[lat/lng: ()]", "");
+                                                String latLngSplit[] = latLng.split(",", 2);
+
+                                                latitude = latLngSplit[0];
+                                                longitude = latLngSplit[1];
+
+                                                placeButton.setText(place.getName());
+                                                placeButton.setTextColor(getColor(R.color.app_main_color));
+
+                                                TextView placeText = (TextView) findViewById(R.id.text_place);
+                                                placeText.setText(getString(R.string.activity_add_post_place_metadata));
+
+                                            }).addOnFailureListener((exception) -> {
+                                                if (exception instanceof ApiException) {
+                                                    final ApiException apiException = (ApiException) exception;
+                                                    final int statusCode = apiException.getStatusCode();
+                                                    // TODO: Handle error with given status code.
+                                                }
+                                            });
+
+                                            Log.i("TAG", prediction.getPlaceId());
+                                            Log.i("TAG", prediction.getPrimaryText(null).toString());
+                                        }
+                                    }).addOnFailureListener((exception) -> {
+                                        if (exception instanceof ApiException) {
+                                            ApiException apiException = (ApiException) exception;
+                                            Log.e("TAG", "Place not found: " + apiException.getStatusCode());
+                                        }
+                                    });
+                                } else {
+                                    Log.i("TAG", "No result of reverse-geocoding.");
+                                }
+                            }
                         }
 
                     } catch (IOException e) {
@@ -492,8 +592,8 @@ public class AddPostActivity extends AppCompatActivity {
     }
 
     // DMS를 Degree 형태로 변환합니다.
-    public float convDMStoDegree(String stringDMS) {
-        float result = 0;
+    public double convDMStoDegree(String stringDMS) {
+        double result = 0;
         String[] DMS = stringDMS.split(",", 3);
 
         String[] stringD = DMS[0].split("/", 2);
@@ -511,7 +611,7 @@ public class AddPostActivity extends AppCompatActivity {
         double S1 = Double.parseDouble(stringS[1]);
         double doubleS = S0 / S1;
 
-        result = (float) (doubleD + (doubleM / 60) + (doubleS / 3600));
+        result = (doubleD + (doubleM / 60) + (doubleS / 3600));
 
         return result;
 

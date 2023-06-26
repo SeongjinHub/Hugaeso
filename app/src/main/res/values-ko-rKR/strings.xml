@@ -53,5 +53,6 @@
     <string name="activity_post_menu_alert_btn_confirm">삭제</string>
     <string name="activity_post_menu_alert_btn_cancle">취소</string>
     <string name="activity_add_post_place_sub">장소를 입력하여 주세요.</string>
-    <string name="activity_add_post_place_metadata">사진에서 장소를 불러왔습니다.</string>
+    <string name="activity_add_post_place_metadata">(Beta) 사진에서 장소를 불러왔습니다. 정확하지 않을 수 있습니다.</string>
+    <string name="activity_add_post_place_btn">예) 한신대학교</string>
 </resources>
