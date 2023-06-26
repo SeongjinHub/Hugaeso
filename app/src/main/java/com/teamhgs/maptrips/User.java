@@ -28,7 +28,6 @@ public class User implements Serializable {
     String country;
     int year;
     int month;
-    String deviceinfo;
     String img;
 
 
@@ -204,12 +203,12 @@ public class User implements Serializable {
 
     public static class savedLoginRequest extends StringRequest {
 
-        public savedLoginRequest(String usercode, String deviceinfo, int auth, Response.Listener<String> listener) {
+        public savedLoginRequest(String usercode, String id, int auth, Response.Listener<String> listener) {
             super(Method.POST, DB_Framework.IP_ADDRESS + "/db_saved_login.php", listener, null);
             parameters = new HashMap<>();
             try {
                 parameters.put("usercode", usercode);
-                parameters.put("deviceinfo", deviceinfo);
+                parameters.put("id", id);
                 parameters.put("auth", String.valueOf(auth));
             } catch (Exception e) {
                 Log.d("savedLoginRequest", "parameter put error");
@@ -225,12 +224,16 @@ public class User implements Serializable {
 
     public static class insertSavedLoginRequest extends StringRequest {
 
-        public insertSavedLoginRequest(String usercode, String deviceinfo, int auth, Response.Listener<String> listener) {
+        public insertSavedLoginRequest(String usercode, String id, int auth, Response.Listener<String> listener) {
             super(Method.POST, DB_Framework.IP_ADDRESS + "/db_insert_saved_login.php", listener, null);
             parameters = new HashMap<>();
             try {
                 parameters.put("usercode", usercode);
-                parameters.put("deviceinfo", deviceinfo);
+                parameters.put("manufacturer", DeviceInfoUtil.getManufacturer());
+                parameters.put("brand", DeviceInfoUtil.getDeviceBrand());
+                parameters.put("model", DeviceInfoUtil.getDeviceModel());
+                parameters.put("os", DeviceInfoUtil.getDeviceOs());
+                parameters.put("id", id);
                 parameters.put("auth", String.valueOf(auth));
                 parameters.put("datetime", (LocalDate.now() + "." + LocalTime.now()));
             } catch (Exception e) {
