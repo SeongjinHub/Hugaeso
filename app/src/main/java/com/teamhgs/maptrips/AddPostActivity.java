@@ -465,6 +465,7 @@ public class AddPostActivity extends AppCompatActivity {
                             // Geocoding API를 통해 Latlng을 주소로 변환합니다.
                             final Geocoder geocoder = new Geocoder(this);
 
+                            placeIDArrayList.clear();
                             List<Address> list = geocoder.getFromLocation(Double.parseDouble(latitude), Double.parseDouble(longitude), 5);
 
                             if (list != null) {
