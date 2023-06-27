@@ -32,6 +32,9 @@ import java.util.Map;
 public class Post implements Serializable {
 
     static final String POST = "Post";
+    static final int TAG_LAT_LNG = 0;
+    static final int TAG_NAME = 1;
+    static final int TAG_PLACE_ID = 2;
 
     String postcode;
     String title;
