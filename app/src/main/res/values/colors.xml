@@ -27,6 +27,9 @@
     <color name="black_50">#50000000</color>
     <color name="black_60">#60000000</color>
     <color name="black_70">#70000000</color>
+    <color name="black_80">#80000000</color>
+    <color name="black_85">#85000000</color>
+    <color name="black_90">#90000000</color>
     <color name="transparent">#00000000</color>
     <color name="red_100">#FFFF0000</color>
 </resources>

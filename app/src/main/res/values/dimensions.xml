@@ -26,4 +26,7 @@
     <dimen name="activity_post_menu_background_radius">15dp</dimen>
     <dimen name="activity_post_menu_btn_padding">20dp</dimen>
     <dimen name="activity_post_menu_btn_textsize">7pt</dimen>
+    <dimen name="activity_add_post_listitem_imgview_padding">40dp</dimen>
+    <dimen name="activity_add_post_listitem_title_textsize">7pt</dimen>
+    <dimen name="activity_add_post_listitem_sub_textsize">5pt</dimen>
 </resources>

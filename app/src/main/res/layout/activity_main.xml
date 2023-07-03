@@ -11,6 +11,7 @@
         android:id="@+id/bottom_navi"
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bottom"
+        app:itemIconTint="@drawable/bottom_icon_color"
         app:itemBackground="@color/white"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"

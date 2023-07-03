@@ -27,11 +27,17 @@
                     android:id="@+id/imageButton_header_back"
                     android:layout_width="@dimen/app_header_btn_size"
                     android:layout_height="@dimen/app_header_btn_size"
+                    android:layout_weight="0"
                     android:padding="12dp"
                     android:layout_marginLeft="-7dp"
                     android:scaleType="fitCenter"
                     android:background="@color/white"
                     android:src="@drawable/ic_back" />
+
+                <HorizontalScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/text_header_title"
@@ -45,15 +51,18 @@
                     android:textSize="@dimen/app_header_fontsize"
                     android:visibility="visible" />
 
+                </HorizontalScrollView>
+
                 <View
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="0" />
 
                 <ImageButton
                     android:id="@+id/imageButton_header_menu"
                     android:layout_width="@dimen/app_header_btn_size"
                     android:layout_height="@dimen/app_header_btn_size"
+                    android:layout_weight="0"
                     android:layout_marginRight="-7dp"
                     android:padding="12dp"
                     android:scaleType="fitCenter"

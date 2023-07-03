@@ -59,6 +59,8 @@ public class Post implements Serializable {
 
     public Post(String postcode) {
         this.postcode = postcode;
+
+        this.privateStatus = 0;
     }
 
     public String getPostcode() {

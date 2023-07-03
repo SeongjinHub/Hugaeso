@@ -82,7 +82,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/edittext_default_padding"
-                        android:background="@drawable/edit_rad_corner_light"
+                        android:background="@drawable/edit_add_post_rad_corner_light"
                         android:ems="10"
                         android:hint="@string/activity_add_post_title"
                         android:inputType="text"
@@ -95,7 +95,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
                         android:layout_marginBottom="@dimen/edittext_default_padding"
-                        android:background="@drawable/edit_rad_corner_light"
+                        android:background="@drawable/edit_add_post_rad_corner_light"
                         android:ems="10"
                         android:hint="@string/activity_add_post_text"
                         android:inputType="textMultiLine"
@@ -155,7 +155,28 @@
                         android:id="@+id/text_place"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/edittext_default_padding"
                         android:text="@string/activity_add_post_place_sub" />
+
+                    <Button
+                        android:id="@+id/button_folder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_add_post_calender"
+                        android:padding="@dimen/edittext_padding_default"
+                        android:text="@string/activity_add_post_folder_btn"
+                        android:textAlignment="textStart"
+                        android:textAllCaps="false"
+                        android:textColor="@color/default_text_color"
+                        android:textSize="8pt"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:id="@+id/text_folder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/edittext_default_padding"
+                        android:text="@string/activity_add_post_folder_sub" />
 
                 </LinearLayout>
 

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/app_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_header"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+    <TextView
+        android:id="@+id/text_header_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="@string/activity_add_post_folder_title"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="@dimen/app_header_fontsize"
+        android:visibility="visible" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ImageButton
+        android:id="@+id/button_add_folder"
+        android:layout_width="@dimen/app_header_btn_size"
+        android:layout_height="@dimen/app_header_btn_size"
+        android:background="@color/white"
+        app:srcCompat="@android:drawable/ic_lock_power_off" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <EditText
+        android:id="@+id/et_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/edittext_default_padding"
+        android:background="@drawable/edit_add_post_rad_corner_light"
+        android:ems="10"
+        android:hint="@string/bottom_search"
+        android:inputType="text"
+        android:maxLength="30"
+        android:maxLines="1"
+        android:padding="10dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <ListView
+        android:id="@+id/listview_folder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>
