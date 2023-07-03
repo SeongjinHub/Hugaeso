@@ -56,5 +56,8 @@
     <string name="activity_add_post_place_sub">Add place</string>
     <string name="activity_add_post_place_metadata">(Beta) find place from metadata</string>
     <string name="activity_add_post_place_btn">ex) Hanshin University</string>
+    <string name="activity_add_post_folder_btn">Not selected.</string>
+    <string name="activity_add_post_folder_sub">select or add folder.</string>
+    <string name="activity_add_post_folder_title">Select folder</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
