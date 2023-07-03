@@ -296,6 +296,7 @@ public class AddPostActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception exception) {
                             // Handle unsuccessful uploads
                             url.add("");
+                            finish();
                         }
                     }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -310,7 +311,7 @@ public class AddPostActivity extends AppCompatActivity {
 
                                     RequestQueue queue = Volley.newRequestQueue(AddPostActivity.this);
 
-                                    Response.Listener<String> insertPostResponseListener = new Response.Listener<String>() {
+                                    Response.Listener<String> insertFolderPostsResponseListener = new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
                                             try {
@@ -320,6 +321,32 @@ public class AddPostActivity extends AppCompatActivity {
                                                 if (result) {
                                                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_add_post_upload_complete), Toast.LENGTH_LONG).show();
                                                     finish();
+                                                } else {
+                                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_add_post_upload_err), Toast.LENGTH_LONG).show();
+                                                    finish();
+                                                }
+                                            } catch (JSONException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }
+                                    };
+
+                                    Response.Listener<String> insertPostResponseListener = new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            try {
+                                                JSONObject jsonResponse = new JSONObject(response);
+                                                boolean result = jsonResponse.getBoolean("responseResult");
+
+                                                if (result) { // 게시글 정보 업로드 성공 시
+                                                    if (folder != null) { // 폴더를 선택하였을 경우 폴더에 게시글 추가.
+                                                        Folder.insertFolderPostsRequest insertFolderPostsRequest = new Folder.insertFolderPostsRequest(folder, post.getPostcode(), date, insertFolderPostsResponseListener);
+                                                        queue.add(insertFolderPostsRequest);
+                                                    }
+                                                    else {
+                                                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_add_post_upload_complete), Toast.LENGTH_LONG).show();
+                                                        finish();
+                                                    }
                                                 } else {
                                                     deleteCacheImg();
                                                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.activity_add_post_upload_err), Toast.LENGTH_LONG).show();

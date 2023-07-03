@@ -113,4 +113,53 @@ public class Folder implements Serializable {
             return parameters;
         }
     }
+
+    public static class insertFolderPostsRequest extends StringRequest {
+
+        public insertFolderPostsRequest(Folder folder, String postcode, String postDate, Response.Listener<String> listener) {
+            super(Method.POST, DB_Framework.IP_ADDRESS + "/db_insert_folder_posts.php", listener, null);
+            parameters = new HashMap<>();
+            try {
+                parameters.put("foldercode", folder.getFoldercode());
+                parameters.put("postcode", postcode);
+
+                SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+                Date PostDate = new Date();
+                Date StartDate = new Date();
+                Date EndDate = new Date();
+
+                PostDate = formatDate.parse(postDate);
+                StartDate = formatDate.parse(folder.getStartDate());
+                EndDate = formatDate.parse(folder.getEndDate());
+
+                if (PostDate.compareTo(StartDate) < 0) { // 게시글 날짜가 폴더 시작일 보다 작을 경우
+                    parameters.put("startdate", postDate);
+                }
+                else {
+                    parameters.put("startdate", folder.getStartDate());
+                }
+
+                if (PostDate.compareTo(EndDate) > 0) {
+                    parameters.put("enddate", postDate);
+                }
+                else {
+                    parameters.put("enddate", folder.getEndDate());
+                }
+
+                Date date = new Date();
+                SimpleDateFormat formatDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                String datetime = formatDateTime.format(date) + Locale.getDefault().getCountry();
+
+                parameters.put("datetime", datetime);
+            } catch (Exception e) {
+                Log.d("insertPostLikeRequest", "parameter put error");
+            }
+        }
+
+        protected Map<String, String> getParams() throws AuthFailureError {
+
+            return parameters;
+        }
+    }
 }
